@@ -11,6 +11,7 @@ const AppHeader: React.FC = () => {
   const [isLangOpen, setIsLangOpen] = useState(false); // Removed unused isApplicationMenuOpen state
 
   const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -62,7 +63,7 @@ const AppHeader: React.FC = () => {
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search..."
+              placeholder={t('search')}
               className="h-11 w-[350px] rounded-lg border border-gray-200 px-4 text-sm dark:border-gray-800 dark:bg-gray-900"
             />
           </div>

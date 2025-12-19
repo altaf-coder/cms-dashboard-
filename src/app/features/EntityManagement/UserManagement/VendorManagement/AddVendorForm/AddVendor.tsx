@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name: string) => /^[A-Za-z\s]{3,}$/.test(name);
@@ -8,6 +9,7 @@ const validatePassword = (password: string) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
 export default function AddVendor() {
+  const { t } = useTranslation();
   const generateVendorId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `V-NaJ-${randomNum}`;
@@ -77,39 +79,39 @@ export default function AddVendor() {
     switch (name) {
       case 'firstName':
       case 'lastName':
-        if (!value.trim()) return 'This field is required';
-        if (!validateName(value)) return 'Only alphabets allowed (min 3 chars)';
+        if (!value.trim()) return t('thisFieldIsRequired');
+        if (!validateName(value)) return t('onlyAlphabetsAllowed');
         return '';
       case 'email':
-        if (!value) return 'Email is required';
-        if (!validateEmail(value)) return 'Invalid email address';
+        if (!value) return t('emailIsRequired');
+        if (!validateEmail(value)) return t('invalidEmailAddress');
         return '';
       case 'phone':
-        if (!value) return 'Mobile number is required';
+        if (!value) return t('mobileNumberIsRequired');
         // Only allow numbers
-        if (!/^\d+$/.test(value)) return 'Only numbers are allowed';
+        if (!/^\d+$/.test(value)) return t('onlyNumbersAreAllowed');
         if (formData.countryCode === '+971' && value.length !== 9)
-          return 'UAE mobile number must be 9 digits';
+          return t('uaeMobileNumberMustBe9Digits');
         return '';
       case 'password':
-        if (!value) return 'Password is required';
+        if (!value) return t('passwordIsRequired');
         if (!validatePassword(value)) 
-          return 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+          return t('passwordMustBeAtLeast8Chars');
         return '';
       case 'confirmPassword':
-        if (!value) return 'Confirm your password';
-        if (value !== formData.password) return 'Passwords do not match';
+        if (!value) return t('confirmYourPassword');
+        if (value !== formData.password) return t('passwordsDoNotMatch');
         return '';
       case 'iban':
-        if (!value.trim()) return 'IBAN is required';
-        if (!validateIBAN(value)) return 'IBAN must start with AE';
+        if (!value.trim()) return t('iban') + ' ' + t('thisFieldIsRequired').toLowerCase();
+        if (!validateIBAN(value)) return t('iban') + ' ' + t('mustStartWithAE');
         return '';
       case 'emiratesIdExpiryDate':
         if (!value) return 'Emirates ID expiry date is required';
         if (new Date(value) <= new Date()) return 'Emirates ID must not be expired';
         return '';
       case 'insuranceExpiryDate':
-        if (!value) return 'Insurance expiry date is required';
+        if (!value) return t('insuranceExpiryDateRequired');
         if (new Date(value) <= new Date()) return 'Insurance must not be expired';
         return '';
       case 'emiratesId':
@@ -125,7 +127,7 @@ export default function AddVendor() {
       case 'insurancePolicyNumber':
       case 'paymentTerms':
       case 'financialLimit':
-        return value ? '' : 'This field is required';
+        return value ? '' : t('thisFieldIsRequired');
       default:
         return '';
     }
@@ -134,7 +136,7 @@ export default function AddVendor() {
   const handleFileChange = (name: string, file: File | null) => {
     setFormData(prev => ({ ...prev, [name]: file }));
     setFileNames(prev => ({ ...prev, [name]: file ? file.name : '' }));
-    setErrors(prev => ({ ...prev, [name]: file ? '' : 'This field is required' }));
+      setErrors(prev => ({ ...prev, [name]: file ? '' : t('thisFieldIsRequired') }));
   };
 
   const handleChange = (
@@ -177,7 +179,7 @@ export default function AddVendor() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setSuccessMessage('Vendor added successfully!');
+    setSuccessMessage(t('vendorAddedSuccessfully'));
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
@@ -188,13 +190,13 @@ export default function AddVendor() {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
           <div className="bg-white p-6 rounded-xl shadow-lg z-10 text-center max-w-sm mx-auto">
-            <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
+            <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
             <p className="text-gray-700 mb-4">{successMessage}</p>
             <button
               onClick={() => setSuccessMessage('')}
               className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>
@@ -202,16 +204,16 @@ export default function AddVendor() {
 
       {/* Main Form Content */}
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">ADD VENDOR</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">{t('addVendors')}</h1>
         <p className="text-center text-gray-500 mb-6">
-          Please Fill In The Form Below to Add Vendor
+          {t('pleaseFillFormToAddVendor')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Vendor ID */}
             <div>
-              <label className="text-sm font-medium">Vendor ID</label>
+              <label className="text-sm font-medium">{t('vendorId')}</label>
               <input
                 type="text"
                 name="vendorId"
@@ -224,7 +226,7 @@ export default function AddVendor() {
             {/* Status */}
             <div>
               <label className="text-sm font-medium">
-                Status <span className="text-red-500">*</span>
+                {t('status')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="status"
@@ -232,28 +234,28 @@ export default function AddVendor() {
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.status ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="">{t('selectStatus')}</option>
+                <option value="active">{t('active')}</option>
+                <option value="inactive">{t('inactive')}</option>
               </select>
               {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
             </div>
 
             {/* Authorized Person */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Authorized Person</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('authorizedPersonSection')}</h3>
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                First Name <span className="text-red-500">*</span>
+                {t('firstName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Enter First Name"
+                placeholder={t('enterYourFirstName')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.firstName ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -263,14 +265,14 @@ export default function AddVendor() {
 
             <div>
               <label className="text-sm font-medium">
-                Last Name <span className="text-red-500">*</span>
+                {t('lastName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Enter Last Name"
+                placeholder={t('enterYourLastName')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.lastName ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -281,14 +283,14 @@ export default function AddVendor() {
             {/* Email */}
             <div>
               <label className="text-sm font-medium">
-                Email <span className="text-red-500">*</span>
+                {t('email')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter Email"
+                placeholder={t('enterYourEmail')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -299,7 +301,7 @@ export default function AddVendor() {
             {/* Phone */}
             <div>
               <label className="text-sm font-medium">
-                Phone <span className="text-red-500">*</span>
+                {t('phone')} <span className="text-red-500">*</span>
               </label>
               <div className="flex">
                 <select
@@ -337,13 +339,13 @@ export default function AddVendor() {
 
             {/* Password & Confirm Password */}
             <div>
-              <label className="text-sm font-medium">Password <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('password')} <span className="text-red-500">*</span></label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter Your Password"
+                placeholder={t('enterYourPassword')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -356,14 +358,14 @@ export default function AddVendor() {
 
             <div>
               <label className="text-sm font-medium">
-                Confirm Password <span className="text-red-500">*</span>
+                {t('confirmPassword')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Re-Enter Your Password"
+                placeholder={t('reEnterYourPassword')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -373,7 +375,7 @@ export default function AddVendor() {
 
             {/* Emirates ID Fields */}
             <div>
-              <label className="text-sm font-medium">Upload Emirates ID <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('uploadEmiratesId')} <span className="text-red-500">*</span></label>
               <div 
                 className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer ${
                   errors.emiratesId ? 'border-red-500' : 'border-gray-300'
@@ -385,10 +387,10 @@ export default function AddVendor() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.emiratesId ? fileNames.emiratesId : 'Upload Emirates ID'}
+                    {fileNames.emiratesId ? fileNames.emiratesId : t('uploadEmiratesId')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">Browse</span>
+                <span className="text-blue-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -400,13 +402,13 @@ export default function AddVendor() {
               {errors.emiratesId && <p className="text-red-500 text-xs mt-1">{errors.emiratesId}</p>}
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.emiratesId ? 'File selected' : 'No file chosen'}
+                  {fileNames.emiratesId ? t('fileSelected') : t('noFileChosen')}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Emirates ID Expiry Date <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('emiratesIdExpiryDate')} <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
@@ -430,7 +432,7 @@ export default function AddVendor() {
 
             {/* Passport Field */}
             <div>
-              <label className="text-sm font-medium">Upload Passport</label>
+              <label className="text-sm font-medium">{t('uploadPassport')}</label>
               <div 
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 cursor-pointer"
                 onClick={() => handleCustomFileClick(passportRef)}
@@ -440,10 +442,10 @@ export default function AddVendor() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.passport ? fileNames.passport : 'Upload Passport'}
+                    {fileNames.passport ? fileNames.passport : t('uploadPassport')}
                   </span>
                 </div>
-                <span className="text-gray-600 text-sm">Browse</span>
+                <span className="text-gray-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -454,63 +456,63 @@ export default function AddVendor() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.passport ? 'File selected' : 'No file chosen'}
+                  {fileNames.passport ? t('fileSelected') : t('noFileChosen')}
                 </span>
-                <span className="text-xs text-gray-500">Optional (For Expats)</span>
+                <span className="text-xs text-gray-500">{t('optionalForExpats')}</span>
               </div>
             </div>
 
             {/* Company Info Section */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Company Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('companyInformationSection')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Vendor Company Name <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('companyName')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
-                placeholder="Enter Company Name"
+                placeholder={t('enterCompanyName')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.companyName ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.companyName && <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">Trade License Number <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('tradeLicenseNumber')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="tradeLicenseNumber"
                 value={formData.tradeLicenseNumber}
                 onChange={handleChange}
-                placeholder="Enter Trade License Number"
+                placeholder={t('enterTradeLicenseNumber')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.tradeLicenseNumber ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.tradeLicenseNumber && <p className="text-red-500 text-xs mt-1">{errors.tradeLicenseNumber}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">VAT / TRN Number <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('vatNumber')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="vatNumber"
                 value={formData.vatNumber}
                 onChange={handleChange}
-                placeholder="Enter VAT / TRN Number"
+                placeholder={t('enterVatNumber')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.vatNumber ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.vatNumber && <p className="text-red-500 text-xs mt-1">{errors.vatNumber}</p>}
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-sm font-medium">Office Address <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('officeAddress')} <span className="text-red-500">*</span></label>
               <textarea
                 name="officeAddress"
                 value={formData.officeAddress}
                 onChange={handleChange}
-                placeholder="Enter Address"
+                placeholder={t('enterAddress')}
                 rows={3}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.officeAddress ? 'border-red-500' : 'border-gray-300'}`}
               />
@@ -520,63 +522,63 @@ export default function AddVendor() {
 
             {/* Bank Details Section */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Bank Details</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('bankDetails')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Account Name <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('accountName')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="accountName"
                 value={formData.accountName}
                 onChange={handleChange}
-                placeholder="Enter Account Name"
+                placeholder={t('enterAccountName')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.accountName ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.accountName && <p className="text-red-500 text-xs mt-1">{errors.accountName}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">Bank Name <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('bankName')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="bankName"
                 value={formData.bankName}
                 onChange={handleChange}
-                placeholder="Enter Bank Name"
+                placeholder={t('enterBankName')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.bankName ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.bankName && <p className="text-red-500 text-xs mt-1">{errors.bankName}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">IBAN <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('iban')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="iban"
                 value={formData.iban}
                 onChange={handleChange}
-                placeholder="Enter IBAN (AE...)"
+                placeholder={t('enterIban')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.iban ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.iban && <p className="text-red-500 text-xs mt-1">{errors.iban}</p>}
-              <p className="text-xs text-gray-500 mt-1">Must start with AE (UAE format)</p>
+              <p className="text-xs text-gray-500 mt-1">{t('mustStartWithAE')} ({t('uaeFormat')})</p>
             </div>
 
             {/* Operational Info Section */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Operational Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('operationalInfo')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Linked Drivers <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('linkedDriver')} <span className="text-red-500">*</span></label>
               <select
                 name="linkedDriver"
                 value={formData.linkedDriver}
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.linkedDriver ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Driver</option>
+                <option value="">{t('selectLinkedDriver')}</option>
                 <option value="driver1">Driver 1</option>
                 <option value="driver2">Driver 2</option>
                 <option value="driver3">Driver 3</option>
@@ -585,7 +587,7 @@ export default function AddVendor() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Insurance Expiry Date <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('insuranceExpiryDate')} <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
@@ -609,24 +611,24 @@ export default function AddVendor() {
 
             {/* Insurance Policy Section */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Insurance Policy</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('insurancePolicy')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Insurance Policy Number <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('insurancePolicyNumber')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="insurancePolicyNumber"
                 value={formData.insurancePolicyNumber}
                 onChange={handleChange}
-                placeholder="Enter Insurance Policy Number"
+                placeholder={t('enterInsurancePolicyNumber')}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.insurancePolicyNumber ? 'border-red-500' : 'border-gray-300'}`}
               />
               {errors.insurancePolicyNumber && <p className="text-red-500 text-xs mt-1">{errors.insurancePolicyNumber}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">Insurance Policy Copy <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('uploadInsuranceCopy')} <span className="text-red-500">*</span></label>
               <div 
                 className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer ${
                   errors.insuranceCopy ? 'border-red-500' : 'border-gray-300'
@@ -638,10 +640,10 @@ export default function AddVendor() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.insuranceCopy ? fileNames.insuranceCopy : 'Upload Insurance Copy'}
+                    {fileNames.insuranceCopy ? fileNames.insuranceCopy : t('uploadInsuranceCopy')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">Browse</span>
+                <span className="text-blue-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -653,35 +655,35 @@ export default function AddVendor() {
               {errors.insuranceCopy && <p className="text-red-500 text-xs mt-1">{errors.insuranceCopy}</p>}
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.insuranceCopy ? 'File selected' : 'No file chosen'}
+                  {fileNames.insuranceCopy ? t('fileSelected') : t('noFileChosen')}
                 </span>
               </div>
             </div>
 
             {/* Financial Info Section */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Financial Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('financialInfo')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Payment Terms <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('paymentTerms')} <span className="text-red-500">*</span></label>
               <select
                 name="paymentTerms"
                 value={formData.paymentTerms}
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.paymentTerms ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Payment Terms</option>
-                <option value="net15">Net 15</option>
-                <option value="net30">Net 30</option>
-                <option value="net45">Net 45</option>
-                <option value="net60">Net 60</option>
+                <option value="">{t('selectPaymentTerms')}</option>
+                <option value="net15">{t('net15')}</option>
+                <option value="net30">{t('net30')}</option>
+                <option value="net45">{t('net45')}</option>
+                <option value="net60">{t('net60')}</option>
               </select>
               {errors.paymentTerms && <p className="text-red-500 text-xs mt-1">{errors.paymentTerms}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">Payables <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('payables')} <span className="text-red-500">*</span></label>
               <div className="flex items-center">
                 <span className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-3 py-2">AED</span>
                 <input
@@ -702,7 +704,7 @@ export default function AddVendor() {
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
             >
-              Add Vendor
+              {t('addVendor')}
             </button>
           </div>
 

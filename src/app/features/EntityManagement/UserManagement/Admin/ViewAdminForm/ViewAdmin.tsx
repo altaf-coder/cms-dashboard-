@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ViewAdmin() {
+  const { t } = useTranslation();
   const generateAdminId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `AD-CMS-${randomNum}`;
@@ -33,8 +35,8 @@ export default function ViewAdmin() {
       {/* Header */}
       <div className="flex justify-center items-center mb-4 sm:mb-6 lg:mb-8">
         <div className="text-center w-full">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">VIEW ADMIN</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">This form is view-only</p>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{t('viewAdmin')}</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">{t('thisFormIsViewOnly')}</p>
         </div>
       </div>
 
@@ -45,7 +47,7 @@ export default function ViewAdmin() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 lg:mb-8">
           {/* Admin ID */}
           <div className="w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Admin ID</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('adminId')}</label>
             <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50">
               <span className="text-gray-700 font-medium text-sm sm:text-base">{formData.adminId}</span>
             </div>
@@ -53,7 +55,7 @@ export default function ViewAdmin() {
 
           {/* Status */}
           <div className="w-full flex items-center justify-between lg:justify-start lg:space-x-4">
-            <span className="text-sm font-medium text-gray-700">Status</span>
+            <span className="text-sm font-medium text-gray-700">{t('status')}</span>
             <div
               className={`relative w-11 h-6 sm:w-12 sm:h-7 rounded-full ${formData.status ? 'bg-blue-600' : 'bg-gray-300'}`}
             >
@@ -72,7 +74,7 @@ export default function ViewAdmin() {
           <div className="space-y-4 sm:space-y-6">
             {/* First Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">First Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('firstName')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50">
                 <span className="text-gray-700 text-sm sm:text-base">{formData.firstName}</span>
               </div>
@@ -80,7 +82,7 @@ export default function ViewAdmin() {
 
             {/* Last Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Last Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('lastName')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50">
                 <span className="text-gray-700 text-sm sm:text-base">{formData.lastName}</span>
               </div>
@@ -88,7 +90,7 @@ export default function ViewAdmin() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('email')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50">
                 <span className="text-gray-700 text-sm sm:text-base break-all">{formData.email}</span>
               </div>
@@ -96,7 +98,7 @@ export default function ViewAdmin() {
 
             {/* Role */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Role</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('role')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50 relative">
                 <span className="text-gray-700 text-sm sm:text-base">{formData.role}</span>
                 <svg 
@@ -121,7 +123,7 @@ export default function ViewAdmin() {
           <div className="space-y-4 sm:space-y-6">
             {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('phone')}</label>
               <div className="flex flex-row gap-2">
                 {/* Country Code */}
                 <div className="w-1/3 sm:w-1/4 border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50 relative min-w-[80px]">
@@ -156,7 +158,7 @@ export default function ViewAdmin() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('password')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50 flex items-center justify-between">
                 <span className="text-gray-700 text-sm sm:text-base">{formData.password}</span>
                 <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -168,7 +170,7 @@ export default function ViewAdmin() {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('confirmPassword')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50 flex items-center justify-between">
                 <span className="text-gray-700 text-sm sm:text-base">{formData.confirmPassword}</span>
                 <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -180,7 +182,7 @@ export default function ViewAdmin() {
 
             {/* Emirates ID */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">Emirates ID</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">{t('emiratesId')}</label>
               <div className="border border-gray-300 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-100/50">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
                   <div className="flex items-center">
@@ -190,7 +192,7 @@ export default function ViewAdmin() {
                     <span className="text-gray-700 text-sm sm:text-base truncate">{formData.emiratesId}</span>
                   </div>
                   <button className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer text-left sm:text-right w-full sm:w-auto">
-                    Download
+                    {t('download')}
                   </button>
                 </div>
               </div>

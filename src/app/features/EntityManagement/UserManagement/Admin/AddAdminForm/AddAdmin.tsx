@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 // Validation functions
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -41,10 +43,10 @@ const validatePassword = (password: string) => {
   return {
     isValid: hasMinLength && hasUpperCase && hasNumber && hasSpecialChar,
     errors: {
-      minLength: hasMinLength ? '' : 'At least 8 characters',
-      upperCase: hasUpperCase ? '' : 'At least 1 uppercase letter',
-      number: hasNumber ? '' : 'At least 1 number',
-      specialChar: hasSpecialChar ? '' : 'At least 1 special character'
+      minLength: hasMinLength ? '' : t('atLeast8Characters'),
+      upperCase: hasUpperCase ? '' : t('atLeast1UppercaseLetter'),
+      number: hasNumber ? '' : t('atLeast1Number'),
+      specialChar: hasSpecialChar ? '' : t('atLeast1SpecialCharacter')
     }
   };
 };
@@ -63,6 +65,7 @@ const countryCodes = [
 ];
 
 export default function AddAdmin() {
+  const { t } = useTranslation();
   const generateAdminId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `AD-CMS-${randomNum}`;
@@ -104,9 +107,9 @@ export default function AddAdmin() {
       switch (name) {
         case 'firstName':
           if (!value) {
-            newErrors[name] = 'First name is required';
+            newErrors[name] = t('firstNameIsRequired');
           } else if (!validateName(value)) {
-            newErrors[name] = 'Only alphabets, min 3 characters';
+            newErrors[name] = t('onlyAlphabetsMin3Characters');
           } else {
             delete newErrors[name];
           }
@@ -114,9 +117,9 @@ export default function AddAdmin() {
 
         case 'lastName':
           if (!value) {
-            newErrors[name] = 'Last name is required';
+            newErrors[name] = t('lastNameIsRequired');
           } else if (!validateName(value)) {
-            newErrors[name] = 'Only alphabets, min 3 characters';
+            newErrors[name] = t('onlyAlphabetsMin3Characters');
           } else {
             delete newErrors[name];
           }
@@ -124,9 +127,9 @@ export default function AddAdmin() {
 
         case 'email':
           if (!value) {
-            newErrors[name] = 'Email is required';
+            newErrors[name] = t('emailIsRequired');
           } else if (!validateEmail(value)) {
-            newErrors[name] = 'Invalid email format';
+            newErrors[name] = t('invalidEmailFormat');
           } else {
             delete newErrors[name];
           }
@@ -135,9 +138,9 @@ export default function AddAdmin() {
         case 'phoneNumber':
           const fullPhone = getFullPhoneNumber();
           if (!value) {
-            newErrors[name] = 'Phone number is required';
+            newErrors[name] = t('phoneNumberIsRequired');
           } else if (!validatePhone(fullPhone, formData.phoneCountryCode)) {
-            newErrors[name] = `Please enter a valid ${countryCodes.find(c => c.code === formData.phoneCountryCode)?.country} phone number`;
+            newErrors[name] = `${t('pleaseEnterValidPhoneNumber')} ${countryCodes.find(c => c.code === formData.phoneCountryCode)?.country} ${t('phoneNumber')}`;
           } else {
             delete newErrors[name];
           }
@@ -145,15 +148,15 @@ export default function AddAdmin() {
 
         case 'password':
           if (!value) {
-            newErrors[name] = 'Password is required';
+            newErrors[name] = t('passwordIsRequired');
           } else if (!validatePassword(value).isValid) {
-            newErrors[name] = 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+            newErrors[name] = t('passwordMustBeAtLeast8Chars');
           } else {
             delete newErrors[name];
           }
 
           if (formData.confirmPassword && formData.confirmPassword !== value) {
-            newErrors.confirmPassword = 'Passwords do not match';
+            newErrors.confirmPassword = t('passwordsDoNotMatch');
           } else if (formData.confirmPassword) {
             delete newErrors.confirmPassword;
           }
@@ -161,9 +164,9 @@ export default function AddAdmin() {
 
         case 'confirmPassword':
           if (!value) {
-            newErrors[name] = 'Confirm password is required';
+            newErrors[name] = t('confirmPasswordIsRequired');
           } else if (value !== formData.password) {
-            newErrors[name] = 'Passwords do not match';
+            newErrors[name] = t('passwordsDoNotMatch');
           } else {
             delete newErrors[name];
           }
@@ -171,7 +174,7 @@ export default function AddAdmin() {
 
         case 'role':
           if (!value) {
-            newErrors[name] = 'Role is required';
+            newErrors[name] = t('roleIsRequired');
           } else {
             delete newErrors[name];
           }
@@ -179,7 +182,7 @@ export default function AddAdmin() {
 
         case 'emiratesId':
           if (!value) {
-            newErrors[name] = 'Emirates ID is required';
+            newErrors[name] = t('emiratesId') + ' ' + t('thisFieldIsRequired').toLowerCase();
           } else {
             delete newErrors[name];
           }
@@ -254,7 +257,7 @@ export default function AddAdmin() {
     const noErrors = Object.keys(errors).length === 0;
 
     if (allFilled && noErrors) {
-      setSuccessMessage('Admin added successfully!');
+      setSuccessMessage(t('adminAddedSuccessfully'));
       setTimeout(() => setSuccessMessage(''), 3000);
       // Reset form after successful submission
       setFormData({
@@ -291,8 +294,8 @@ export default function AddAdmin() {
 
       <div className="flex justify-center items-center mb-6">
         <div className="text-center w-full">
-          <h1 className="text-2xl font-bold text-gray-900">ADD ADMINS</h1>
-          <p className="text-gray-600 mt-2">Please Fill in The Form Below to Add Admin</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('addAdmins')}</h1>
+          <p className="text-gray-600 mt-2">{t('pleaseFillFormToAddAdmin')}</p>
         </div>
       </div>
 
@@ -302,7 +305,7 @@ export default function AddAdmin() {
           {/* Admin ID */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Admin ID <span className="text-red-500">*</span>
+              {t('adminId')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -315,7 +318,7 @@ export default function AddAdmin() {
 
           {/* Status */}
           <div className="mb-4 flex items-center">
-            <span className="text-sm font-medium text-gray-700 mr-3">Status</span>
+            <span className="text-sm font-medium text-gray-700 mr-3">{t('status')}</span>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -333,7 +336,7 @@ export default function AddAdmin() {
           {/* First Name */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              First Name <span className="text-red-500">*</span>
+              {t('firstName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -341,7 +344,7 @@ export default function AddAdmin() {
               value={formData.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your First Name"
+              placeholder={t('enterYourFirstName')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('firstName') ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -351,7 +354,7 @@ export default function AddAdmin() {
           {/* Last Name */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name <span className="text-red-500">*</span>
+              {t('lastName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -359,7 +362,7 @@ export default function AddAdmin() {
               value={formData.lastName}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Last Name"
+              placeholder={t('enterYourLastName')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('lastName') ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -369,7 +372,7 @@ export default function AddAdmin() {
           {/* Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email <span className="text-red-500">*</span>
+              {t('email')} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -377,7 +380,7 @@ export default function AddAdmin() {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Email"
+              placeholder={t('enterYourEmail')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('email') ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -387,7 +390,7 @@ export default function AddAdmin() {
           {/* Phone */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone <span className="text-red-500">*</span>
+              {t('phone')} <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-2">
               <select
@@ -408,7 +411,7 @@ export default function AddAdmin() {
                 value={formData.phoneNumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder={`Enter phone number`}
+                placeholder={t('enterPhoneNumber')}
                 className={`flex-1 border rounded-lg px-3 py-2 focus:ring-2
                 focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('phoneNumber') ? 'border-red-500' : 'border-gray-300'}`}
               />
@@ -419,7 +422,7 @@ export default function AddAdmin() {
           {/* Password */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password <span className="text-red-500">*</span>
+              {t('password')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -427,7 +430,7 @@ export default function AddAdmin() {
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Password"
+              placeholder={t('enterYourPassword')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('password') ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -437,7 +440,7 @@ export default function AddAdmin() {
           {/* Confirm Password */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password <span className="text-red-500">*</span>
+              {t('confirmPassword')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -445,7 +448,7 @@ export default function AddAdmin() {
               value={formData.confirmPassword}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Re-Enter Your Password"
+              placeholder={t('reEnterYourPassword')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('confirmPassword') ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -455,7 +458,7 @@ export default function AddAdmin() {
           {/* Emirates ID */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Emirates ID <span className="text-red-500">*</span>
+              {t('uploadEmiratesId')} <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center">
               <label className={`flex items-center px-4 py-2 bg-white text-gray-700 border rounded-lg cursor-pointer hover:bg-gray-50 ${shouldShowError('emiratesId') ? 'border-red-500' : 'border-gray-300'}`}>
@@ -463,7 +466,7 @@ export default function AddAdmin() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                 </svg>
-                <span>{formData.emiratesId ? formData.emiratesId.name : 'Upload Emirates ID'}</span>
+                <span>{formData.emiratesId ? formData.emiratesId.name : t('uploadEmiratesId')}</span>
                 <input
                   type="file"
                   name="emiratesId"
@@ -480,7 +483,7 @@ export default function AddAdmin() {
           {/* Role */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role <span className="text-red-500">*</span>
+              {t('role')} <span className="text-red-500">*</span>
             </label>
             <select
               name="role"
@@ -490,11 +493,11 @@ export default function AddAdmin() {
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2
               focus:ring-blue-500 focus:border-blue-500 ${shouldShowError('role') ? 'border-red-500' : 'border-gray-300'}`}
             >
-              <option value="">Select Role</option>
+              <option value="">{t('selectRole')}</option>
               <option value="admin">Admin</option>
-              <option value="super-admin">Clearance Agent</option>
-              <option value="manager">Transport Coordinator</option>
-              <option value="support">Finance</option>
+              <option value="super-admin">{t('clearanceAgent')}</option>
+              <option value="manager">{t('transportCoordinator')}</option>
+              <option value="support">{t('finance')}</option>
             </select>
             {shouldShowError('role') && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
           </div>
@@ -504,7 +507,7 @@ export default function AddAdmin() {
         {/* Manage Accessibility */}
         <div className="mb-6">
           <Link to="#" className="text-blue-600 hover:underline flex items-center">
-            <span>Manage Accessibility for this User</span>
+            <span>{t('manageAccessibilityForThisUser')}</span>
             <svg xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -518,7 +521,7 @@ export default function AddAdmin() {
             type="submit"
             className="text-white font-medium py-2 px-6 rounded-lg bg-blue-600 hover:bg-blue-700"
           >
-            Add Admin
+            {t('addAdmin')}
           </button>
         </div>
       </form>
@@ -528,13 +531,13 @@ export default function AddAdmin() {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
           <div className="bg-white p-6 rounded-lg shadow-lg z-10 text-center max-w-sm mx-auto">
-            <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
+            <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
             <p className="text-gray-700 mb-4">{successMessage}</p>
             <button
               onClick={() => setSuccessMessage('')}
               className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>

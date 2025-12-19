@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ViewDriver() {
+  const { t } = useTranslation();
   const [formData] = useState({
     driverId: "D-Naj-4567",
     status: 'Active',
@@ -66,15 +68,15 @@ export default function ViewDriver() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">VIEW DRIVER</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">{t('viewDriver')}</h1>
         <p className="text-center text-gray-500 mb-6">
-          Driver Information & Details
+          {t('driverInformationAndDetails')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium">Driver ID</label>
+              <label className="text-sm font-medium">{t('driverId')}</label>
               <input
                 type="text"
                 name="driverId"
@@ -86,7 +88,7 @@ export default function ViewDriver() {
 
             <div>
               <label className="text-sm font-medium">
-                Status
+                {t('status')}
               </label>
               <select
                 name="status"
@@ -94,65 +96,65 @@ export default function ViewDriver() {
                 disabled
                 className="w-full border rounded-lg px-3 py-2 bg-gray-100"
               >
-                <option value="Pending Approval">Pending Approval</option>
-                <option value="active">Active</option>
-                <option value="suspended">Suspended</option>
-                <option value="inactive">Inactive</option>
+                <option value="Pending Approval">{t('pendingApproval')}</option>
+                <option value="active">{t('active')}</option>
+                <option value="suspended">{t('suspended')}</option>
+                <option value="inactive">{t('inactive')}</option>
               </select>
               <p className="text-xs text-gray-500 mt-1">
-                Driver current status
+                {t('driverCurrentStatus')}
               </p>
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Personal Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('personalInfo')}</h3>
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                First Name
+                {t('firstName')}
               </label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 readOnly
-                placeholder="Enter Your First Name"
+                placeholder={t('enterYourFirstName')}
                 className="w-full border rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                Last Name
+                {t('lastName')}
               </label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 readOnly
-                placeholder="Enter Your Last Name"
+                placeholder={t('enterYourLastName')}
                 className="w-full border rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                Email
+                {t('email')}
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 readOnly
-                placeholder="Enter Your Email"
+                placeholder={t('enterYourEmail')}
                 className="w-full border rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                Phone
+                {t('phone')}
               </label>
               <div className="flex">
                 <select
@@ -172,43 +174,43 @@ export default function ViewDriver() {
                   name="phone"
                   value={formData.phone}
                   readOnly
-                  placeholder={formData.countryCode === '+971' ? '5XX XXX XXXX' : 'Enter Phone Number'}
+                  placeholder={formData.countryCode === '+971' ? '5XX XXX XXXX' : t('enterPhoneNumber')}
                   className="w-2/3 border border-l-0 rounded-r-lg px-3 py-2 bg-gray-100"
                 />
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-500">Full: {formData.countryCode} {formData.phone}</span>
+                <span className="text-xs text-gray-500">{t('full')}: {formData.countryCode} {formData.phone}</span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Password</label>
+              <label className="text-sm font-medium">{t('password')}</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 readOnly
-                placeholder="Enter Your Password"
+                placeholder={t('enterYourPassword')}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                Confirm Password
+                {t('confirmPassword')}
               </label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 readOnly
-                placeholder="Re-Enter Your Password"
+                placeholder={t('reEnterYourPassword')}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Emirates ID</label>
+              <label className="text-sm font-medium">{t('uploadEmiratesId')}</label>
               <div 
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
                 onClick={() => handleCustomFileClick(emiratesIdRef)}
@@ -218,10 +220,10 @@ export default function ViewDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.emiratesId ? fileNames.emiratesId : 'Upload Emirates ID'}
+                    {fileNames.emiratesId ? fileNames.emiratesId : t('uploadEmiratesId')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">View</span>
+                <span className="text-blue-600 text-sm">{t('view')}</span>
               </div>
               <input
                 type="file"
@@ -232,13 +234,13 @@ export default function ViewDriver() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.emiratesId ? 'File available' : 'No file available'}
+                  {fileNames.emiratesId ? t('fileAvailable') : t('noFileAvailable')}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Emirates ID Expiry Date</label>
+              <label className="text-sm font-medium">{t('emiratesIdExpiryDate')}</label>
               <div className="relative">
                 <input
                   type="date"
@@ -259,7 +261,7 @@ export default function ViewDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Visa</label>
+              <label className="text-sm font-medium">{t('uploadVisa')}</label>
               <div 
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
                 onClick={() => handleCustomFileClick(visaRef)}
@@ -269,10 +271,10 @@ export default function ViewDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.visa ? fileNames.visa : 'Upload Visa'}
+                    {fileNames.visa ? fileNames.visa : t('uploadVisa')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">View</span>
+                <span className="text-blue-600 text-sm">{t('view')}</span>
               </div>
               <input
                 type="file"
@@ -283,13 +285,13 @@ export default function ViewDriver() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.visa ? 'File available' : 'No file available'}
+                  {fileNames.visa ? t('fileAvailable') : t('noFileAvailable')}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Visa Expiry Date</label>
+              <label className="text-sm font-medium">{t('visaExpiry')}</label>
               <div className="relative">
                 <input
                   type="date"
@@ -310,7 +312,7 @@ export default function ViewDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Passport</label>
+              <label className="text-sm font-medium">{t('uploadPassport')}</label>
               <div 
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
                 onClick={() => handleCustomFileClick(passportRef)}
@@ -320,7 +322,7 @@ export default function ViewDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.passport ? fileNames.passport : 'Upload Passport'}
+                    {fileNames.passport ? fileNames.passport : t('uploadPassport')}
                   </span>
                 </div>
                 <span className="text-gray-600 text-sm">View</span>
@@ -334,30 +336,30 @@ export default function ViewDriver() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.passport ? 'File available' : 'No file available'}
+                  {fileNames.passport ? t('fileAvailable') : t('noFileAvailable')}
                 </span>
                 <span className="text-xs text-gray-500">Optional (For Expats)</span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Trade License Number</label>
+              <label className="text-sm font-medium">{t('tradeLicenseNumber')}</label>
               <input
                 type="text"
                 name="tradeLicenseNumber"
                 value={formData.tradeLicenseNumber}
                 readOnly
-                placeholder="Enter Trade License Number"
+                placeholder={t('enterTradeLicenseNumber')}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
               />
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">License Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('licenseInfo')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Driving License Number</label>
+              <label className="text-sm font-medium">{t('drivingLicenseNumber')}</label>
               <input
                 type="text"
                 name="drivingLicenseNumber"
@@ -369,7 +371,7 @@ export default function ViewDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Driving License Expiry Date</label>
+              <label className="text-sm font-medium">{t('drivingLicenseExpiry')}</label>
               <div className="relative">
                 <input
                   type="date"
@@ -391,7 +393,7 @@ export default function ViewDriver() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-sm font-medium">Upload License Copy</label>
+              <label className="text-sm font-medium">{t('uploadDrivingLicenseCopy')}</label>
               <div 
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
                 onClick={() => handleCustomFileClick(drivingLicenseCopyRef)}
@@ -401,10 +403,10 @@ export default function ViewDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.drivingLicenseCopy ? fileNames.drivingLicenseCopy : 'Upload License Copy'}
+                    {fileNames.drivingLicenseCopy ? fileNames.drivingLicenseCopy : t('uploadDrivingLicenseCopy')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">View</span>
+                <span className="text-blue-600 text-sm">{t('view')}</span>
               </div>
               <input
                 type="file"
@@ -415,24 +417,24 @@ export default function ViewDriver() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.drivingLicenseCopy ? 'File available' : 'No file available'}
+                  {fileNames.drivingLicenseCopy ? t('fileAvailable') : t('noFileAvailable')}
                 </span>
               </div>
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Operational Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('operationalDetails')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Assigned Truck</label>
+              <label className="text-sm font-medium">{t('assignedTruck')}</label>
               <select
                 name="assignedTruck"
                 value={formData.assignedTruck}
                 disabled
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
               >
-                <option value="">Select Assigned Truck</option>
+                <option value="">{t('selectAssignedTruck')}</option>
                 <option value="truck-001">Truck 001</option>
                 <option value="truck-002">Truck 002</option>
                 <option value="truck-003">Truck 003</option>
@@ -440,14 +442,14 @@ export default function ViewDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Assigned Vendor</label>
+              <label className="text-sm font-medium">{t('assignedVendor')}</label>
               <select
                 name="assignedVendor"
                 value={formData.assignedVendor}
                 disabled
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
               >
-                <option value="">Select Vendor</option>
+                <option value="">{t('selectVendor')}</option>
                 <option value="vendor-001">Vendor 001</option>
                 <option value="vendor-002">Vendor 002</option>
                 <option value="vendor-003">Vendor 003</option>

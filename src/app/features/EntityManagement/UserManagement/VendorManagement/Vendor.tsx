@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { EyeIcon, PencilIcon, TrashIcon, DocumentIcon, CheckCircleIcon, XCircleIcon, ArrowDownTrayIcon, UserIcon, TruckIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
 import vendorData from '../../../../../data/admins.json';
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
@@ -46,6 +47,7 @@ const getVendorsData = (): Vendor[] => {
 };
 
 export default function VendorTable() {
+  const { t } = useTranslation();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   // Load vendors data on component mount
   useEffect(() => {
@@ -268,19 +270,19 @@ export default function VendorTable() {
   return (
     <>
       <PageMeta
-        title="Vendor Management | CMS Dashboard"
-        description="Manage vendors and their information"
+        title={`${t("vendorManagement")} | CMS Dashboard`}
+        description={t("manageVendors")}
       />
-      <PageBreadcrumb pageTitle="Vendor Management" />
+      <PageBreadcrumb pageTitle={t("vendorManagement")} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Vendors</h2>
+        <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t("manageVendors")}</h2>
         <Link to="/add-vendor">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Vendor
+            <span className="text-xl">+</span> {t("addVendor")}
           </button>
         </Link>
       </div>
@@ -289,7 +291,7 @@ export default function VendorTable() {
       <div className="px-5 py-3 space-y-3">
         <input
           type="text"
-          placeholder="Search across Company Name, Authorized Person, Email, Mobile, Vendor ID"
+          placeholder={t("searchVendors")}
           className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -303,10 +305,10 @@ export default function VendorTable() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Active">Active</option>
-            <option value="Suspended">Suspended</option>
+            <option value="">{t("allStatus")}</option>
+            <option value="Pending">{t("pending")}</option>
+            <option value="Active">{t("active")}</option>
+            <option value="Suspended">{t("suspended")}</option>
           </select>
 
           {/* Insurance Expiry Filter */}
@@ -315,10 +317,10 @@ export default function VendorTable() {
             onChange={(e) => setInsuranceExpiryFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Insurance Expiry</option>
-            <option value="30">Next 30 days</option>
-            <option value="60">Next 60 days</option>
-            <option value="90">Next 90 days</option>
+            <option value="">{t("insuranceExpiryFilter")}</option>
+            <option value="30">{t("next30Days")}</option>
+            <option value="60">{t("next60Days")}</option>
+            <option value="90">{t("next90Days")}</option>
           </select>
 
           {/* Trade License Expiry Filter */}
@@ -327,25 +329,25 @@ export default function VendorTable() {
             onChange={(e) => setTradeLicenseExpiryFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Trade License Expiry</option>
-            <option value="30">Next 30 days</option>
-            <option value="60">Next 60 days</option>
-            <option value="90">Next 90 days</option>
+            <option value="">{t("tradeLicenseExpiry")}</option>
+            <option value="30">{t("next30Days")}</option>
+            <option value="60">{t("next60Days")}</option>
+            <option value="90">{t("next90Days")}</option>
           </select>
 
           {/* Payables Range Filter */}
           <div className="flex items-center gap-2">
             <input
               type="number"
-              placeholder="Min AED"
+              placeholder={t("minAED")}
               value={payablesRange.min}
               onChange={(e) => setPayablesRange({...payablesRange, min: e.target.value})}
               className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white w-24"
             />
-            <span className="text-gray-500">to</span>
+            <span className="text-gray-500">{t("of")}</span>
             <input
               type="number"
-              placeholder="Max AED"
+              placeholder={t("maxAED")}
               value={payablesRange.max}
               onChange={(e) => setPayablesRange({...payablesRange, max: e.target.value})}
               className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white w-24"
@@ -354,14 +356,14 @@ export default function VendorTable() {
               onClick={applyPayablesFilter}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
-              Apply
+              {t("apply")}
             </button>
             {(payablesRange.min !== "" || payablesRange.max !== "") && (
               <button
                 onClick={clearPayablesFilter}
                 className="px-3 py-1 bg-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-400"
               >
-                Clear
+                {t("clear")}
               </button>
             )}
           </div>
@@ -371,35 +373,35 @@ export default function VendorTable() {
         {selectedVendors.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedVendors.length} selected
+              {selectedVendors.length} {t("selected")}
             </span>
             <button
               onClick={handleBulkApprove}
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
             >
               <CheckCircleIcon className="w-4 h-4" />
-              Approve Selected
+              {t("approveSelected")}
             </button>
             <button
               onClick={handleBulkSuspend}
               className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 flex items-center gap-1"
             >
               <XCircleIcon className="w-4 h-4" />
-              Suspend Selected
+              {t("suspendSelected")}
             </button>
             <button
               onClick={handleBulkActivate}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-1"
             >
               <CheckCircleIcon className="w-4 h-4" />
-              Activate Selected
+              {t("activateSelected")}
             </button>
             <button
               onClick={handleBulkExport}
               className="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 flex items-center gap-1"
             >
               <ArrowDownTrayIcon className="w-4 h-4" />
-              Export Selected
+              {t("exportSelected")}
             </button>
           </div>
         )}
@@ -418,20 +420,20 @@ export default function VendorTable() {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ID</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Company Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">First Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Last Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Email</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Phone</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Trade License No.</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Insurance Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Linked Drivers</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Linked Trucks</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Payables (AED)</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Action</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Activity Log</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("id")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("companyName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("firstName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("lastName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("email")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("phone")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("tradeLicenseNo")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("insuranceExpiry")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("linkedDrivers")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("linkedTrucks")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("payables")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("status")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("action")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("activityLog")}</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -491,7 +493,7 @@ export default function VendorTable() {
                         <EyeIcon className="w-5 h-5 text-blue-600 group-hover:text-blue-800" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        View
+                        {t("view")}
                       </span>
                     </div>
 
@@ -501,7 +503,7 @@ export default function VendorTable() {
                         <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        Edit
+                        {t("edit")}
                       </span>
                     </div>
 
@@ -517,7 +519,7 @@ export default function VendorTable() {
                         <TrashIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        Delete
+                        {t("delete")}
                       </span>
                     </div>
 
@@ -535,7 +537,7 @@ export default function VendorTable() {
                           <CheckCircleIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                          Approve
+                          {t("approve")}
                         </span>
                       </div>
                     )}
@@ -554,7 +556,7 @@ export default function VendorTable() {
                           <XCircleIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                          Suspend
+                          {t("suspendSelected")}
                         </span>
                       </div>
                     )}
@@ -573,7 +575,7 @@ export default function VendorTable() {
                           <CheckCircleIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                          Activate
+                          {t("activateSelected")}
                         </span>
                       </div>
                     )}
@@ -587,7 +589,7 @@ export default function VendorTable() {
                         <ArrowDownTrayIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        Export
+                        {t("export")}
                       </span>
                     </div>
                   </div>
@@ -597,7 +599,7 @@ export default function VendorTable() {
                   <Link to={`/vendor-activity/${vendor.id}`}>
                     <button className="flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-blue-600">
                       <DocumentIcon className="w-5 h-5" />
-                      <span className="text-xs">View activity log</span>
+                      <span className="text-xs">{t("viewActivityLog")}</span>
                     </button>
                   </Link>
                 </TableCell>
@@ -607,7 +609,7 @@ export default function VendorTable() {
         </Table>
 
         {currentRecords.length === 0 && (
-          <p className="text-center py-4 text-gray-500 text">No matching records found.</p>
+          <p className="text-center py-4 text-gray-500 text">{t("noMatchingRecords")}</p>
         )}
       </div>
 
@@ -622,13 +624,13 @@ export default function VendorTable() {
             }
           }}
         >
-          <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedVendors.length} records)
+          <TrashIcon className="w-5 h-5" /> {t("deleteSelected")} ({selectedVendors.length} {t("records")})
         </button>
         
         {/* Pagination Controls */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t("rowsPerPage")}:</span>
             <select 
               value={recordsPerPage}
               onChange={handleRecordsPerPageChange}
@@ -643,7 +645,7 @@ export default function VendorTable() {
           
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredVendors.length)} of {filteredVendors.length}
+              {indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredVendors.length)} {t("of")} {filteredVendors.length}
             </span>
           </div>
           
@@ -713,22 +715,22 @@ export default function VendorTable() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Vendor?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("deleteVendor")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedVendor?.companyName}</b>?
+              {t("deleteVendorConfirm")} <b>{selectedVendor?.companyName}</b>?
             </p>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
                 onClick={handleDelete}
               >
-                Yes, Delete
+                {t("yesDelete")}
               </button>
             </div>
           </div>
@@ -740,16 +742,16 @@ export default function VendorTable() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-80 text-center">
             <h2 className="text-lg font-semibold text-gray-800">
-              {actionType === "approve" ? "Approve Vendor?" : 
-               actionType === "suspend" ? "Suspend Vendor?" : 
-               "Activate Vendor?"}
+              {actionType === "approve" ? t("approveVendor") : 
+               actionType === "suspend" ? t("suspendVendor") : 
+               t("activateVendor")}
             </h2>
             <p className="text-sm text-gray-600 mt-2">
               {actionType === "approve" 
-                ? `Are you sure you want to approve ${selectedVendor?.companyName}? They will receive portal credentials.`
+                ? `${t("approveVendorConfirm")} ${selectedVendor?.companyName}? ${t("approveVendorMessage")}`
                 : actionType === "suspend"
-                ? `Are you sure you want to suspend ${selectedVendor?.companyName}? They will lose access to the portal.`
-                : `Are you sure you want to activate ${selectedVendor?.companyName}? They will regain portal access.`
+                ? `${t("suspendVendorConfirm")} ${selectedVendor?.companyName}? ${t("suspendVendorMessage")}`
+                : `${t("activateVendorConfirm")} ${selectedVendor?.companyName}? ${t("activateVendorMessage")}`
               }
             </p>
             <div className="flex justify-center gap-4 mt-6">
@@ -760,7 +762,7 @@ export default function VendorTable() {
                   setActionType("");
                 }}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className={`px-4 py-2 ${
@@ -772,7 +774,7 @@ export default function VendorTable() {
                 } text-white rounded-md`}
                 onClick={handleAction}
               >
-                Yes, {actionType === "approve" ? "Approve" : actionType === "suspend" ? "Suspend" : "Activate"}
+                {actionType === "approve" ? t("yesApprove") : actionType === "suspend" ? t("yesSuspend") : t("yesActivate")}
               </button>
             </div>
           </div>

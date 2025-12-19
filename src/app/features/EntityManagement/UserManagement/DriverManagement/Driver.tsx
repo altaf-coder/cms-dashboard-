@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { EyeIcon, PencilIcon, TrashIcon, DocumentIcon, CheckCircleIcon, NoSymbolIcon, ArrowDownTrayIcon, TruckIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
 import driverData from '../../../../../data/admins.json';
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
@@ -50,6 +51,7 @@ const getDriversData = (): Driver[] => {
 };
 
 export default function DriverTable() {
+  const { t } = useTranslation();
   const [drivers, setDrivers] = useState<Driver[]>([]);
   // Load drivers data on component mount
   useEffect(() => {
@@ -288,19 +290,19 @@ export default function DriverTable() {
   return (
     <>
       <PageMeta
-        title="Driver Management | CMS Dashboard"
-        description="Manage drivers and their information"
+        title={`${t("driverManagement")} | CMS Dashboard`}
+        description={t("manageDrivers")}
       />
-      <PageBreadcrumb pageTitle="Driver Management" />
+      <PageBreadcrumb pageTitle={t("driverManagement")} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Drivers</h2>
+        <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t("manageDrivers")}</h2>
         <Link to="/add-driver">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Driver
+            <span className="text-xl">+</span> {t("addDriver")}
           </button>
         </Link>
       </div>
@@ -309,7 +311,7 @@ export default function DriverTable() {
       <div className="px-5 py-3 space-y-3">
         <input
           type="text"
-          placeholder="Search Driver Name, Mobile, Driving License, Driver ID"
+          placeholder={t("searchDrivers")}
           className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -323,7 +325,7 @@ export default function DriverTable() {
             onChange={(e) => setVendorFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Vendors</option>
+            <option value="">{t("allVendors")}</option>
             {vendors.map(vendor => (
               <option key={vendor} value={vendor}>{vendor}</option>
             ))}
@@ -335,10 +337,10 @@ export default function DriverTable() {
             onChange={(e) => setLicenseExpiryFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">License Expiry</option>
-            <option value="30">Next 30 days</option>
-            <option value="60">Next 60 days</option>
-            <option value="90">Next 90 days</option>
+            <option value="">{t("licenseExpiry")}</option>
+            <option value="30">{t("next30Days")}</option>
+            <option value="60">{t("next60Days")}</option>
+            <option value="90">{t("next90Days")}</option>
           </select>
 
           {/* Status Filter */}
@@ -347,11 +349,11 @@ export default function DriverTable() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Suspended">Suspended</option>
-            <option value="Blacklisted">Blacklisted</option>
+            <option value="">{t("allStatus")}</option>
+            <option value="Pending">{t("pending")}</option>
+            <option value="Approved">{t("approved")}</option>
+            <option value="Suspended">{t("suspended")}</option>
+            <option value="Blacklisted">{t("blacklisted")}</option>
           </select>
 
           {/* Assigned Truck Filter */}
@@ -360,9 +362,9 @@ export default function DriverTable() {
             onChange={(e) => setAssignedTruckFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Assigned Truck</option>
-            <option value="Assigned">Assigned</option>
-            <option value="Unassigned">Unassigned</option>
+            <option value="">{t("assignedTruckFilter")}</option>
+            <option value="Assigned">{t("assigned")}</option>
+            <option value="Unassigned">{t("unassigned")}</option>
           </select>
 
           {/* Sorting */}
@@ -377,10 +379,10 @@ export default function DriverTable() {
             }}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Sort By</option>
-            <option value="name">Name</option>
-            <option value="lastActive">Last Active</option>
-            <option value="licenseExpiry">License Expiry</option>
+            <option value="">{t("sortBy")}</option>
+            <option value="name">{t("name")}</option>
+            <option value="lastActive">{t("lastActive")}</option>
+            <option value="licenseExpiry">{t("licenseExpiry")}</option>
           </select>
         </div>
 
@@ -388,26 +390,26 @@ export default function DriverTable() {
         {selectedDrivers.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedDrivers.length} selected
+              {selectedDrivers.length} {t("selected")}
             </span>
             <button
               onClick={handleBulkAssignVendor}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
-              Assign Selected to Vendor
+              {t("assignSelectedToVendor")}
             </button>
             <button
               onClick={handleBulkSuspend}
               className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700"
             >
-              Suspend Selected
+              {t("suspendSelected")}
             </button>
             <button
               onClick={handleBulkExport}
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
             >
               <ArrowDownTrayIcon className="w-4 h-4" />
-              Export CSV
+              {t("exportCSV")}
             </button>
           </div>
         )}
@@ -426,17 +428,17 @@ export default function DriverTable() {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ID</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">First Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Last Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Vendor</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Email</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Phone</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Driving License No.</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Assigned Truck</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Last Active</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Actions</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("id")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("firstName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("lastName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("vendor")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("email")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("phone")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("licenseNumber")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("assignedTruck")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("lastActive")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("status")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("action")}</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -477,14 +479,14 @@ export default function DriverTable() {
                         {driver.assignedTruck}
                       </>
                     ) : (
-                      <span className="text-gray-400">Not Assigned</span>
+                      <span className="text-gray-400">{t("notAssigned")}</span>
                     )}
                   </div>
                 </TableCell>
                 <TableCell className="px-5 py-4">{driver.lastActive}</TableCell>
                 <TableCell className="px-5 py-4">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(driver.status)}`}>
-                    {driver.status}
+                    {driver.status === "Pending" ? t("pending") : driver.status === "Approved" ? t("approved") : driver.status === "Suspended" ? t("suspended") : t("blacklisted")}
                   </span>
                 </TableCell>
 
@@ -493,17 +495,11 @@ export default function DriverTable() {
                   <div className="flex items-center gap-1">
                     {/* View */}
                     <div className="relative group">
-                      <button
-                        onClick={() => {
-                          // Open side panel with driver details
-                          console.log('View driver:', driver.id);
-                        }}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <EyeIcon className="w-5 h-5" />
-                      </button>
+                      <Link to={`/view-driver/${driver.id}`}>
+                        <EyeIcon className="w-5 h-5 text-blue-600 hover:text-blue-800" />
+                      </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View
+                        {t("view")}
                       </span>
                     </div>
 
@@ -513,7 +509,7 @@ export default function DriverTable() {
                         <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Edit
+                        {t("edit")}
                       </span>
                     </div>
 
@@ -529,7 +525,7 @@ export default function DriverTable() {
                         <TrashIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Delete
+                        {t("delete")}
                       </span>
                     </div>
 
@@ -543,7 +539,7 @@ export default function DriverTable() {
                           <CheckCircleIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Approve
+                          {t("approve")}
                         </span>
                       </div>
                     )}
@@ -561,7 +557,7 @@ export default function DriverTable() {
                           <NoSymbolIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Suspend
+                          {t("suspendSelected")}
                         </span>
                       </div>
                     )}
@@ -575,7 +571,7 @@ export default function DriverTable() {
                         <ArrowDownTrayIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Export
+                        {t("export")}
                       </span>
                     </div>
 
@@ -591,7 +587,7 @@ export default function DriverTable() {
                         <DocumentIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View Docs
+                        {t("viewDocs")}
                       </span>
                     </div>
 
@@ -605,7 +601,7 @@ export default function DriverTable() {
                           <NoSymbolIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Blacklist
+                          {t("blacklist")}
                         </span>
                       </div>
                     )}
@@ -617,7 +613,7 @@ export default function DriverTable() {
         </Table>
 
         {currentRecords.length === 0 && (
-          <p className="text-center py-4 text-gray-500">No matching records found.</p>
+          <p className="text-center py-4 text-gray-500">{t("noMatchingRecords")}</p>
         )}
       </div>
 
@@ -633,11 +629,11 @@ export default function DriverTable() {
               }
             }}
           >
-            <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedDrivers.length} records)
+            <TrashIcon className="w-5 h-5" /> {t("deleteSelected")} ({selectedDrivers.length} {t("records")})
           </button>
           
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t("rowsPerPage")}:</span>
             <select 
               value={recordsPerPage} 
               onChange={handleRecordsPerPageChange}
@@ -653,14 +649,14 @@ export default function DriverTable() {
         
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            {filteredDrivers.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredDrivers.length)} of {filteredDrivers.length}
+            {filteredDrivers.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredDrivers.length)} {t("of")} {filteredDrivers.length}
           </span>
           
           <button 
             onClick={() => handlePageChange(1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border rounded-l ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="First page"
+            title={t("firstPage")}
           >
             {"«"}
           </button>
@@ -669,7 +665,7 @@ export default function DriverTable() {
             onClick={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border-t border-b ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Previous page"
+            title={t("previousPage")}
           >
             {"<"}
           </button>
@@ -705,7 +701,7 @@ export default function DriverTable() {
             onClick={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border-t border-b ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Next page"
+            title={t("nextPage")}
           >
             {">"}
           </button>
@@ -714,7 +710,7 @@ export default function DriverTable() {
             onClick={() => handlePageChange(totalPages)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border rounded-r ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Last page"
+            title={t("lastPage")}
           >
             {"»"}
           </button>
@@ -725,22 +721,22 @@ export default function DriverTable() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-80 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Driver?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("deleteDriver")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>?
+              {t("deleteDriverConfirm")} <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>?
             </p>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
                 onClick={handleDelete}
               >
-                Yes, Delete
+                {t("yesDelete")}
               </button>
             </div>
           </div>
@@ -751,13 +747,13 @@ export default function DriverTable() {
       {showSuspendPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Suspend Driver?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("suspendDriver")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to suspend <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>?
+              {t("suspendDriverConfirm")} <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>?
             </p>
             <div className="mt-4">
               <textarea
-                placeholder="Reason for suspension..."
+                placeholder={t("reasonForSuspension")}
                 className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 rows={3}
               />
@@ -767,13 +763,13 @@ export default function DriverTable() {
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowSuspendPopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md"
                 onClick={handleSuspend}
               >
-                Yes, Suspend
+                {t("yesSuspend")}
               </button>
             </div>
           </div>
@@ -784,14 +780,14 @@ export default function DriverTable() {
       {showAssignTruckPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Assign Truck</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("assignTruck")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Assign truck to <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>
+              {t("assignTruckTo")} <b>{selectedDriver?.firstName} {selectedDriver?.lastName}</b>
             </p>
             
             <div className="mt-4 space-y-3">
               <select className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Select Vendor</option>
+                <option value="">{t("selectVendor")}</option>
                 <option value="Vendor 1">Vendor 1</option>
                 <option value="Vendor 2">Vendor 2</option>
                 <option value="Vendor 3">Vendor 3</option>
@@ -799,14 +795,14 @@ export default function DriverTable() {
               </select>
               
               <select className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Select Available Truck</option>
-                <option value="A12345">A12345 (Available)</option>
-                <option value="B67890">B67890 (Available)</option>
-                <option value="F24680">F24680 (Available)</option>
+                <option value="">{t("selectAvailableTruck")}</option>
+                <option value="A12345">A12345 ({t("available")})</option>
+                <option value="B67890">B67890 ({t("available")})</option>
+                <option value="F24680">F24680 ({t("available")})</option>
               </select>
               
               <div className="text-xs text-gray-500 mt-2">
-                * Only showing trucks with valid documents and active status
+                {t("onlyValidTrucks")}
               </div>
             </div>
 
@@ -815,13 +811,13 @@ export default function DriverTable() {
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowAssignTruckPopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
                 onClick={() => setShowAssignTruckPopup(false)}
               >
-                Assign Truck
+                {t("assignTruckButton")}
               </button>
             </div>
           </div>
@@ -832,9 +828,9 @@ export default function DriverTable() {
       {showViewDocumentsPopup && selectedDriver && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96 max-h-[80vh] overflow-y-auto">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Driver Documents</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t("driverDocuments")}</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Documents for <b>{selectedDriver.firstName} {selectedDriver.lastName}</b>
+              {t("documentsFor")} <b>{selectedDriver.firstName} {selectedDriver.lastName}</b>
             </p>
             
             <div className="space-y-3">
@@ -846,15 +842,15 @@ export default function DriverTable() {
                       <p className="text-sm text-gray-500">{doc.type}</p>
                     </div>
                     <div className={`text-sm ${getDateColor(doc.expiry)}`}>
-                      Exp: {doc.expiry}
+                      {t("exp")}: {doc.expiry}
                     </div>
                   </div>
                   <div className="mt-2 flex justify-end">
                     <button className="text-blue-600 text-sm hover:text-blue-800">
-                      View
+                      {t("view")}
                     </button>
                     <button className="text-green-600 text-sm ml-3 hover:text-green-800">
-                      Download
+                      {t("download")}
                     </button>
                   </div>
                 </div>
@@ -866,7 +862,7 @@ export default function DriverTable() {
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowViewDocumentsPopup(false)}
               >
-                Close
+                {t("close")}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { EyeIcon, PencilIcon, TrashIcon, DocumentIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
 import Badge from "../../../../components/badge/Badge";
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
@@ -39,6 +40,7 @@ const getAdminsData = (): Admin[] => {
 };
 
 export default function AdminTable() {
+  const { t } = useTranslation();
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
@@ -203,19 +205,19 @@ export default function AdminTable() {
   return (
     <>
       <PageMeta
-        title="Admin Management | CMS Dashboard"
-        description="Manage admin users and their permissions"
+        title={`${t("adminManagement")} | CMS Dashboard`}
+        description={t("manageAdmins")}
       />
-      <PageBreadcrumb pageTitle="Admin Management" />
+      <PageBreadcrumb pageTitle={t("adminManagement")} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Admins</h2>
+        <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t("manageAdmins")}</h2>
         <Link to="/add-admin">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Admin
+            <span className="text-xl">+</span> {t("addAdmin")}
           </button>
         </Link>
       </div>
@@ -224,7 +226,7 @@ export default function AdminTable() {
       <div className="px-5 py-3 space-y-3">
         <input
           type="text"
-          placeholder="Search Admins by ID, Name, Email, Phone"
+          placeholder={t("searchAdmins")}
           className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -238,11 +240,11 @@ export default function AdminTable() {
             onChange={(e) => setRoleFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Role</option>
+            <option value="">{t("role")}</option>
             <option value="Admin">Admin</option>
-            <option value="Clearance Agent">Clearance Agent</option>
-            <option value="Transport Coordinator">Transport Coordinator</option>
-            <option value="Finance">Finance</option>
+            <option value="Clearance Agent">{t("clearanceAgent")}</option>
+            <option value="Transport Coordinator">{t("transportCoordinator")}</option>
+            <option value="Finance">{t("finance")}</option>
           </select>
 
           {/* Date Picker */}
@@ -277,10 +279,10 @@ export default function AdminTable() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Status</option>
-            <option value="Active">Active</option>
-            <option value="Suspended">Suspended</option>
-            <option value="Inactive">Inactive</option>
+            <option value="">{t("status")}</option>
+            <option value="Active">{t("active")}</option>
+            <option value="Suspended">{t("suspended")}</option>
+            <option value="Inactive">{t("inactive")}</option>
           </select>
 
         </div>
@@ -289,25 +291,25 @@ export default function AdminTable() {
         {selectedAdmins.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedAdmins.length} selected
+              {selectedAdmins.length} {t("selected")}
             </span>
             <button
               onClick={() => handleBulkStatusUpdate("Active")}
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"
             >
-              Activate Selected
+              {t("activateSelected")}
             </button>
             <button
               onClick={() => handleBulkStatusUpdate("Suspended")}
               className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700"
             >
-              Suspend Selected
+              {t("suspendSelected")}
             </button>
             <button
               onClick={handleBulkExport}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
-              Export CSV
+              {t("exportCSV")}
             </button>
           </div>
         )}
@@ -326,17 +328,17 @@ export default function AdminTable() {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">ID</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">First Name</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Last Name</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Email</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Phone</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Role</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Linked Customers</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Linked Vendors</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Status</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Action</TableCell>
-              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">Activity Log</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("id")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("firstName")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("lastName")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("email")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("phone")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("role")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("linkedCustomers")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("linkedVendors")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("status")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("action")}</TableCell>
+              <TableCell className="px-2 py-2 text-start text-gray-500 font-medium text-[10px] dark:text-gray-400 whitespace-nowrap">{t("activityLog")}</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -379,7 +381,7 @@ export default function AdminTable() {
                         <EyeIcon className="w-4 h-4 text-blue-600 group-hover:text-blue-800" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-[10px] text-black dark:text-white px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View
+                        {t("view")}
                       </span>
                     </div>
 
@@ -389,7 +391,7 @@ export default function AdminTable() {
                         <PencilIcon className="w-4 h-4 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-[10px] text-black dark:text-white px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Edit
+                        {t("edit")}
                       </span>
                     </div>
 
@@ -405,7 +407,7 @@ export default function AdminTable() {
                         <TrashIcon className="w-4 h-4" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-[10px] text-black dark:text-white px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Delete
+                        {t("delete")}
                       </span>
                     </div>
 
@@ -421,7 +423,7 @@ export default function AdminTable() {
         </Table>
 
         {filteredAdmins.length === 0 && (
-          <p className="text-center py-4 text-gray-500">No matching records found.</p>
+          <p className="text-center py-4 text-gray-500">{t("noMatchingRecords")}</p>
         )}
       </div>
 
@@ -433,11 +435,11 @@ export default function AdminTable() {
             onClick={handleBulkDelete}
             disabled={selectedAdmins.length === 0}
           >
-            <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedAdmins.length} records)
+            <TrashIcon className="w-5 h-5" /> {t("deleteSelected")} ({selectedAdmins.length} {t("records")})
           </button>
           
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t("rowsPerPage")}:</span>
             <select 
               value={recordsPerPage} 
               onChange={handleRecordsPerPageChange}
@@ -453,14 +455,14 @@ export default function AdminTable() {
         
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            {filteredAdmins.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredAdmins.length)} of {filteredAdmins.length}
+            {filteredAdmins.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredAdmins.length)} {t("of")} {filteredAdmins.length}
           </span>
           
           <button 
             onClick={() => handlePageChange(1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border rounded-l ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="First page"
+            title={t("firstPage")}
           >
             {"«"}
           </button>
@@ -469,7 +471,7 @@ export default function AdminTable() {
             onClick={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border-t border-b ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Previous page"
+            title={t("previousPage")}
           >
             {"<"}
           </button>
@@ -505,7 +507,7 @@ export default function AdminTable() {
             onClick={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border-t border-b ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Next page"
+            title={t("nextPage")}
           >
             {">"}
           </button>
@@ -514,7 +516,7 @@ export default function AdminTable() {
             onClick={() => handlePageChange(totalPages)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border rounded-r ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Last page"
+            title={t("lastPage")}
           >
             {"»"}
           </button>
@@ -525,22 +527,22 @@ export default function AdminTable() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-80 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Admin?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("deleteAdmin")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedAdmin?.firstName}</b>?
+              {t("deleteAdminConfirm")} <b>{selectedAdmin?.firstName}</b>?
             </p>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
                 onClick={handleDelete}
               >
-                Yes, Delete
+                {t("yesDelete")}
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name: string) => /^[A-Za-z\s]{3,}$/.test(name);
@@ -6,6 +7,7 @@ const validatePassword = (password: string) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
 export default function EditDriver() {
+  const { t } = useTranslation();
   const generateDriverId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `D-Naj-${randomNum}`;
@@ -84,45 +86,45 @@ export default function EditDriver() {
     switch (name) {
       case 'firstName':
       case 'lastName':
-        if (!value.trim()) return 'This field is required';
-        if (!validateName(value)) return 'Only alphabets allowed (min 3 chars)';
+        if (!value.trim()) return t('thisFieldIsRequired');
+        if (!validateName(value)) return t('onlyAlphabetsAllowed');
         return '';
       case 'email':
-        if (!value) return 'Email is required';
-        if (!validateEmail(value)) return 'Invalid email address';
+        if (!value) return t('emailIsRequired');
+        if (!validateEmail(value)) return t('invalidEmailAddress');
         return '';
       case 'phone':
-        if (!value) return 'Mobile number is required';
-        if (!/^\d+$/.test(value)) return 'Only numbers are allowed';
+        if (!value) return t('mobileNumberIsRequired');
+        if (!/^\d+$/.test(value)) return t('onlyNumbersAreAllowed');
         if (formData.countryCode === '+971' && value.length !== 9)
-          return 'UAE mobile number must be 9 digits';
+          return t('uaeMobileNumberMustBe9Digits');
         return '';
       case 'password':
-        if (!value) return 'Password is required';
+        if (!value) return t('passwordIsRequired');
         if (!validatePassword(value))
-          return 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+          return t('passwordMustBeAtLeast8Chars');
         return '';
       case 'confirmPassword':
-        if (!value) return 'Confirm your password';
-        if (value !== formData.password) return 'Passwords do not match';
+        if (!value) return t('confirmYourPassword');
+        if (value !== formData.password) return t('passwordsDoNotMatch');
         return '';
       case 'emiratesIdExpiry':
-        if (!value) return 'Emirates ID expiry date is required';
-        if (new Date(value) <= new Date()) return 'Emirates ID must not be expired';
+        if (!value) return t('emiratesIdExpiryRequired');
+        if (new Date(value) <= new Date()) return t('emiratesIdMustNotBeExpired');
         if (new Date(value) <= new Date(new Date().setMonth(new Date().getMonth() + 2)))
-          return 'Emirates ID must be valid for at least 2 months';
+          return t('emiratesIdMustBeValidFor2Months');
         return '';
       case 'visaExpiry':
-        if (!value) return 'Visa expiry date is required';
-        if (new Date(value) <= new Date()) return 'Visa must not be expired';
+        if (!value) return t('visaExpiryRequired');
+        if (new Date(value) <= new Date()) return t('visaMustNotBeExpired');
         if (new Date(value) <= new Date(new Date().setMonth(new Date().getMonth() + 2)))
-          return 'Visa must be valid for at least 2 months';
+          return t('visaMustBeValidFor2Months');
         return '';
       case 'drivingLicenseExpiry':
-        if (!value) return 'Driving license expiry date is required';
-        if (new Date(value) <= new Date()) return 'License must not be expired';
+        if (!value) return t('drivingLicenseExpiryRequired');
+        if (new Date(value) <= new Date()) return t('licenseMustNotBeExpired');
         if (new Date(value) <= new Date(new Date().setMonth(new Date().getMonth() + 2)))
-          return 'License must be valid for at least 2 months';
+          return t('licenseMustBeValidFor2Months');
         return '';
       case 'emiratesId':
       case 'visa':
@@ -132,7 +134,7 @@ export default function EditDriver() {
       case 'drivingLicenseNumber':
       case 'assignedTruck':
       case 'assignedVendor':
-        return value ? '' : 'This field is required';
+        return value ? '' : t('thisFieldIsRequired');
       default:
         return '';
     }
@@ -142,7 +144,7 @@ export default function EditDriver() {
     setFormData(prev => ({ ...prev, [name]: file }));
     setFileNames(prev => ({ ...prev, [name]: file ? file.name : '' }));
     if (showAllErrors) {
-      setErrors(prev => ({ ...prev, [name]: file ? '' : 'This field is required' }));
+      setErrors(prev => ({ ...prev, [name]: file ? '' : t('thisFieldIsRequired') }));
     }
   };
 
@@ -186,7 +188,7 @@ export default function EditDriver() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setSuccessMessage('Driver added successfully! Status: Pending Approval');
+    setSuccessMessage(t('driverUpdatedSuccessfully') + ' ' + t('status') + ': ' + t('pendingApproval'));
     setTimeout(() => setSuccessMessage(''), 3000);
     setFormData({
       driverId: generateDriverId(),
@@ -232,7 +234,7 @@ export default function EditDriver() {
 
   const confirmDelete = () => {
     setShowDeletePopup(false);
-    setSuccessMessage('Driver deleted successfully!');
+    setSuccessMessage(t('driverDeletedSuccessfully'));
     setTimeout(() => setSuccessMessage(''), 3000);
     // Reset form after delete
     setFormData({
@@ -273,13 +275,13 @@ export default function EditDriver() {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
           <div className="bg-white p-6 rounded-xl shadow-lg z-10 text-center max-w-sm mx-auto">
-            <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
+            <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
             <p className="text-gray-700 mb-4">{successMessage}</p>
             <button
               onClick={() => setSuccessMessage('')}
               className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>
@@ -295,22 +297,22 @@ export default function EditDriver() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Delete Driver</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('deleteDriver')}</h2>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this driver? This action cannot be undone.
+              {t('deleteDriverConfirmAction')}
             </p>
             <div className="flex space-x-3 justify-center">
               <button
                 onClick={() => setShowDeletePopup(false)}
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={confirmDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t('delete')}
               </button>
             </div>
           </div>
@@ -318,15 +320,15 @@ export default function EditDriver() {
       )}
 
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">Edit DRIVER</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">{t('editDriver')}</h1>
         <p className="text-center text-gray-500 mb-6">
-          Please Fill In The Form Below to Edit Driver
+          {t('pleaseFillFormToEditDriver')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium">Driver ID</label>
+              <label className="text-sm font-medium">{t('driverId')}</label>
               <input
                 type="text"
                 name="driverId"
@@ -338,7 +340,7 @@ export default function EditDriver() {
 
             <div>
               <label className="text-sm font-medium">
-                Status <span className="text-red-500">*</span>
+                {t('status')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="status"
@@ -346,31 +348,31 @@ export default function EditDriver() {
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.status ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="Pending Approval">Pending Approval</option>
-                <option value="active">Active</option>
-                <option value="suspended">Suspended</option>
-                <option value="inactive">Inactive</option>
+                <option value="Pending Approval">{t('pendingApproval')}</option>
+                <option value="active">{t('active')}</option>
+                <option value="suspended">{t('suspended')}</option>
+                <option value="inactive">{t('inactive')}</option>
               </select>
               {showAllErrors && errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
               <p className="text-xs text-gray-500 mt-1">
-                Default: Pending Approval. Admin will approve after verification.
+                {t('default')}: {t('pendingApproval')}. {t('adminWillApproveAfterVerification')}
               </p>
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Personal Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('personalInfo')}</h3>
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                First Name <span className="text-red-500">*</span>
+                {t('firstName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Enter Your First Name"
+                placeholder={t('enterYourFirstName')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.firstName ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
@@ -379,14 +381,14 @@ export default function EditDriver() {
 
             <div>
               <label className="text-sm font-medium">
-                Last Name <span className="text-red-500">*</span>
+                {t('lastName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Enter Your Last Name"
+                placeholder={t('enterYourLastName')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.lastName ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
@@ -395,14 +397,14 @@ export default function EditDriver() {
 
             <div>
               <label className="text-sm font-medium">
-                Email <span className="text-red-500">*</span>
+                {t('email')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter Your Email"
+                placeholder={t('enterYourEmail')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
@@ -412,7 +414,7 @@ export default function EditDriver() {
             {/* Phone with Country Code Dropdown */}
             <div>
               <label className="text-sm font-medium">
-                Phone <span className="text-red-500">*</span>
+                {t('phone')} <span className="text-red-500">*</span>
               </label>
               <div className="flex">
                 <select
@@ -432,29 +434,29 @@ export default function EditDriver() {
                   name="phone"
                   value={formData.phone}
                   onChange={handlePhoneChange}
-                  placeholder={formData.countryCode === '+971' ? '5XX XXX XXXX' : 'Enter Phone Number'}
+                  placeholder={formData.countryCode === '+971' ? '5XX XXX XXXX' : t('enterPhoneNumber')}
                   className={`w-2/3 border border-l-0 rounded-r-lg px-3 py-2 ${showAllErrors && errors.phone ? 'border-red-500' : 'border-gray-300'
                     }`}
                 />
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-500">Full: {getFullPhoneNumber()}</span>
+                <span className="text-xs text-gray-500">{t('full')}: {getFullPhoneNumber()}</span>
                 {showAllErrors && errors.phone ? (
                   <span className="text-red-500 text-xs">{errors.phone}</span>
                 ) : formData.countryCode === '+971' && (
-                  <span className="text-xs text-gray-500">9 digits required</span>
+                  <span className="text-xs text-gray-500">9 {t('digitsRequired')}</span>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Password <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('password')} <span className="text-red-500">*</span></label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter Your Password"
+                placeholder={t('enterYourPassword')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
@@ -463,14 +465,14 @@ export default function EditDriver() {
 
             <div>
               <label className="text-sm font-medium">
-                Confirm Password <span className="text-red-500">*</span>
+                {t('confirmPassword')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Re-Enter Your Password"
+                placeholder={t('reEnterYourPassword')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                   }`}
               />
@@ -478,7 +480,7 @@ export default function EditDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Emirates ID <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('uploadEmiratesId')} <span className="text-red-500">*</span></label>
               <div
                 className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer ${showAllErrors && errors.emiratesId ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -489,10 +491,10 @@ export default function EditDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.emiratesId ? fileNames.emiratesId : 'Upload Emirates ID'}
+                    {fileNames.emiratesId ? fileNames.emiratesId : t('uploadEmiratesId')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">Browse</span>
+                <span className="text-blue-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -504,13 +506,13 @@ export default function EditDriver() {
               {showAllErrors && errors.emiratesId && <p className="text-red-500 text-xs mt-1">{errors.emiratesId}</p>}
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.emiratesId ? 'File selected' : 'No file chosen'}
+                  {fileNames.emiratesId ? t('fileSelected') : t('noFileChosen')}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Emirates ID Expiry Date <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('emiratesIdExpiryDate')} <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
@@ -534,7 +536,7 @@ export default function EditDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Visa <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('uploadVisa')} <span className="text-red-500">*</span></label>
               <div
                 className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer ${showAllErrors && errors.visa ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -545,10 +547,10 @@ export default function EditDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.visa ? fileNames.visa : 'Upload Visa'}
+                    {fileNames.visa ? fileNames.visa : t('uploadVisa')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">Browse</span>
+                <span className="text-blue-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -560,13 +562,13 @@ export default function EditDriver() {
               {showAllErrors && errors.visa && <p className="text-red-500 text-xs mt-1">{errors.visa}</p>}
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.visa ? 'File selected' : 'No file chosen'}
+                  {fileNames.visa ? t('fileSelected') : t('noFileChosen')}
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Visa Expiry Date <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('visaExpiry')} <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
@@ -590,7 +592,7 @@ export default function EditDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Upload Passport</label>
+              <label className="text-sm font-medium">{t('uploadPassport')}</label>
               <div
                 className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 cursor-pointer"
                 onClick={() => handleCustomFileClick(passportRef)}
@@ -600,10 +602,10 @@ export default function EditDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.passport ? fileNames.passport : 'Upload Passport'}
+                    {fileNames.passport ? fileNames.passport : t('uploadPassport')}
                   </span>
                 </div>
-                <span className="text-gray-600 text-sm">Browse</span>
+                <span className="text-gray-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -614,44 +616,44 @@ export default function EditDriver() {
               />
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.passport ? 'File selected' : 'No file chosen'}
+                  {fileNames.passport ? t('fileSelected') : t('noFileChosen')}
                 </span>
-                <span className="text-xs text-gray-500">Optional (For Expats)</span>
+                <span className="text-xs text-gray-500">{t('optionalForExpats')}</span>
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Trade License Number <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('tradeLicenseNumber')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="tradeLicenseNumber"
                 value={formData.tradeLicenseNumber}
                 onChange={handleChange}
-                placeholder="Enter Trade License Number"
+                placeholder={t('enterTradeLicenseNumber')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.tradeLicenseNumber ? 'border-red-500' : 'border-gray-300'}`}
               />
               {showAllErrors && errors.tradeLicenseNumber && <p className="text-red-500 text-xs mt-1">{errors.tradeLicenseNumber}</p>}
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">License Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('licenseInfo')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Driving License Number <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('drivingLicenseNumber')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 name="drivingLicenseNumber"
                 value={formData.drivingLicenseNumber}
                 onChange={handleChange}
-                placeholder="Enter License Number"
+                placeholder={t('enterDrivingLicenseNumber')}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.drivingLicenseNumber ? 'border-red-500' : 'border-gray-300'}`}
               />
               {showAllErrors && errors.drivingLicenseNumber && <p className="text-red-500 text-xs mt-1">{errors.drivingLicenseNumber}</p>}
             </div>
 
             <div>
-              <label className="text-sm font-medium">Driving License Expiry Date <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('drivingLicenseExpiry')} <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
@@ -675,7 +677,7 @@ export default function EditDriver() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-sm font-medium">Upload License Copy <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('uploadDrivingLicenseCopy')} <span className="text-red-500">*</span></label>
               <div
                 className={`flex items-center justify-between border rounded-lg px-3 py-2 cursor-pointer ${showAllErrors && errors.drivingLicenseCopy ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -686,10 +688,10 @@ export default function EditDriver() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <span className="text-gray-500">
-                    {fileNames.drivingLicenseCopy ? fileNames.drivingLicenseCopy : 'Upload License Copy'}
+                    {fileNames.drivingLicenseCopy ? fileNames.drivingLicenseCopy : t('uploadDrivingLicenseCopy')}
                   </span>
                 </div>
-                <span className="text-blue-600 text-sm">Browse</span>
+                <span className="text-blue-600 text-sm">{t('browse')}</span>
               </div>
               <input
                 type="file"
@@ -701,24 +703,24 @@ export default function EditDriver() {
               {showAllErrors && errors.drivingLicenseCopy && <p className="text-red-500 text-xs mt-1">{errors.drivingLicenseCopy}</p>}
               <div className="flex justify-between mt-1">
                 <span className="text-xs text-gray-500">
-                  {fileNames.drivingLicenseCopy ? 'File selected' : 'No file chosen'}
+                  {fileNames.drivingLicenseCopy ? t('fileSelected') : t('noFileChosen')}
                 </span>
               </div>
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Operational Info</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('operationalDetails')}</h3>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Assigned Truck <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('assignedTruck')} <span className="text-red-500">*</span></label>
               <select
                 name="assignedTruck"
                 value={formData.assignedTruck}
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.assignedTruck ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Assigned Truck</option>
+                <option value="">{t('selectAssignedTruck')}</option>
                 <option value="truck-001">Truck 001</option>
                 <option value="truck-002">Truck 002</option>
                 <option value="truck-003">Truck 003</option>
@@ -727,14 +729,14 @@ export default function EditDriver() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Assigned Vendor <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('assignedVendor')} <span className="text-red-500">*</span></label>
               <select
                 name="assignedVendor"
                 value={formData.assignedVendor}
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${showAllErrors && errors.assignedVendor ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Vendor</option>
+                <option value="">{t('selectVendor')}</option>
                 <option value="vendor-001">Vendor 001</option>
                 <option value="vendor-002">Vendor 002</option>
                 <option value="vendor-003">Vendor 003</option>
@@ -754,13 +756,13 @@ export default function EditDriver() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Delete Driver
+              {t('deleteDriver')}
             </button>
             <button
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Update Driver
+              {t('updateDriver')}
             </button>
           </div>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { EyeIcon, PencilIcon, TrashIcon, DocumentIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../../components/ui/table";
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
 import PageMeta from "../../../Dashboard/PageMeta";
@@ -42,6 +43,7 @@ const customersData: Customer[] = (customerData.customers || []).map(customer =>
 }));
 
 export default function Customers() {
+  const { t } = useTranslation();
   const [customers, setCustomers] = useState<Customer[]>([]);
   
   // Load customer data from JSON file on component mount
@@ -192,19 +194,19 @@ export default function Customers() {
   return (
     <>
       <PageMeta
-        title="Customer Management | CMS Dashboard"
-        description="Manage customers and their information"
+        title={`${t("customerManagement")} | CMS Dashboard`}
+        description={t("manageCustomers")}
       />
-      <PageBreadcrumb pageTitle="Customer Management" />
+      <PageBreadcrumb pageTitle={t("customerManagement")} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Customers</h2>
+        <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t("manageCustomers")}</h2>
         <Link to="/add-customers">
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Customer
+            <span className="text-xl">+</span> {t("addCustomer")}
           </button>
         </Link>
       </div>
@@ -213,7 +215,7 @@ export default function Customers() {
       <div className="px-5 py-3 space-y-3">
         <input
           type="text"
-          placeholder="Search across Company Name, Authorized Person, Email, Mobile, Trade License"
+          placeholder={t("searchCustomers")}
           className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -227,10 +229,10 @@ export default function Customers() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Active">Active</option>
-            <option value="Suspended">Suspended</option>
+            <option value="">{t("allStatus")}</option>
+            <option value="Pending">{t("pending")}</option>
+            <option value="Active">{t("active")}</option>
+            <option value="Suspended">{t("suspended")}</option>
           </select>
 
           {/* Payment Terms Filter */}
@@ -239,11 +241,11 @@ export default function Customers() {
             onChange={(e) => setPaymentTermsFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Payment Terms</option>
-            <option value="Prepaid">Prepaid</option>
-            <option value="Net 15">Net 15</option>
-            <option value="Net 30">Net 30</option>
-            <option value="Net 60">Net 60</option>
+            <option value="">{t("paymentTerms")}</option>
+            <option value="Prepaid">{t("prepaid")}</option>
+            <option value="Net 15">{t("net15")}</option>
+            <option value="Net 30">{t("net30")}</option>
+            <option value="Net 60">{t("net60")}</option>
           </select>
 
           {/* Trade License Expiry Filter */}
@@ -252,10 +254,10 @@ export default function Customers() {
             onChange={(e) => setTradeLicenseExpiryFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Trade License Expiry</option>
-            <option value="30">Next 30 days</option>
-            <option value="60">Next 60 days</option>
-            <option value="90">Next 90 days</option>
+            <option value="">{t("tradeLicenseExpiry")}</option>
+            <option value="30">{t("next30Days")}</option>
+            <option value="60">{t("next60Days")}</option>
+            <option value="90">{t("next90Days")}</option>
           </select>
 
           {/* Outstanding Balance Filter */}
@@ -264,7 +266,7 @@ export default function Customers() {
             onChange={(e) => setOutstandingBalanceFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Outstanding Balance</option>
+            <option value="">{t("outstandingBalanceRange")}</option>
             <option value="0-5000">0 - 5,000 AED</option>
             <option value="5000-15000">5,000 - 15,000 AED</option>
             <option value="15000+">15,000+ AED</option>
@@ -275,25 +277,25 @@ export default function Customers() {
         {selectedCustomers.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedCustomers.length} selected
+              {selectedCustomers.length} {t("selected")}
             </span>
             <button
               onClick={handleBulkApprove}
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"
             >
-              Approve Selected
+              {t("approveSelected")}
             </button>
             <button
               onClick={handleBulkSuspend}
               className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700"
             >
-              Suspend Selected
+              {t("suspendSelected")}
             </button>
             <button
               onClick={handleBulkExport}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
             >
-              Export CSV
+              {t("exportCSV")}
             </button>
           </div>
         )}
@@ -312,21 +314,21 @@ export default function Customers() {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ID</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Company Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">First Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Last Name</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Email</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Phone</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Trade License No.</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">TRN</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">TRN Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Payment Terms</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Outstanding Balance</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Created At</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Action</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Activity Log</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("id")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("companyName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("firstName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("lastName")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("email")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("phone")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("tradeLicenseNo")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("trn")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("trnExpiry")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("paymentTerms")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("outstandingBalance")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("status")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("createdAt")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("action")}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t("activityLog")}</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -374,7 +376,7 @@ export default function Customers() {
                         <EyeIcon className="w-5 h-5 text-blue-600 group-hover:text-blue-800" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        View
+                        {t("view")}
                       </span>
                     </div>
 
@@ -384,7 +386,7 @@ export default function Customers() {
                         <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        Edit
+                        {t("edit")}
                       </span>
                     </div>
 
@@ -400,7 +402,7 @@ export default function Customers() {
                         <TrashIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all">
-                        Delete
+                        {t("delete")}
                       </span>
                     </div>
                   </div>
@@ -415,7 +417,7 @@ export default function Customers() {
         </Table>
 
         {sortedCustomers.length === 0 && (
-          <p className="text-center py-4 text-gray-500">No matching records found.</p>
+          <p className="text-center py-4 text-gray-500">{t("noMatchingRecords")}</p>
         )}
       </div>
 
@@ -423,11 +425,11 @@ export default function Customers() {
       <div className="px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 border-t border-gray-100 dark:border-white/[0.05]">
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-2 text-red-500">
-            <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedCustomers.length} records)
+            <TrashIcon className="w-5 h-5" /> {t("deleteSelected")} ({selectedCustomers.length} {t("records")})
           </button>
           
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t("rowsPerPage")}:</span>
             <select 
               value={recordsPerPage} 
               onChange={handleRecordsPerPageChange}
@@ -443,14 +445,14 @@ export default function Customers() {
         
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            {filteredCustomers.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredCustomers.length)} of {filteredCustomers.length}
+            {filteredCustomers.length === 0 ? 0 : indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredCustomers.length)} {t("of")} {filteredCustomers.length}
           </span>
           
           <button 
             onClick={() => handlePageChange(1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border rounded-l ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="First page"
+            title={t("firstPage")}
           >
             {"«"}
           </button>
@@ -459,7 +461,7 @@ export default function Customers() {
             onClick={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1}
             className={`px-2 py-1 border-t border-b ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Previous page"
+            title={t("previousPage")}
           >
             {"<"}
           </button>
@@ -495,7 +497,7 @@ export default function Customers() {
             onClick={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border-t border-b ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Next page"
+            title={t("nextPage")}
           >
             {">"}
           </button>
@@ -504,7 +506,7 @@ export default function Customers() {
             onClick={() => handlePageChange(totalPages)} 
             disabled={currentPage === totalPages || totalPages === 0}
             className={`px-2 py-1 border rounded-r ${(currentPage === totalPages || totalPages === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
-            title="Last page"
+            title={t("lastPage")}
           >
             {"»"}
           </button>
@@ -515,22 +517,22 @@ export default function Customers() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-80 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Customer?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("deleteCustomer")}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedCustomer?.companyName}</b>?
+              {t("deleteCustomerConfirm")} <b>{selectedCustomer?.companyName}</b>?
             </p>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
                 onClick={handleDelete}
               >
-                Yes, Delete
+                {t("yesDelete")}
               </button>
             </div>
           </div>

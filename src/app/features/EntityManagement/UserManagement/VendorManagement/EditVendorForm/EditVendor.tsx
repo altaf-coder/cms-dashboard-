@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name: string) => /^[A-Za-z\s]{3,}$/.test(name);
@@ -8,6 +9,7 @@ const validatePassword = (password: string) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
 export default function EditVendor() {
+  const { t } = useTranslation();
   const generateVendorId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `V-NaJ-${randomNum}`;
@@ -78,32 +80,32 @@ export default function EditVendor() {
     switch (name) {
       case 'firstName':
       case 'lastName':
-        if (!value.trim()) return 'This field is required';
-        if (!validateName(value)) return 'Only alphabets allowed (min 3 chars)';
+        if (!value.trim()) return t('thisFieldIsRequired');
+        if (!validateName(value)) return t('onlyAlphabetsAllowed');
         return '';
       case 'email':
-        if (!value) return 'Email is required';
-        if (!validateEmail(value)) return 'Invalid email address';
+        if (!value) return t('emailIsRequired');
+        if (!validateEmail(value)) return t('invalidEmailAddress');
         return '';
       case 'phone':
-        if (!value) return 'Mobile number is required';
+        if (!value) return t('mobileNumberIsRequired');
         // Only allow numbers
-        if (!/^\d+$/.test(value)) return 'Only numbers are allowed';
+        if (!/^\d+$/.test(value)) return t('onlyNumbersAreAllowed');
         if (formData.countryCode === '+971' && value.length !== 9)
-          return 'UAE mobile number must be 9 digits';
+          return t('uaeMobileNumberMustBe9Digits');
         return '';
       case 'password':
-        if (!value) return 'Password is required';
+        if (!value) return t('passwordIsRequired');
         if (!validatePassword(value)) 
-          return 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+          return t('passwordMustBeAtLeast8Chars');
         return '';
       case 'confirmPassword':
-        if (!value) return 'Confirm your password';
-        if (value !== formData.password) return 'Passwords do not match';
+        if (!value) return t('confirmYourPassword');
+        if (value !== formData.password) return t('passwordsDoNotMatch');
         return '';
       case 'iban':
-        if (!value.trim()) return 'IBAN is required';
-        if (!validateIBAN(value)) return 'IBAN must start with AE';
+        if (!value.trim()) return t('iban') + ' ' + t('thisFieldIsRequired').toLowerCase();
+        if (!validateIBAN(value)) return t('iban') + ' ' + t('mustStartWithAE');
         return '';
       case 'emiratesIdExpiryDate':
         if (!value) return 'Emirates ID expiry date is required';
@@ -126,7 +128,7 @@ export default function EditVendor() {
       case 'insurancePolicyNumber':
       case 'paymentTerms':
       case 'financialLimit':
-        return value ? '' : 'This field is required';
+        return value ? '' : t('thisFieldIsRequired');
       default:
         return '';
     }
@@ -135,7 +137,7 @@ export default function EditVendor() {
   const handleFileChange = (name: string, file: File | null) => {
     setFormData(prev => ({ ...prev, [name]: file }));
     setFileNames(prev => ({ ...prev, [name]: file ? file.name : '' }));
-    setErrors(prev => ({ ...prev, [name]: file ? '' : 'This field is required' }));
+      setErrors(prev => ({ ...prev, [name]: file ? '' : t('thisFieldIsRequired') }));
   };
 
   const handleChange = (
@@ -178,14 +180,14 @@ export default function EditVendor() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setSuccessMessage('Vendor updated successfully!');
+    setSuccessMessage(t('vendorUpdatedSuccessfully'));
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   // --- Delete Vendor Function ---
   const handleDeleteVendor = () => {
     // In a real application, you would send a delete request to your backend here
-    setSuccessMessage('Vendor deleted successfully!');
+    setSuccessMessage(t('vendorDeletedSuccessfully'));
     setShowDeletePopup(false);
     
     // Reset form after deletion
@@ -232,13 +234,13 @@ export default function EditVendor() {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
           <div className="bg-white p-6 rounded-xl shadow-lg z-10 text-center max-w-sm mx-auto">
-            <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
+            <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
             <p className="text-gray-700 mb-4">{successMessage}</p>
             <button
               onClick={() => setSuccessMessage('')}
               className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>
@@ -254,22 +256,22 @@ export default function EditVendor() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Delete Vendor</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('deleteVendor')}</h2>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this vendor? This action cannot be undone.
+              {t('deleteVendorConfirmAction')}
             </p>
             <div className="flex space-x-3 justify-center">
               <button
                 onClick={() => setShowDeletePopup(false)}
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={handleDeleteVendor}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t('delete')}
               </button>
             </div>
           </div>
@@ -278,16 +280,16 @@ export default function EditVendor() {
 
       {/* Main Form Content */}
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">EDIT VENDOR</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">{t('editVendor')}</h1>
         <p className="text-center text-gray-500 mb-6">
-          Please Fill In The Form Below to Edit Vendor
+          {t('pleaseFillFormToEditVendor')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Vendor ID */}
             <div>
-              <label className="text-sm font-medium">Vendor ID</label>
+              <label className="text-sm font-medium">{t('vendorId')}</label>
               <input
                 type="text"
                 name="vendorId"
@@ -300,7 +302,7 @@ export default function EditVendor() {
             {/* Status */}
             <div>
               <label className="text-sm font-medium">
-                Status <span className="text-red-500">*</span>
+                {t('status')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="status"
@@ -308,28 +310,28 @@ export default function EditVendor() {
                 onChange={handleChange}
                 className={`w-full border rounded-lg px-3 py-2 ${errors.status ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="">{t('selectStatus')}</option>
+                <option value="active">{t('active')}</option>
+                <option value="inactive">{t('inactive')}</option>
               </select>
               {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
             </div>
 
             {/* Authorized Person */}
             <div className="md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Authorized Person</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('authorizedPersonSection')}</h3>
             </div>
 
             <div>
               <label className="text-sm font-medium">
-                First Name <span className="text-red-500">*</span>
+                {t('firstName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Enter First Name"
+                placeholder={t('enterYourFirstName')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.firstName ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -339,14 +341,14 @@ export default function EditVendor() {
 
             <div>
               <label className="text-sm font-medium">
-                Last Name <span className="text-red-500">*</span>
+                {t('lastName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Enter Last Name"
+                placeholder={t('enterYourLastName')}
                 className={`w-full border rounded-lg px-3 py-2 ${
                   errors.lastName ? 'border-red-500' : 'border-gray-300'
                 }`}

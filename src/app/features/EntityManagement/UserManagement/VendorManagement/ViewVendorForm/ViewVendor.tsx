@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ViewVendor() {
+  const { t } = useTranslation();
   const [formData] = useState({
     vendorId: 'V-NaJ-1234',
     status: 'Active',
@@ -35,8 +37,8 @@ export default function ViewVendor() {
     <div>
       <label className="text-sm font-medium">{label}</label>
       <div className="flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 bg-gray-100">
-        <span className="text-gray-700">{fileName || 'No file uploaded'}</span>
-        <span className="text-xs text-gray-500">File</span>
+        <span className="text-gray-700">{fileName || t('noFileUploaded')}</span>
+        <span className="text-xs text-gray-500">{t('file')}</span>
       </div>
     </div>
   );
@@ -44,13 +46,13 @@ export default function ViewVendor() {
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">VIEW VENDOR</h1>
-        <p className="text-center text-gray-500 mb-6">All vendor details are shown below</p>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">{t('viewVendor')}</h1>
+        <p className="text-center text-gray-500 mb-6">{t('allVendorDetailsShownBelow')}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Vendor ID & Status */}
           <div>
-            <label className="text-sm font-medium">Vendor ID</label>
+            <label className="text-sm font-medium">{t('vendorId')}</label>
             <input
               type="text"
               value={formData.vendorId}
@@ -60,7 +62,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Status</label>
+            <label className="text-sm font-medium">{t('status')}</label>
             <input
               type="text"
               value={formData.status}
@@ -71,11 +73,11 @@ export default function ViewVendor() {
 
           {/* Authorized Person */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Authorized Person</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('authorizedPersonSection')}</h3>
           </div>
 
           <div>
-            <label className="text-sm font-medium">First Name</label>
+            <label className="text-sm font-medium">{t('firstName')}</label>
             <input
               type="text"
               value={formData.firstName}
@@ -85,7 +87,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Last Name</label>
+            <label className="text-sm font-medium">{t('lastName')}</label>
             <input
               type="text"
               value={formData.lastName}
@@ -95,7 +97,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium">{t('email')}</label>
             <input
               type="text"
               value={formData.email}
@@ -105,7 +107,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Phone</label>
+            <label className="text-sm font-medium">{t('phone')}</label>
             <input
               type="text"
               value={getFullPhoneNumber()}
@@ -115,7 +117,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Password</label>
+            <label className="text-sm font-medium">{t('password')}</label>
             <input
               type="password"
               value={formData.password}
@@ -125,7 +127,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Confirm Password</label>
+            <label className="text-sm font-medium">{t('confirmPassword')}</label>
             <input
               type="password"
               value={formData.confirmPassword}
@@ -135,9 +137,9 @@ export default function ViewVendor() {
           </div>
 
           {/* Emirates ID & Passport */}
-          {renderFileField('Emirates ID', formData.emiratesId)}
+          {renderFileField(t('emiratesId'), formData.emiratesId)}
           <div>
-            <label className="text-sm font-medium">Emirates ID Expiry Date</label>
+            <label className="text-sm font-medium">{t('emiratesIdExpiryDate')}</label>
             <input
               type="date"
               value={formData.emiratesIdExpiryDate}
@@ -145,7 +147,7 @@ export default function ViewVendor() {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
             />
           </div>
-          {renderFileField('Passport', formData.passport)}
+          {renderFileField(t('passport'), formData.passport)}
           
           {/* Company Details */}
           <div className="md:col-span-2">
@@ -153,7 +155,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Company Name</label>
+            <label className="text-sm font-medium">{t('companyName')}</label>
             <input
               type="text"
               value={formData.companyName}
@@ -163,7 +165,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Trade License Number</label>
+            <label className="text-sm font-medium">{t('tradeLicenseNumber')}</label>
             <input
               type="text"
               value={formData.tradeLicenseNumber}
@@ -173,7 +175,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">VAT / TRN Number</label>
+            <label className="text-sm font-medium">{t('vatNumber')}</label>
             <input
               type="text"
               value={formData.vatNumber}
@@ -183,7 +185,7 @@ export default function ViewVendor() {
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Office Address</label>
+            <label className="text-sm font-medium">{t('officeAddress')}</label>
             <textarea
               value={formData.officeAddress}
               readOnly
@@ -194,11 +196,11 @@ export default function ViewVendor() {
 
           {/* Bank Details */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Bank Details</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('bankDetails')}</h3>
           </div>
 
           <div>
-            <label className="text-sm font-medium">Account Name</label>
+            <label className="text-sm font-medium">{t('accountName')}</label>
             <input
               type="text"
               value={formData.accountName}
@@ -208,7 +210,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Bank Name</label>
+            <label className="text-sm font-medium">{t('bankName')}</label>
             <input
               type="text"
               value={formData.bankName}
@@ -218,7 +220,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">IBAN</label>
+            <label className="text-sm font-medium">{t('iban')}</label>
             <input
               type="text"
               value={formData.iban}
@@ -229,11 +231,11 @@ export default function ViewVendor() {
 
           {/* Operational Info */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Operational Info</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('operationalInfo')}</h3>
           </div>
 
           <div>
-            <label className="text-sm font-medium">Linked Driver</label>
+            <label className="text-sm font-medium">{t('linkedDriver')}</label>
             <input
               type="text"
               value={formData.linkedDriver}
@@ -243,7 +245,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Insurance Policy Number</label>
+            <label className="text-sm font-medium">{t('insurancePolicyNumber')}</label>
             <input
               type="text"
               value={formData.insurancePolicyNumber}
@@ -253,11 +255,11 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            {renderFileField('Insurance Copy', formData.insuranceCopy)}
+            {renderFileField(t('insuranceCopy'), formData.insuranceCopy)}
           </div>
 
           <div>
-            <label className="text-sm font-medium">Insurance Expiry Date</label>
+            <label className="text-sm font-medium">{t('insuranceExpiryDate')}</label>
             <input
               type="date"
               value={formData.insuranceExpiryDate}
@@ -268,11 +270,11 @@ export default function ViewVendor() {
 
           {/* Financial Info */}
           <div className="md:col-span-2">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Financial Info</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">{t('financialInfo')}</h3>
           </div>
 
           <div>
-            <label className="text-sm font-medium">Payment Terms</label>
+            <label className="text-sm font-medium">{t('paymentTerms')}</label>
             <input
               type="text"
               value={formData.paymentTerms}
@@ -282,7 +284,7 @@ export default function ViewVendor() {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Financial Limit</label>
+            <label className="text-sm font-medium">{t('financialLimit')}</label>
             <div className="flex">
               <span className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-3 py-2">AED</span>
               <input

@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 
 // Validation functions
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -36,10 +38,10 @@ const validatePassword = (password: string) => {
   return {
     isValid: hasMinLength && hasUpperCase && hasNumber && hasSpecialChar,
     errors: {
-      minLength: hasMinLength ? '' : 'At least 8 characters',
-      upperCase: hasUpperCase ? '' : 'At least 1 uppercase letter',
-      number: hasNumber ? '' : 'At least 1 number',
-      specialChar: hasSpecialChar ? '' : 'At least 1 special character'
+      minLength: hasMinLength ? '' : t('atLeast8Characters'),
+      upperCase: hasUpperCase ? '' : t('atLeast1UppercaseLetter'),
+      number: hasNumber ? '' : t('atLeast1Number'),
+      specialChar: hasSpecialChar ? '' : t('atLeast1SpecialCharacter')
     }
   };
 };
@@ -78,6 +80,7 @@ const getPhoneFormatHint = (countryCode: string) => {
 };
 
 export default function EditAdmin() {
+  const { t } = useTranslation();
   const generateAdminId = useCallback(() => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     return `AD-CMS-${randomNum}`;
@@ -129,63 +132,63 @@ export default function EditAdmin() {
       switch (name) {
         case 'firstName':
         case 'lastName':
-          if (!value) newErrors[name] = 'This field is required';
-          else if (!validateName(value)) newErrors[name] = 'Only alphabets, min 3 characters';
+          if (!value) newErrors[name] = t('thisFieldIsRequired');
+          else if (!validateName(value)) newErrors[name] = t('onlyAlphabetsMin3Characters');
           else delete newErrors[name];
           break;
 
         case 'email':
-          if (!value) newErrors[name] = 'Email is required';
-          else if (!validateEmail(value)) newErrors[name] = 'Invalid email';
+          if (!value) newErrors[name] = t('emailIsRequired');
+          else if (!validateEmail(value)) newErrors[name] = t('invalidEmail');
           else delete newErrors[name];
           break;
 
         case 'phone':
           if (!value) {
-            newErrors[name] = 'Phone number is required';
+            newErrors[name] = t('phoneNumberIsRequired');
           } else if (!/^\d+$/.test(value)) {
-            newErrors[name] = 'Only numbers are allowed';
+            newErrors[name] = t('onlyNumbersAreAllowed');
           } else if (formData.countryCode === '+971' && value.length !== 9) {
-            newErrors[name] = 'UAE mobile number must be 9 digits';
+            newErrors[name] = t('uaeMobileNumberMustBe9Digits');
           } else if (formData.countryCode === '+966' && value.length !== 9) {
-            newErrors[name] = 'KSA mobile number must be 9 digits';
+            newErrors[name] = t('ksaMobileNumberMustBe9Digits');
           } else if ((formData.countryCode === '+974' || formData.countryCode === '+965' || formData.countryCode === '+973' || formData.countryCode === '+968') && value.length !== 8) {
-            newErrors[name] = `${formData.countryCode} mobile number must be 8 digits`;
+            newErrors[name] = `${formData.countryCode} ${t('mobileNumberMustBe8Digits')}`;
           } else if ((formData.countryCode === '+91' || formData.countryCode === '+92') && value.length !== 10) {
-            newErrors[name] = `${formData.countryCode} mobile number must be 10 digits`;
+            newErrors[name] = `${formData.countryCode} ${t('mobileNumberMustBe10Digits')}`;
           } else if ((formData.countryCode === '+1' || formData.countryCode === '+44') && value.length !== 10) {
-            newErrors[name] = `${formData.countryCode} mobile number must be 10 digits`;
+            newErrors[name] = `${formData.countryCode} ${t('mobileNumberMustBe10Digits')}`;
           } else if (!validatePhoneWithCode(value, formData.countryCode)) {
-            newErrors[name] = 'Invalid phone number format for selected country';
+            newErrors[name] = t('invalidPhoneNumberFormat');
           } else {
             delete newErrors[name];
           }
           break;
 
         case 'password':
-          if (!value) newErrors[name] = 'Password is required';
+          if (!value) newErrors[name] = t('passwordIsRequired');
           else if (!validatePassword(value).isValid)
-            newErrors[name] = 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+            newErrors[name] = t('passwordMustBeAtLeast8Chars');
           else delete newErrors[name];
 
           if (formData.confirmPassword && formData.confirmPassword !== value)
-            newErrors.confirmPassword = 'Passwords do not match';
+            newErrors.confirmPassword = t('passwordsDoNotMatch');
           else delete newErrors.confirmPassword;
           break;
 
         case 'confirmPassword':
-          if (!value) newErrors[name] = 'Confirm password is required';
-          else if (value !== formData.password) newErrors[name] = 'Passwords do not match';
+          if (!value) newErrors[name] = t('confirmPasswordIsRequired');
+          else if (value !== formData.password) newErrors[name] = t('passwordsDoNotMatch');
           else delete newErrors[name];
           break;
 
         case 'role':
-          if (!value) newErrors[name] = 'Please select a role';
+          if (!value) newErrors[name] = t('pleaseSelectARole');
           else delete newErrors[name];
           break;
 
         case 'emiratesId':
-          if (!value) newErrors[name] = 'Emirates ID is required';
+          if (!value) newErrors[name] = t('emiratesId') + ' ' + t('thisFieldIsRequired').toLowerCase();
           else delete newErrors[name];
           break;
 
@@ -223,44 +226,44 @@ export default function EditAdmin() {
     const newErrors: Record<string, string> = {};
     
     // Validate each required field
-    if (!formData.firstName) newErrors.firstName = 'This field is required';
-    else if (!validateName(formData.firstName)) newErrors.firstName = 'Only alphabets, min 3 characters';
+    if (!formData.firstName) newErrors.firstName = t('thisFieldIsRequired');
+    else if (!validateName(formData.firstName)) newErrors.firstName = t('onlyAlphabetsMin3Characters');
 
-    if (!formData.lastName) newErrors.lastName = 'This field is required';
-    else if (!validateName(formData.lastName)) newErrors.lastName = 'Only alphabets, min 3 characters';
+    if (!formData.lastName) newErrors.lastName = t('thisFieldIsRequired');
+    else if (!validateName(formData.lastName)) newErrors.lastName = t('onlyAlphabetsMin3Characters');
 
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!validateEmail(formData.email)) newErrors.email = 'Invalid email';
+    if (!formData.email) newErrors.email = t('emailIsRequired');
+    else if (!validateEmail(formData.email)) newErrors.email = t('invalidEmail');
 
     // Phone validation
     if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = t('phoneNumberIsRequired');
     } else if (!/^\d+$/.test(formData.phone)) {
-      newErrors.phone = 'Only numbers are allowed';
+      newErrors.phone = t('onlyNumbersAreAllowed');
     } else if (formData.countryCode === '+971' && formData.phone.length !== 9) {
-      newErrors.phone = 'UAE mobile number must be 9 digits';
+      newErrors.phone = t('uaeMobileNumberMustBe9Digits');
     } else if (formData.countryCode === '+966' && formData.phone.length !== 9) {
-      newErrors.phone = 'KSA mobile number must be 9 digits';
+      newErrors.phone = t('ksaMobileNumberMustBe9Digits');
     } else if ((formData.countryCode === '+974' || formData.countryCode === '+965' || formData.countryCode === '+973' || formData.countryCode === '+968') && formData.phone.length !== 8) {
-      newErrors.phone = `${formData.countryCode} mobile number must be 8 digits`;
+      newErrors.phone = `${formData.countryCode} ${t('mobileNumberMustBe8Digits')}`;
     } else if ((formData.countryCode === '+91' || formData.countryCode === '+92') && formData.phone.length !== 10) {
-      newErrors.phone = `${formData.countryCode} mobile number must be 10 digits`;
+      newErrors.phone = `${formData.countryCode} ${t('mobileNumberMustBe10Digits')}`;
     } else if ((formData.countryCode === '+1' || formData.countryCode === '+44') && formData.phone.length !== 10) {
-      newErrors.phone = `${formData.countryCode} mobile number must be 10 digits`;
+      newErrors.phone = `${formData.countryCode} ${t('mobileNumberMustBe10Digits')}`;
     } else if (!validatePhoneWithCode(formData.phone, formData.countryCode)) {
-      newErrors.phone = 'Invalid phone number format for selected country';
+      newErrors.phone = t('invalidPhoneNumberFormat');
     }
 
-    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.password) newErrors.password = t('passwordIsRequired');
     else if (!validatePassword(formData.password).isValid) 
-      newErrors.password = 'Password must be at least 8 characters, include 1 uppercase, 1 number, and 1 symbol';
+      newErrors.password = t('passwordMustBeAtLeast8Chars');
 
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
-    else if (formData.confirmPassword !== formData.password) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.confirmPassword) newErrors.confirmPassword = t('confirmPasswordIsRequired');
+    else if (formData.confirmPassword !== formData.password) newErrors.confirmPassword = t('passwordsDoNotMatch');
 
-    if (!formData.role) newErrors.role = 'Please select a role';
+    if (!formData.role) newErrors.role = t('pleaseSelectARole');
 
-    if (!formData.emiratesId) newErrors.emiratesId = 'Emirates ID is required';
+    if (!formData.emiratesId) newErrors.emiratesId = t('emiratesId') + ' ' + t('thisFieldIsRequired').toLowerCase();
 
     return newErrors;
   };
@@ -271,7 +274,7 @@ export default function EditAdmin() {
     setShowAllErrors(true);
     
     if (Object.keys(newErrors).length === 0) {
-      setPopupMessage('Admin updated successfully!');
+      setPopupMessage(t('adminUpdatedSuccessfully'));
       // Here you would typically send the data to your backend
     }
   };
@@ -281,7 +284,7 @@ export default function EditAdmin() {
   };
 
   const confirmDelete = () => {
-    setPopupMessage('Admin deleted successfully!');
+    setPopupMessage(t('adminDeletedSuccessfully'));
     setShowDeletePopup(false);
     // Here you would typically send delete request to your backend
   };
@@ -297,7 +300,7 @@ export default function EditAdmin() {
             <h2 className={`text-xl font-semibold mb-2 ${
               popupMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'
             }`}>
-              {popupMessage.includes('successfully') ? 'Success!' : 'Error!'}
+              {popupMessage.includes('successfully') ? t('success') : t('error')}
             </h2>
             <p className="text-gray-700 mb-4">{popupMessage}</p>
             <button
@@ -306,7 +309,7 @@ export default function EditAdmin() {
                 popupMessage.includes('successfully') ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
               } text-white rounded`}
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>
@@ -322,22 +325,22 @@ export default function EditAdmin() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Delete Admin</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('deleteAdmin')}</h2>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this admin? This action cannot be undone.
+              {t('deleteAdminConfirmAction')}
             </p>
             <div className="flex space-x-3 justify-center">
               <button
                 onClick={() => setShowDeletePopup(false)}
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={confirmDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
-                Delete
+                {t('delete')}
               </button>
             </div>
           </div>
@@ -346,8 +349,8 @@ export default function EditAdmin() {
 
       <div className="flex justify-center items-center mb-6">
         <div className="text-center w-full">
-          <h1 className="text-2xl font-bold text-gray-900">EDIT ADMIN</h1>
-          <p className="text-gray-600 mt-2">Edit Admin Details Below</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('editAdmin')}</h1>
+          <p className="text-gray-600 mt-2">{t('editAdminDetailsBelow')}</p>
         </div>
       </div>
 
@@ -357,7 +360,7 @@ export default function EditAdmin() {
           {/* Admin ID */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Admin ID <span className="text-red-500">*</span>
+              {t('adminId')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -370,7 +373,7 @@ export default function EditAdmin() {
 
           {/* Status */}
           <div className="mb-4 flex items-center">
-            <span className="text-sm font-medium text-gray-700 mr-3">Status</span>
+            <span className="text-sm font-medium text-gray-700 mr-3">{t('status')}</span>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -388,7 +391,7 @@ export default function EditAdmin() {
           {/* First Name */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              First Name <span className="text-red-500">*</span>
+              {t('firstName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -396,7 +399,7 @@ export default function EditAdmin() {
               value={formData.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your First Name"
+              placeholder={t('enterYourFirstName')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2 
               focus:ring-blue-500 focus:border-blue-500 ${
                 (showAllErrors && errors.firstName) ? 'border-red-500' : 'border-gray-300'
@@ -410,7 +413,7 @@ export default function EditAdmin() {
           {/* Last Name */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name <span className="text-red-500">*</span>
+              {t('lastName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -418,7 +421,7 @@ export default function EditAdmin() {
               value={formData.lastName}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Last Name"
+              placeholder={t('enterYourLastName')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2 
               focus:ring-blue-500 focus:border-blue-500 ${
                 (showAllErrors && errors.lastName) ? 'border-red-500' : 'border-gray-300'
@@ -432,7 +435,7 @@ export default function EditAdmin() {
           {/* Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email <span className="text-red-500">*</span>
+              {t('email')} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -440,7 +443,7 @@ export default function EditAdmin() {
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Email"
+              placeholder={t('enterYourEmail')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2 
               focus:ring-blue-500 focus:border-blue-500 ${
                 (showAllErrors && errors.email) ? 'border-red-500' : 'border-gray-300'
@@ -454,7 +457,7 @@ export default function EditAdmin() {
           {/* Phone with separate Country Code and Phone Number inputs */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone <span className="text-red-500">*</span>
+              {t('phone')} <span className="text-red-500">*</span>
             </label>
             
             <div className="flex gap-2">
@@ -502,7 +505,7 @@ export default function EditAdmin() {
           {/* Password */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password <span className="text-red-500">*</span>
+              {t('password')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -510,7 +513,7 @@ export default function EditAdmin() {
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter Your Password"
+              placeholder={t('enterYourPassword')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2 
               focus:ring-blue-500 focus:border-blue-500 ${
                 (showAllErrors && errors.password) ? 'border-red-500' : 'border-gray-300'
@@ -524,7 +527,7 @@ export default function EditAdmin() {
           {/* Confirm Password */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password <span className="text-red-500">*</span>
+              {t('confirmPassword')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -532,7 +535,7 @@ export default function EditAdmin() {
               value={formData.confirmPassword}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Re-Enter Your Password"
+              placeholder={t('reEnterYourPassword')}
               className={`w-full border rounded-lg px-3 py-2 focus:ring-2 
               focus:ring-blue-500 focus:border-blue-500 ${
                 (showAllErrors && errors.confirmPassword) ? 'border-red-500' : 'border-gray-300'
@@ -546,7 +549,7 @@ export default function EditAdmin() {
           {/* Emirates ID */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Emirates ID <span className="text-red-500">*</span>
+              {t('uploadEmiratesId')} <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center">
               <label className={`flex items-center px-4 py-2 bg-white text-gray-700 border rounded-lg cursor-pointer hover:bg-gray-50 ${
@@ -556,7 +559,7 @@ export default function EditAdmin() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                 </svg>
-                <span>{formData.emiratesId ? formData.emiratesId.name : 'Upload Emirates ID'}</span>
+                <span>{formData.emiratesId ? formData.emiratesId.name : t('uploadEmiratesId')}</span>
                 <input
                   type="file"
                   name="emiratesId"
@@ -575,7 +578,7 @@ export default function EditAdmin() {
           {/* Role */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role <span className="text-red-500">*</span>
+              {t('role')} <span className="text-red-500">*</span>
             </label>
             <select
               name="role"
@@ -587,11 +590,11 @@ export default function EditAdmin() {
                 (showAllErrors && errors.role) ? 'border-red-500' : 'border-gray-300'
               }`}
             >
-              <option value="">Select Role</option>
+              <option value="">{t('selectRole')}</option>
               <option value="admin">Admin</option>
-              <option value="super-admin">Clearance Agent</option>
-              <option value="manager">Transport Coordinator</option>
-              <option value="support">Finance</option>
+              <option value="super-admin">{t('clearanceAgent')}</option>
+              <option value="manager">{t('transportCoordinator')}</option>
+              <option value="support">{t('finance')}</option>
             </select>
             {(showAllErrors || touched.role) && errors.role && (
               <p className="text-red-500 text-sm mt-1">{errors.role}</p>
@@ -603,7 +606,7 @@ export default function EditAdmin() {
         {/* Manage Accessibility */}
         <div className="mb-6">
           <Link to="#" className="text-blue-600 hover:underline flex items-center">
-            <span>Manage Accessibility for this User</span>
+            <span>{t('manageAccessibilityForThisUser')}</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
@@ -620,14 +623,14 @@ export default function EditAdmin() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            Delete
+            {t('delete')}
           </button>
           <button
             type="button"
             onClick={handleUpdate}
             className="text-white font-medium py-2 px-8 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
           >
-            Update Admin
+            {t('updateAdmin')}
           </button>
         </div>
       </form>

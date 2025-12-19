@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CustomerData {
   customerId: string;
@@ -26,6 +27,7 @@ interface CustomerData {
 }
 
 export default function ViewCustomers() {
+  const { t } = useTranslation();
   const [formData] = useState<CustomerData>({
     customerId: 'C-Ag-1234',
     status: 'Active',
@@ -72,7 +74,7 @@ export default function ViewCustomers() {
             <span className="text-gray-700">{fileName}</span>
           </div>
           <button className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer">
-            Download
+            {t('download')}
           </button>
         </div>
       </div>
@@ -179,7 +181,7 @@ export default function ViewCustomers() {
             )}
           </div>
           <span className={`ml-2 ${value === 'Yes' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
-            Yes
+            {t('yes')}
           </span>
         </div>
         
@@ -193,7 +195,7 @@ export default function ViewCustomers() {
             )}
           </div>
           <span className={`ml-2 ${value === 'No' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
-            No
+            {t('no')}
           </span>
         </div>
       </div>
@@ -225,7 +227,7 @@ export default function ViewCustomers() {
   const renderPhoneField = () => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Phone
+        {t('phone')}
       </label>
       <div className="flex gap-2">
         {/* Country Code - Read only view */}
@@ -268,8 +270,8 @@ export default function ViewCustomers() {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         {/* Header */}
         <div className="bg-white p-6 border-b">
-          <h1 className="text-2xl font-bold text-center text-gray-800">VIEW CUSTOMER DETAILS</h1>
-          <p className="text-center text-gray-600 mt-2">Customer Information and Specifications</p>
+          <h1 className="text-2xl font-bold text-center text-gray-800">{t('viewCustomer')}</h1>
+          <p className="text-center text-gray-600 mt-2">{t('customerInformationAndSpecifications')}</p>
         </div>
 
         <div className="p-6">
@@ -277,57 +279,57 @@ export default function ViewCustomers() {
             {/* Customer ID & Status */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Customer ID
+                {t('customerId')}
               </label>
               <div className="border border-gray-300 rounded-lg px-3 py-2 bg-gray-50">
                 <span className="text-gray-700 font-medium">{formData.customerId}</span>
               </div>
             </div>
 
-            {renderStatusField('Status', formData.status)}
+            {renderStatusField(t('status'), formData.status)}
 
             {/* Authorized Person */}
             <div className="md:col-span-2">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Authorized Person</h2>
+              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{t('authorizedPersonSection')}</h2>
             </div>
 
-            {renderInputField('First Name', formData.firstName)}
-            {renderInputField('Last Name', formData.lastName)}
-            {renderInputField('Email', formData.email)}
+            {renderInputField(t('firstName'), formData.firstName)}
+            {renderInputField(t('lastName'), formData.lastName)}
+            {renderInputField(t('email'), formData.email)}
             
             {/* Phone Field - Read only view */}
             {renderPhoneField()}
             
-            {renderInputField('Password', formData.password, 'password')}
-            {renderInputField('Confirm Password', formData.confirmPassword, 'password')}
+            {renderInputField(t('password'), formData.password, 'password')}
+            {renderInputField(t('confirmPassword'), formData.confirmPassword, 'password')}
 
             {/* Emirates ID & Passport */}
-            {renderFileField('Emirates ID', formData.emiratesId)}
-            {renderFileField('Passport', formData.passport)}
+            {renderFileField(t('emiratesId'), formData.emiratesId)}
+            {renderFileField(t('passport'), formData.passport)}
 
             {/* Company Details */}
             <div className="md:col-span-2">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Company Details</h2>
+              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{t('companyInformationSection')}</h2>
             </div>
 
-            {renderInputField('Company Name', formData.companyName)}
-            {renderInputField('Trade License Number', formData.tradeLicenseNumber)}
-            {renderDateField('Trade License Expiry', formData.tradeLicenseExpiry)}
-            {renderFileField('Trade License Copy', formData.tradeLicenseCopy)}
+            {renderInputField(t('companyName'), formData.companyName)}
+            {renderInputField(t('tradeLicenseNumber'), formData.tradeLicenseNumber)}
+            {renderDateField(t('tradeLicenseExpiry'), formData.tradeLicenseExpiry)}
+            {renderFileField(t('tradeLicenseCopy'), formData.tradeLicenseCopy)}
             
             {/* VAT Registered - Radio buttons without input container */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                VAT Registered?
+                {t('vatRegistered')}?
               </label>
               {renderRadioField('', formData.vatRegistered)}
             </div>
             
-            {renderInputField('TRN Number', formData.trnNumber)}
+            {renderInputField(t('trnNumber'), formData.trnNumber)}
 
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Office Address
+                {t('officeAddress')}
               </label>
               <div className="border border-gray-300 rounded-lg px-3 py-3 bg-gray-50">
                 <span className="text-gray-700">{formData.officeAddress}</span>
@@ -336,13 +338,13 @@ export default function ViewCustomers() {
 
             {/* Financial Info */}
             <div className="md:col-span-2">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Financial Info</h2>
+              <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{t('financialInfo')}</h2>
             </div>
 
-            {renderDropdownField('Payment Terms', formData.paymentTerms)}
-            {renderInputField('Credit Limit', `AED ${formData.creditLimit}`)}
-            {renderInputField('Outstanding Balance', `AED ${formData.outstandingBalance}`)}
-            {renderFileField('VAT Certificate', formData.vatCertificate)}
+            {renderDropdownField(t('paymentTerms'), formData.paymentTerms)}
+            {renderInputField(t('creditLimit'), `AED ${formData.creditLimit}`)}
+            {renderInputField(t('outstandingBalance'), `AED ${formData.outstandingBalance}`)}
+            {renderFileField(t('vatCertificate'), formData.vatCertificate)}
           </div>
         </div>
       </div>
