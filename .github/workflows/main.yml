@@ -1,0 +1,47 @@
+name: Deploy T-CMS to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.CUSTOM_PORT }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SERVER_IP: ${{ secrets.SERVER_IP }}
+      WORK_DIR: ${{ secrets.WORK_DIR }}
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${SSH_PORT} -t rsa,ecdsa,ed25519 ${SERVER_IP} >> ~/.ssh/known_hosts
+
+      # Step 3: Rsync project files to server (excluding local-only files)
+      - name: Rsync deployment to server (safe mode)
+        run: |
+          rsync -avz --progress \
+            --exclude ".git" \
+            --exclude "node_modules/" \
+            --exclude "dist/" \
+            --exclude ".env" \
+            --exclude "deploy-cms.sh" \
+            -e "ssh -p ${SSH_PORT}" ./ \
+            ${SSH_USER}@${SERVER_IP}:${WORK_DIR}
+
+      # Step 4: Run the deploy script on the server
+      - name: Run server deploy script
+        run: |
+          ssh -p  ${{ secrets.CUSTOM_PORT }}  ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "bash ${{ secrets.WORK_DIR }}/deploy-cms.sh"
