@@ -1,6 +1,7 @@
 // src/NewPages/ViewVehicleList.tsx
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 interface VehicleData {
   id: string;
@@ -16,6 +17,7 @@ interface VehicleData {
 }
 
 export default function ViewVehicleList() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
   // Mock data - in real app, this would come from an API
@@ -36,15 +38,15 @@ export default function ViewVehicleList() {
     const baseClass = "px-2 py-1 rounded-full text-xs font-medium";
     switch (status) {
       case 'In Transit':
-        return <span className={`${baseClass} bg-blue-100 text-blue-800`}>In Transit</span>;
+        return <span className={`${baseClass} bg-blue-100 text-blue-800`}>{t('inTransit')}</span>;
       case 'Delivered':
-        return <span className={`${baseClass} bg-green-100 text-green-800`}>Delivered</span>;
+        return <span className={`${baseClass} bg-green-100 text-green-800`}>{t('delivered')}</span>;
       case 'Pending':
-        return <span className={`${baseClass} bg-yellow-100 text-yellow-800`}>Pending</span>;
+        return <span className={`${baseClass} bg-yellow-100 text-yellow-800`}>{t('pending')}</span>;
       case 'Damaged':
-        return <span className={`${baseClass} bg-red-100 text-red-800`}>Damaged</span>;
+        return <span className={`${baseClass} bg-red-100 text-red-800`}>{t('damaged')}</span>;
       default:
-        return <span className={`${baseClass} bg-gray-100 text-gray-800`}>Unknown</span>;
+        return <span className={`${baseClass} bg-gray-100 text-gray-800`}>{t('unknown')}</span>;
     }
   };
 
@@ -63,7 +65,7 @@ export default function ViewVehicleList() {
         {/* Header */}
         <div className="mb-8 flex items-center justify-center relative">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
-            View Vehicle
+            {t('viewVehicleDetails')}
           </h1>
         </div>
 
@@ -75,7 +77,7 @@ export default function ViewVehicleList() {
               {/* Shipment ID */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Shipment ID
+                  {t('shipmentId')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                   <span className="text-gray-900">{vehicleData.shipmentId}</span>
@@ -85,7 +87,7 @@ export default function ViewVehicleList() {
               {/* VIN Number */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  VIN Number
+                  {t('vinNumber')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 font-mono">
                   <span className="text-gray-900">{vehicleData.vinNumber}</span>
@@ -95,7 +97,7 @@ export default function ViewVehicleList() {
               {/* Make */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Make
+                  {t('make')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                   <span className="text-gray-900">{vehicleData.make}</span>
@@ -105,7 +107,7 @@ export default function ViewVehicleList() {
               {/* Model */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Model
+                  {t('model')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                   <span className="text-gray-900">{vehicleData.model}</span>
@@ -115,7 +117,7 @@ export default function ViewVehicleList() {
               {/* Model Year */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Model Year
+                  {t('modelYear')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                   <span className="text-gray-900">{vehicleData.modelYear}</span>
@@ -125,27 +127,27 @@ export default function ViewVehicleList() {
               {/* Color */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Color
+                  {t('color')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
-                  <span className="text-gray-900">{vehicleData.color || "Not Specified"}</span>
+                  <span className="text-gray-900">{vehicleData.color || t('notSpecified')}</span>
                 </div>
               </div>
 
-              {/* Status - YEH ADD KAREN */}
+              {/* Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
+                  {t('status')}
                 </label>
                 <div className="w-full px-4 py-2.5">
                   {getStatusBadge(vehicleData.status)}
                 </div>
               </div>
 
-              {/* Added Date - YEH BHI ADD KAREN */}
+              {/* Added Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Added Date
+                  {t('addedDate')}
                 </label>
                 <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                   <span className="text-gray-900">{vehicleData.addedDate}</span>
@@ -155,11 +157,11 @@ export default function ViewVehicleList() {
               {/* Vehicle Value */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Vehicle Value
+                  {t('vehicleValue')}
                 </label>
                 <div className="relative w-full md:w-1/2">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    AED
+                    {t('aed')}
                   </div>
                   <div className="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
                     <span className="text-gray-900 font-medium">

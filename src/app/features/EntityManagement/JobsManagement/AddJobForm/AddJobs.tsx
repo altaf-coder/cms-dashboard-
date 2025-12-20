@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { XMarkIcon, CalendarIcon, ClockIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 // Mock data - in real app, this would come from API
 const activeShipments = [
@@ -62,6 +63,7 @@ interface FormData {
 }
 
 export default function AddJobs() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   
   // Generate next Job ID
@@ -238,19 +240,19 @@ export default function AddJobs() {
     const newWarnings: Record<string, string> = {};
     
     // Required fields validation
-    if (!formData.shipmentId) newErrors.shipmentId = "Shipment is required";
-    if (!formData.vendorId) newErrors.vendorId = "Vendor is required";
-    if (!formData.driverId) newErrors.driverId = "Driver is required";
-    if (!formData.truckId) newErrors.truckId = "Truck is required";
-    if (!formData.jobType) newErrors.jobType = "Job type is required";
-    if (!formData.jobDateTime) newErrors.jobDateTime = "Job date & time is required";
+    if (!formData.shipmentId) newErrors.shipmentId = t('shipmentIsRequired');
+    if (!formData.vendorId) newErrors.vendorId = t('vendorIsRequired');
+    if (!formData.driverId) newErrors.driverId = t('driverIsRequired');
+    if (!formData.truckId) newErrors.truckId = t('truckIsRequired');
+    if (!formData.jobType) newErrors.jobType = t('jobTypeIsRequired');
+    if (!formData.jobDateTime) newErrors.jobDateTime = t('jobDateTimeIsRequired');
     
     // Job type specific validations
     if (formData.jobType === "Pickup" && !formData.pickupLocation) {
-      newErrors.pickupLocation = "Pickup location is required for Pickup jobs";
+      newErrors.pickupLocation = t('pickupLocationRequiredForPickupJobs');
     }
     if (formData.jobType === "Delivery" && !formData.dropLocation) {
-      newErrors.dropLocation = "Drop location is required for Delivery jobs";
+      newErrors.dropLocation = t('dropLocationRequiredForDeliveryJobs');
     }
     
     // Job date validation
@@ -260,27 +262,27 @@ export default function AddJobs() {
       today.setHours(0, 0, 0, 0);
       
       if (selectedDate < today) {
-        newErrors.jobDateTime = "Job date must be today or in the future";
+        newErrors.jobDateTime = t('jobDateMustBeTodayOrFuture');
       }
     }
     
     // Special instructions length
     if (formData.specialInstructions.length > 3000) {
-      newErrors.specialInstructions = "Special instructions cannot exceed 3000 characters";
+      newErrors.specialInstructions = t('specialInstructionsCannotExceed3000Chars');
     }
     
     // Business rule validations
     if (!checkDriverAvailability()) {
-      newErrors.driverId = "Driver is not available at selected timeslot. Change time or select another driver";
+      newErrors.driverId = t('driverNotAvailableAtSelectedTimeslot');
     }
     
     if (!validateJobType()) {
       const selectedShipment = activeShipments.find(s => s.id === formData.shipmentId);
-      newErrors.jobType = `Job type "${formData.jobType}" is not allowed for shipment status "${selectedShipment?.status}"`;
+      newErrors.jobType = t('jobTypeNotAllowedForShipmentStatus', { jobType: formData.jobType, status: selectedShipment?.status || '' });
     }
     
     if (!checkPortReturnDate()) {
-      newWarnings.portLastReturnDate = "Job date exceeds Port Last Return Date";
+      newWarnings.portLastReturnDate = t('jobDateExceedsPortLastReturnDate');
     }
     
     setErrors(newErrors);
@@ -310,7 +312,7 @@ export default function AddJobs() {
       console.log('Sending email notifications to driver and vendor...');
       
       // Show success popup
-      setSuccessMessage('Job created successfully! Email notifications sent to driver and vendor.');
+      setSuccessMessage(t('jobCreatedSuccessfullyEmailNotificationsSent'));
       
       // Reset form after success
       setTimeout(() => {
@@ -343,7 +345,7 @@ export default function AddJobs() {
       console.error('Error creating job:', error);
       setErrors(prev => ({
         ...prev,
-        submit: "Failed to create job. Please try again."
+        submit: t('failedToCreateJob')
       }));
     } finally {
       setIsSubmitting(false);
@@ -377,7 +379,7 @@ export default function AddJobs() {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
           <div className="bg-white p-6 rounded-xl shadow-lg z-10 text-center max-w-sm mx-auto">
-            <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
+            <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
             <p className="text-gray-700 mb-4">{successMessage}</p>
             <button
               onClick={() => {
@@ -386,7 +388,7 @@ export default function AddJobs() {
               }}
               className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              OK
+              {t('ok')}
             </button>
           </div>
         </div>
@@ -398,8 +400,8 @@ export default function AddJobs() {
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Add New Job</h1>
-                <p className="text-sm text-gray-600 mt-1">Create and assign a new transportation job</p>
+                <h1 className="text-2xl font-bold text-gray-900">{t('addNewJob')}</h1>
+                <p className="text-sm text-gray-600 mt-1">{t('createAndAssignNewTransportationJob')}</p>
               </div>
               <button
                 onClick={() => navigate('/jobs')}
@@ -419,7 +421,7 @@ export default function AddJobs() {
                 {/* Job ID (Auto-generated) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Job ID
+                    {t('jobId')}
                   </label>
                   <input
                     type="text"
@@ -427,13 +429,13 @@ export default function AddJobs() {
                     readOnly
                     className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Auto-generated</p>
+                  <p className="text-xs text-gray-500 mt-1">{t('autoGenerated')}</p>
                 </div>
 
                 {/* Shipment (Required Dropdown) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Shipment <span className="text-red-500">*</span>
+                    {t('shipment')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="shipmentId"
@@ -444,7 +446,7 @@ export default function AddJobs() {
                       errors.shipmentId ? 'border-red-500' : 'border-gray-300'
                     }`}
                   >
-                    <option value="">Select Shipment</option>
+                    <option value="">{t('selectShipment')}</option>
                     {activeShipments.map(shipment => (
                       <option key={shipment.id} value={shipment.id}>
                         {shipment.id} - {shipment.customer}
@@ -459,7 +461,7 @@ export default function AddJobs() {
                 {/* Container No. (Auto-filled from shipment) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Container No. <span className="text-red-500">*</span>
+                    {t('containerNo')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -473,7 +475,7 @@ export default function AddJobs() {
                 {/* Customer (Auto-filled from shipment) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Customer <span className="text-red-500">*</span>
+                    {t('customer')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -490,7 +492,7 @@ export default function AddJobs() {
                 {/* Vendor (Required Dropdown) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor <span className="text-red-500">*</span>
+                    {t('vendor')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="vendorId"
@@ -501,7 +503,7 @@ export default function AddJobs() {
                       errors.vendorId ? 'border-red-500' : 'border-gray-300'
                     }`}
                   >
-                    <option value="">Select Vendor</option>
+                    <option value="">{t('selectVendor')}</option>
                     {approvedVendors.map(vendor => (
                       <option key={vendor.id} value={vendor.id}>
                         {vendor.name}
@@ -516,7 +518,7 @@ export default function AddJobs() {
                 {/* Driver (Dropdown based on vendor) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Driver <span className="text-red-500">*</span>
+                    {t('driver')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="driverId"
@@ -528,7 +530,7 @@ export default function AddJobs() {
                       errors.driverId ? 'border-red-500' : 'border-gray-300'
                     } ${!formData.vendorId ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                   >
-                    <option value="">Select Driver</option>
+                    <option value="">{t('selectDriver')}</option>
                     {filteredDrivers.map(driver => (
                       <option key={driver.id} value={driver.id}>
                         {driver.name}
@@ -543,7 +545,7 @@ export default function AddJobs() {
                 {/* Truck (Dropdown based on vendor) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Truck <span className="text-red-500">*</span>
+                    {t('truck')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="truckId"
@@ -555,7 +557,7 @@ export default function AddJobs() {
                       errors.truckId ? 'border-red-500' : 'border-gray-300'
                     } ${!formData.vendorId ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                   >
-                    <option value="">Select Truck</option>
+                    <option value="">{t('selectTruck')}</option>
                     {filteredTrucks.map(truck => (
                       <option key={truck.id} value={truck.id}>
                         {truck.plateNumber} - {truck.id}
@@ -570,7 +572,7 @@ export default function AddJobs() {
                 {/* Job Type (Required Dropdown) */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Job Type <span className="text-red-500">*</span>
+                    {t('jobType')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="jobType"
@@ -581,10 +583,10 @@ export default function AddJobs() {
                       errors.jobType ? 'border-red-500' : 'border-gray-300'
                     }`}
                   >
-                    <option value="">Select Job Type</option>
-                    <option value="Pickup">Pickup</option>
-                    <option value="Delivery">Delivery</option>
-                    <option value="Empty Return">Empty Return</option>
+                    <option value="">{t('selectJobType')}</option>
+                    <option value="Pickup">{t('pickup')}</option>
+                    <option value="Delivery">{t('delivery')}</option>
+                    <option value="Empty Return">{t('emptyReturn')}</option>
                   </select>
                   {errors.jobType && (
                     <p className="text-sm text-red-600 mt-1">{errors.jobType}</p>
@@ -595,14 +597,14 @@ export default function AddJobs() {
 
             {/* Job Details Section */}
             <div className="border-t pt-6 mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Job Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('jobDetails')}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Pickup Location (Conditional) */}
                 {formData.jobType === "Pickup" && (
                   <div className="h-[80px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Pick up Location <span className="text-red-500">*</span>
+                      {t('pickupLocation')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -618,14 +620,14 @@ export default function AddJobs() {
                 {formData.jobType === "Delivery" && (
                   <div className="h-[80px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Drop Location <span className="text-red-500">*</span>
+                      {t('dropLocation')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="dropLocation"
                       value={formData.dropLocation}
                       onChange={handleChange}
-                      placeholder="Enter customer address"
+                      placeholder={t('enterCustomerAddress')}
                       className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.dropLocation ? 'border-red-500' : 'border-gray-300'
                       }`}
@@ -639,7 +641,7 @@ export default function AddJobs() {
                 {/* Job Date & Time */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Job Date & Time <span className="text-red-500">*</span>
+                    {t('jobDateTime')} <span className="text-red-500">*</span>
                   </label>
                   <div className="flex space-x-2">
                     <div className="relative flex-1">
@@ -699,7 +701,7 @@ export default function AddJobs() {
                 {/* Port Last Return Date */}
                 <div className="h-[80px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Port Last Return Date
+                    {t('portLastReturnDate')}
                   </label>
                   <input
                     type="text"
@@ -722,7 +724,7 @@ export default function AddJobs() {
               {/* Special Instructions */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Special Instructions (Optional)
+                  {t('specialInstructionsOptional')}
                 </label>
                 <textarea
                   name="specialInstructions"
@@ -730,14 +732,14 @@ export default function AddJobs() {
                   onChange={handleChange}
                   rows={4}
                   maxLength={3000}
-                  placeholder="Enter any special instructions for the driver..."
+                  placeholder={t('enterAnySpecialInstructionsForDriver')}
                   className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     errors.specialInstructions ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
                 <div className="flex justify-between mt-1">
                   <p className="text-xs text-gray-500">
-                    Maximum 3000 characters
+                    {t('maximum3000Characters')}
                   </p>
                   <p className="text-xs text-gray-500">
                     {formData.specialInstructions.length}/3000
@@ -751,7 +753,7 @@ export default function AddJobs() {
               {/* Status */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
+                  {t('status')}
                 </label>
                 <select
                   name="status"
@@ -759,14 +761,14 @@ export default function AddJobs() {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="draft">Draft</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="In-Transit">In-Transit</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Returned">Returned</option>
+                  <option value="draft">{t('draft')}</option>
+                  <option value="Assigned">{t('assigned')}</option>
+                  <option value="In-Transit">{t('inTransit')}</option>
+                  <option value="Delivered">{t('delivered')}</option>
+                  <option value="Returned">{t('returned')}</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  If no status selected, job will be saved as "draft"
+                  {t('ifNoStatusSelectedJobWillBeSavedAsDraft')}
                 </p>
               </div>
             </div>
@@ -779,7 +781,7 @@ export default function AddJobs() {
                   onClick={() => navigate('/jobs')}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
@@ -792,10 +794,10 @@ export default function AddJobs() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                       </svg>
-                      Creating...
+                      {t('creating')}
                     </span>
                   ) : (
-                    'Create Job'
+                    t('createJob')
                   )}
                 </button>
               </div>
@@ -810,12 +812,12 @@ export default function AddJobs() {
             <div className="flex">
               <ExclamationTriangleIcon className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0" />
               <div>
-                <h4 className="text-sm font-medium text-blue-800">Important Information</h4>
+                <h4 className="text-sm font-medium text-blue-800">{t('importantInformation')}</h4>
                 <ul className="mt-1 text-sm text-blue-700 list-disc list-inside space-y-1">
-                  <li>Driver availability will be checked against existing jobs</li>
-                  <li>Job type must match the shipment status</li>
-                  <li>Email notifications will be sent to driver and vendor upon creation</li>
-                  <li>Status must follow proper sequence (cannot skip steps)</li>
+                  <li>{t('driverAvailabilityWillBeCheckedAgainstExistingJobs')}</li>
+                  <li>{t('jobTypeMustMatchTheShipmentStatus')}</li>
+                  <li>{t('emailNotificationsWillBeSentToDriverAndVendorUponCreation')}</li>
+                  <li>{t('statusMustFollowProperSequence')}</li>
                 </ul>
               </div>
             </div>

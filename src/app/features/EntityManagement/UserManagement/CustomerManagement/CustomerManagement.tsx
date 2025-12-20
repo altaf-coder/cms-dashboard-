@@ -205,7 +205,7 @@ export default function Customers() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
         <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t("manageCustomers")}</h2>
         <Link to="/add-customers">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap min-w-[140px]">
             <span className="text-xl">+</span> {t("addCustomer")}
           </button>
         </Link>

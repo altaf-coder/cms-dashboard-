@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams} from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
 interface PortFormData {
@@ -57,30 +58,31 @@ interface PortFormData {
 const returnRoutes = ["Sheikh Zayed Road", "E311", "E611", "Internal Roads"];
 const weekendDays = ["Saturday", "Sunday", "Friday", "Monday", "Tuesday", "Wednesday", "Thursday"];
 
-// Helper function to format time display
-function formatTimeDisplay(time: string) {
-  if (!time) return "Not set";
-  return time;
-}
-
-// Helper function to format boolean as Yes/No
-function formatBoolean(value: boolean) {
-  return value ? "Yes" : "No";
-}
-
-// Helper function to format currency
-function formatCurrency(amount: number) {
-  if (amount === 0 || amount === undefined) return "0 AED";
-  return `${amount} AED`;
-}
-
-// Helper function to format days
-function formatDays(value: number) {
-  return `${value} day${value !== 1 ? 's' : ''}`;
-}
-
 export default function PortViewForm() {
+  const { t } = useTranslation();
   const { id } = useParams();
+
+  // Helper function to format time display
+  const formatTimeDisplay = (time: string) => {
+    if (!time) return t('notSet');
+    return time;
+  };
+
+  // Helper function to format boolean as Yes/No
+  const formatBoolean = (value: boolean) => {
+    return value ? t('yes') : t('no');
+  };
+
+  // Helper function to format currency
+  const formatCurrency = (amount: number) => {
+    if (amount === 0 || amount === undefined) return "0 AED";
+    return `${amount} AED`;
+  };
+
+  // Helper function to format days
+  const formatDays = (value: number) => {
+    return value === 1 ? `${value} ${t('day')}` : `${value} ${t('days')}`;
+  };
  
 
   // View data
@@ -146,7 +148,7 @@ export default function PortViewForm() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
             <h1 className="text-2xl font-bold text-gray-900">
-              View Port Rule
+              {t('viewPortRule')}
             </h1>
           </div>
         </div>
@@ -154,14 +156,14 @@ export default function PortViewForm() {
         {/* Basic Port Information */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Basic Port Information
+            {t('basicPortInformation')}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Port ID */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Port ID
+                {t('portId')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formData.portId}
@@ -171,7 +173,7 @@ export default function PortViewForm() {
             {/* Port Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Port Name
+                {t('portName')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formData.portName}
@@ -181,17 +183,17 @@ export default function PortViewForm() {
             {/* Port Code */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Port Code
+                {t('portCode')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
-                {formData.portCode || "Not set"}
+                {formData.portCode || t('notSet')}
               </div>
             </div>
 
             {/* Emirate */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Emirate
+                {t('emirate')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formData.emirate}
@@ -201,7 +203,7 @@ export default function PortViewForm() {
             {/* Active Status */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Active Status
+                {t('activeStatus')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg">
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -209,7 +211,7 @@ export default function PortViewForm() {
                     ? "bg-green-100 text-green-800" 
                     : "bg-red-100 text-red-800"
                 }`}>
-                  {formData.activeStatus}
+                  {formData.activeStatus === "Active" ? t('active') : t('inactive')}
                 </span>
               </div>
             </div>
@@ -219,14 +221,14 @@ export default function PortViewForm() {
         {/* Container Return Rules */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Container Return Rules
+            {t('containerReturnRules')}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Standard Free Days */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Standard Free Days
+                {t('standardFreeDays')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formatDays(formData.standardFreeDays)}
@@ -236,7 +238,7 @@ export default function PortViewForm() {
             {/* Maximum Allowed Return Days */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Maximum Allowed Return Days
+                {t('maximumReturnDays')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formatDays(formData.maximumReturnDays)}
@@ -246,7 +248,7 @@ export default function PortViewForm() {
             {/* Demurrage per Day */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Demurrage per Day
+                {t('demurragePerDayAED')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formatCurrency(formData.demurragePerDay)}
@@ -256,20 +258,22 @@ export default function PortViewForm() {
             {/* Return Deadline Calculation Method */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Return Deadline Calculation Method
+                {t('returnDeadlineCalculationMethod')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
-                {formData.returnDeadlineMethod}
+                {formData.returnDeadlineMethod === 'ETA Based' ? t('etaBased') : 
+                 formData.returnDeadlineMethod === 'Release Date Based' ? t('releaseDateBased') : 
+                 formData.returnDeadlineMethod === 'Custom' ? t('custom') : formData.returnDeadlineMethod}
               </div>
             </div>
 
             {/* Grace Period */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Grace Period
+                {t('gracePeriodHoursOptional').replace(' - Optional', '')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
-                {formData.gracePeriod > 0 ? `${formData.gracePeriod} hours` : "No grace period"}
+                {formData.gracePeriod > 0 ? `${formData.gracePeriod} ${t('hours')}` : t('noGracePeriod')}
               </div>
             </div>
           </div>
@@ -278,7 +282,7 @@ export default function PortViewForm() {
         {/* Toll & Movement Rules */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Toll & Movement Rules
+            {t('tollMovementRules')}
           </h3>
           
           {/* Toll Applicable */}
@@ -286,9 +290,9 @@ export default function PortViewForm() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Toll Applicable?
+                  {t('tollApplicable')}
                 </label>
-                <p className="text-sm text-gray-500">Enable toll charges for this port</p>
+                <p className="text-sm text-gray-500">{t('enableTollChargesForThisPort')}</p>
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                 formData.tollApplicable 
@@ -305,7 +309,7 @@ export default function PortViewForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Day Toll Amount
+                      {t('dayTollAmountAED')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
                       {formatCurrency(formData.dayTollAmount)}
@@ -315,7 +319,7 @@ export default function PortViewForm() {
                   {/* Night Toll Amount */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Night Toll Amount
+                      {t('nightTollAmountAED')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
                       {formatCurrency(formData.nightTollAmount)}
@@ -325,7 +329,7 @@ export default function PortViewForm() {
                   {/* Night Hours Start */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Night Hours Start
+                      {t('nightHoursStart')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 flex items-center gap-2">
                       <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -336,7 +340,7 @@ export default function PortViewForm() {
                   {/* Night Hours End */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Night Hours End
+                      {t('nightHoursEnd')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 flex items-center gap-2">
                       <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -350,9 +354,9 @@ export default function PortViewForm() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Toll Required For Empty Return?
+                        {t('tollRequiredForEmptyReturn')}
                       </label>
-                      <p className="text-sm text-gray-500">Enable toll for empty container returns</p>
+                      <p className="text-sm text-gray-500">{t('enableTollForEmptyContainerReturns')}</p>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                       formData.tollRequiredForEmptyReturn 
@@ -366,7 +370,7 @@ export default function PortViewForm() {
                   {formData.tollRequiredForEmptyReturn && (
                     <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Toll Amount
+                        {t('emptyReturnTollAmountAED')}
                       </label>
                       <div className="w-full md:w-1/2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
                         {formatCurrency(formData.emptyReturnTollAmount)}
@@ -378,25 +382,27 @@ export default function PortViewForm() {
                 {/* Toll Applied */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Toll Applied
+                    {t('tollAppliedTo')}
                   </label>
                   <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
-                    {formData.tollApplied}
+                    {formData.tollApplied === 'Car Carriers Only' ? t('carCarriersOnly') :
+                     formData.tollApplied === 'Heavy Trucks Only' ? t('heavyTrucksOnly') :
+                     formData.tollApplied === 'Both' ? t('both') : formData.tollApplied}
                   </div>
                 </div>
 
                 {/* Toll Payment Method */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Toll Payment Method
+                    {t('tollPaymentMethod')}
                   </label>
                   <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
-                    {formData.tollPaymentMethod}
+                    {formData.tollPaymentMethod === 'Prepaid' ? t('prepaid') :
+                     formData.tollPaymentMethod === 'Postpaid' ? t('postpaid') :
+                     formData.tollPaymentMethod === 'Vendor Pays' ? t('vendorPays') : formData.tollPaymentMethod}
                   </div>
                   <p className="mt-1 text-sm text-gray-500">
-                    {formData.tollPaymentMethod === "Prepaid" && "Company pays upfront"}
-                    {formData.tollPaymentMethod === "Postpaid" && "Customer pays later"}
-                    {formData.tollPaymentMethod === "Vendor Pays" && "Vendor pays the toll"}
+                    {t('tollPaymentMethodDescription')}
                   </p>
                 </div>
 
@@ -404,9 +410,9 @@ export default function PortViewForm() {
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Mandatory Toll Receipt Upload?
+                      {t('mandatoryTollReceipt')}
                     </label>
-                    <p className="text-sm text-gray-500">Driver will have to upload receipt before marking job as Complete</p>
+                    <p className="text-sm text-gray-500">{t('driverWillHaveToUploadReceiptBeforeMarkingJobAsComplete')}</p>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                     formData.mandatoryTollReceipt 
@@ -420,7 +426,7 @@ export default function PortViewForm() {
                 {/* Return Route Restrictions */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Return Route Restrictions
+                    {t('returnRouteRestrictions')}
                   </label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {returnRoutes.map(route => (
@@ -438,8 +444,8 @@ export default function PortViewForm() {
                   </div>
                   <p className="mt-1 text-sm text-gray-500">
                     {formData.returnRouteRestrictions.length > 0 
-                      ? `Selected: ${formData.returnRouteRestrictions.join(", ")}`
-                      : "No restrictions selected"}
+                      ? `${t('selected')}: ${formData.returnRouteRestrictions.join(", ")}`
+                      : t('noRestrictionsSelected')}
                   </p>
                 </div>
 
@@ -448,9 +454,9 @@ export default function PortViewForm() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Automatic Toll Penalty If No Receipt?
+                        {t('automaticTollPenalty')}
                       </label>
-                      <p className="text-sm text-gray-500">Apply penalty automatically if receipt not uploaded</p>
+                      <p className="text-sm text-gray-500">{t('applyPenaltyAutomaticallyIfReceiptNotUploaded')}</p>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                       formData.automaticTollPenalty 
@@ -464,7 +470,7 @@ export default function PortViewForm() {
                   {formData.automaticTollPenalty && (
                     <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Penalty Amount
+                        {t('penaltyAmountAED')}
                       </label>
                       <div className="w-full md:w-1/2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900">
                         {formatCurrency(formData.penaltyAmount)}
@@ -480,7 +486,7 @@ export default function PortViewForm() {
         {/* Movement Restrictions */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Movement Restrictions
+            {t('movementRestrictionsSection')}
           </h3>
           
           <div className="space-y-6">
@@ -488,9 +494,9 @@ export default function PortViewForm() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Night-Only Movement Allowed?
+                  {t('nightOnlyMovementAllowed')}
                 </label>
-                <p className="text-sm text-gray-500">Restrict movement to night hours only</p>
+                <p className="text-sm text-gray-500">{t('restrictMovementToNightHoursOnly')}</p>
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                 formData.nightOnlyMovement 
@@ -507,7 +513,7 @@ export default function PortViewForm() {
                   {/* Allowed Movement Start Time */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Allowed Movement Start Time
+                      {t('allowedMovementStartTime')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 flex items-center gap-2">
                       <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -518,7 +524,7 @@ export default function PortViewForm() {
                   {/* Allowed Movement End Time */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Allowed Movement End Time
+                      {t('allowedMovementEndTime')}
                     </label>
                     <div className="w-full px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 flex items-center gap-2">
                       <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -532,7 +538,7 @@ export default function PortViewForm() {
             {/* Weekend Restrictions */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Weekend Restrictions
+                {t('weekendRestrictions')}
               </label>
               <div className="flex flex-wrap gap-2">
                 {weekendDays.map(day => (
@@ -550,8 +556,8 @@ export default function PortViewForm() {
               </div>
               <p className="mt-1 text-sm text-gray-500">
                 {formData.weekendRestrictions.length > 0 
-                  ? `Restricted days: ${formData.weekendRestrictions.join(", ")}`
-                  : "No weekend restrictions"}
+                  ? `${t('restrictedDays')} ${formData.weekendRestrictions.join(", ")}`
+                  : t('noWeekendRestrictions')}
               </p>
             </div>
 
@@ -559,9 +565,9 @@ export default function PortViewForm() {
             <div className="flex items-center justify-between">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Public Holiday Lock?
+                  {t('publicHolidayLock')}
                 </label>
-                <p className="text-sm text-gray-500">Admin can manually block port on given dates</p>
+                <p className="text-sm text-gray-500">{t('adminCanManuallyBlockPortOnGivenDates')}</p>
               </div>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                 formData.publicHolidayLock 
@@ -575,7 +581,7 @@ export default function PortViewForm() {
             {/* Port Entry Fee */}
             <div className="w-full md:w-1/2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Port Entry Fee
+                {t('portEntryFeeAEDOptional').replace(' - Optional', '')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                 {formatCurrency(formData.portEntryFee)}
@@ -587,14 +593,14 @@ export default function PortViewForm() {
         {/* Operational Cutoff Rules */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Operational Cutoff Rules
+            {t('operationalCutoffRules')}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Cutoff Time for DO Submission */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cutoff Time for DO Submission
+                {t('cutoffTimeForDosubmission')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 flex items-center gap-2">
                 <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -605,7 +611,7 @@ export default function PortViewForm() {
             {/* Cutoff Time for Container Pickup */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cutoff Time for Container Pickup
+                {t('cutoffTimeForContainerPickup')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 flex items-center gap-2">
                 <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -616,7 +622,7 @@ export default function PortViewForm() {
             {/* Cutoff Time for Empty Return */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cutoff Time for Empty Return
+                {t('cutoffTimeForEmptyReturn')}
               </label>
               <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 flex items-center gap-2">
                 <ClockIcon className="w-4 h-4 text-gray-500" />
@@ -629,9 +635,9 @@ export default function PortViewForm() {
           <div className="mt-6 flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Upload DO Mandatory?
+                {t('uploadDoMandatory')}
               </label>
-              <p className="text-sm text-gray-500">Require Delivery Order upload for operations</p>
+              <p className="text-sm text-gray-500">{t('requireDeliveryOrderUploadForOperations')}</p>
             </div>
             <div className={`px-3 py-1 rounded-full text-sm font-medium ${
               formData.uploadDoMandatory 
@@ -646,7 +652,7 @@ export default function PortViewForm() {
         {/* Notification Setup */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-            Notification Setup
+            {t('notificationSetup')}
           </h3>
           
           <div className="space-y-6">
@@ -654,7 +660,7 @@ export default function PortViewForm() {
               {/* Reminder Before Return Deadline */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Reminder Before Return Deadline
+                  {t('reminderBeforeReturnDeadline')}
                 </label>
                 <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
                   {formData.reminderBeforeReturn}
@@ -664,10 +670,10 @@ export default function PortViewForm() {
               {/* Demurrage Alert Threshold */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Demurrage Alert Threshold
+                  {t('demurrageAlertThresholdDays')}
                 </label>
                 <div className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900">
-                  {formatDays(formData.demurrageAlertThreshold)} before free days end
+                  {formatDays(formData.demurrageAlertThreshold)} {t('daysBeforeFreeDaysEnd')}
                 </div>
               </div>
             </div>
@@ -677,9 +683,9 @@ export default function PortViewForm() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Toll Required Notification
+                    {t('tollRequiredNotification')}
                   </label>
-                  <p className="text-sm text-gray-500">Notify drivers about toll requirements</p>
+                  <p className="text-sm text-gray-500">{t('notifyDriversAboutTollRequirements')}</p>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                   formData.tollRequiredNotification 
@@ -693,9 +699,9 @@ export default function PortViewForm() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Night Movement Warning
+                    {t('nightMovementWarning')}
                   </label>
-                  <p className="text-sm text-gray-500">Alert about night movement restrictions</p>
+                  <p className="text-sm text-gray-500">{t('alertAboutNightMovementRestrictions')}</p>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                   formData.nightMovementWarning 
@@ -709,9 +715,9 @@ export default function PortViewForm() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Cutoff Time Warning
+                    {t('cutoffTimeWarning')}
                   </label>
-                  <p className="text-sm text-gray-500">Alert about approaching cutoff times</p>
+                  <p className="text-sm text-gray-500">{t('alertAboutApproachingCutoffTimes')}</p>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                   formData.cutoffTimeWarning 

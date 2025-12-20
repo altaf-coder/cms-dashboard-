@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 import { Dropdown } from "../dropdown/Dropdown";
 import { DropdownItem } from "../dropdown/DropdownItem";
 // import img from "../../../src/";
 
 export default function UserDropdown() {
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
@@ -48,7 +51,7 @@ export default function UserDropdown() {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        className={`${isRTL ? 'left-0' : 'right-0'} mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark`}
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">

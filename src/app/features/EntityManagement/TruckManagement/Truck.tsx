@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../com
 import truckData from '../../../../data/admins.json';
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../Dashboard/PageMeta";
+import { useTranslation } from 'react-i18next';
 
 interface Truck {
   id: string;
@@ -36,8 +37,8 @@ const getTrucksData = (): Truck[] => {
     id: truck.id || `T-CMS-${String(index + 1).padStart(3, '0')}`,
     plateNo: truck.truckNumber || `ABC${Math.floor(1000 + Math.random() * 9000)}`,
     vendor: truck.company || 'Vendor 2',
-    assignedDriver: truck.driver || 'Not Assigned',
-    currentJob: truck.location || 'No Current Job',
+    assignedDriver: truck.driver || t('notAssigned'),
+    currentJob: truck.location || t('noCurrentJob'),
     registrationExpiry: truck.lastMaintenance || '12/12/2025',
     insuranceExpiry: truck.insuranceExpiry || '12/12/2025',
     status: (truck.status as "Pending" | "Approved" | "Suspended" | "Maintenance") || 'Approved',
@@ -56,6 +57,7 @@ const getTrucksData = (): Truck[] => {
 };
 
 export default function TruckTable() {
+  const { t } = useTranslation();
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -175,7 +177,7 @@ export default function TruckTable() {
       setTrucks(prev => prev.map(t => 
         t.id === selectedTruck.id ? { 
           ...t, 
-          assignedDriver: "Driver Assigned",
+          assignedDriver: t('driverAssigned'),
           driverId: "D-CMS-001"
         } : t
       ));
@@ -275,19 +277,19 @@ export default function TruckTable() {
   return (
     <>
       <PageMeta
-        title="Truck Management | CMS Dashboard"
-        description="Manage trucks and their information"
+        title={t('truckManagement') + ' | CMS Dashboard'}
+        description={t('manageTrucks')}
       />
-      <PageBreadcrumb pageTitle="Truck Management" />
+      <PageBreadcrumb pageTitle={t('truckManagement')} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Trucks</h2>
+        <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t('manageTrucks')}</h2>
         <Link to="/add-truck">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Truck
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2  whitespace-nowrap min-w-[140px]">
+            <span className="text-xl">+</span> {t('addTruck')}
           </button>
         </Link>
       </div>
@@ -296,7 +298,7 @@ export default function TruckTable() {
       <div className="px-5 py-3 space-y-3">
         <input
           type="text"
-          placeholder="Search Truck Name, Mobile, Driving License, Driver ID"
+          placeholder={t('searchTruckNameMobileDrivingLicenseDriverId')}
           className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -310,11 +312,11 @@ export default function TruckTable() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Suspended">Suspended</option>
-            <option value="Maintenance">Maintenance</option>
+            <option value="">{t('allStatus')}</option>
+            <option value="Pending">{t('pending')}</option>
+            <option value="Approved">{t('approved')}</option>
+            <option value="Suspended">{t('suspended')}</option>
+            <option value="Maintenance">{t('maintenance')}</option>
           </select>
 
           {/* Vendor Filter */}
@@ -323,7 +325,7 @@ export default function TruckTable() {
             onChange={(e) => setVendorFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Vendors</option>
+            <option value="">{t('allVendors')}</option>
             {vendors.map(vendor => (
               <option key={vendor} value={vendor}>{vendor}</option>
             ))}
@@ -335,10 +337,10 @@ export default function TruckTable() {
             onChange={(e) => setExpiryWindowFilter(e.target.value)}
             className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Expiry Windows</option>
-            <option value="30">Next 30 days (Registration/Insurance)</option>
-            <option value="60">Next 60 days (Registration/Insurance)</option>
-            <option value="90">Next 90 days (Registration/Insurance)</option>
+            <option value="">{t('expiryWindows')}</option>
+            <option value="30">{t('next30DaysRegistrationInsurance')}</option>
+            <option value="60">{t('next60DaysRegistrationInsurance')}</option>
+            <option value="90">{t('next90DaysRegistrationInsurance')}</option>
           </select>
         </div>
 
@@ -346,35 +348,35 @@ export default function TruckTable() {
         {selectedTrucks.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedTrucks.length} selected
+              {selectedTrucks.length} {t('selected')}
             </span>
             <button
               onClick={handleBulkAssignDriver}
               className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-1"
             >
               <UserIcon className="w-4 h-4" />
-              Assign Driver to Selected
+              {t('bulkAssignDriver')}
             </button>
             <button
               onClick={handleBulkApprove}
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
             >
               <CheckCircleIcon className="w-4 h-4" />
-              Approve Selected
+              {t('approveSelected')}
             </button>
             <button
               onClick={handleBulkSuspend}
               className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 flex items-center gap-1"
             >
               <NoSymbolIcon className="w-4 h-4" />
-              Suspend Selected
+              {t('suspendSelected')}
             </button>
             <button
               onClick={handleBulkExport}
               className="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 flex items-center gap-1"
             >
               <ArrowDownTrayIcon className="w-4 h-4" />
-              Export CSV
+              {t('exportCSV')}
             </button>
           </div>
         )}
@@ -393,15 +395,15 @@ export default function TruckTable() {
                   onChange={toggleSelectAll}
                 />
               </TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ID</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Plate No.</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Vendor</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Assigned Driver</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Current Job</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Registration Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Insurance Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Actions</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('id')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('plateNo')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('vendor')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('assignedDriver')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('currentJob')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('registrationExpiry')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('insuranceExpiry')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('status')}</TableCell>
+              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('action')}</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -426,7 +428,7 @@ export default function TruckTable() {
                 <TableCell className="px-5 py-4">{truck.vendor}</TableCell>
                 <TableCell className="px-5 py-4">
                   <div className="flex items-center gap-1">
-                    {truck.assignedDriver !== "Not Assigned" ? (
+                    {truck.assignedDriver !== t('notAssigned') ? (
                       <>
                         <UserIcon className="w-4 h-4" />
                         <span className="text-blue-600">{truck.assignedDriver}</span>
@@ -437,7 +439,7 @@ export default function TruckTable() {
                   </div>
                 </TableCell>
                 <TableCell className="px-5 py-4">
-                  <span className={truck.currentJob === "No Current Job" ? "text-gray-500" : "text-green-600"}>
+                  <span className={truck.currentJob === t('noCurrentJob') ? "text-gray-500" : "text-green-600"}>
                     {truck.currentJob}
                   </span>
                 </TableCell>
@@ -459,7 +461,10 @@ export default function TruckTable() {
                     {truck.status === "Suspended" && (
                       <NoSymbolIcon className="w-3 h-3 mr-1" />
                     )}
-                    {truck.status}
+                    {truck.status === "Pending" ? t('pending') : 
+                     truck.status === "Approved" ? t('approved') :
+                     truck.status === "Suspended" ? t('suspended') :
+                     truck.status === "Maintenance" ? t('maintenance') : truck.status}
                   </span>
                 </TableCell>
 
@@ -472,7 +477,7 @@ export default function TruckTable() {
                         <EyeIcon className="w-5 h-5 text-blue-600 group-hover:text-blue-800" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View
+                        {t('view')}
                       </span>
                     </div>
 
@@ -482,7 +487,7 @@ export default function TruckTable() {
                         <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Edit
+                        {t('edit')}
                       </span>
                     </div>
 
@@ -498,7 +503,7 @@ export default function TruckTable() {
                         <TrashIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Delete
+                        {t('delete')}
                       </span>
                     </div>
 
@@ -512,7 +517,7 @@ export default function TruckTable() {
                           <CheckCircleIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Approve
+                          {t('approve')}
                         </span>
                       </div>
                     )}
@@ -530,13 +535,13 @@ export default function TruckTable() {
                           <NoSymbolIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Suspend
+                          {t('suspend')}
                         </span>
                       </div>
                     )}
 
                     {/* Assign Driver - Show for trucks without driver */}
-                    {truck.assignedDriver === "Not Assigned" && (
+                    {truck.assignedDriver === t('notAssigned') && (
                       <div className="relative group">
                         <button
                           className="text-blue-600 hover:text-blue-800"
@@ -548,7 +553,7 @@ export default function TruckTable() {
                           <UserIcon className="w-5 h-5" />
                         </button>
                         <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Assign Driver
+                          {t('assignDriver')}
                         </span>
                       </div>
                     )}
@@ -562,7 +567,7 @@ export default function TruckTable() {
                         <ArrowDownTrayIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Export
+                        {t('export')}
                       </span>
                     </div>
                   </div>
@@ -573,7 +578,7 @@ export default function TruckTable() {
         </Table>
 
         {currentRecords.length === 0 && (
-          <p className="text-center py-4 text-gray-500">No matching records found.</p>
+          <p className="text-center py-4 text-gray-500">{t('noMatchingRecords')}</p>
         )}
       </div>
 
@@ -588,13 +593,13 @@ export default function TruckTable() {
             }
           }}
         >
-          <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedTrucks.length} records)
+          <TrashIcon className="w-5 h-5" /> {t('deleteSelected')} ({selectedTrucks.length} {t('records')})
         </button>
         
         {/* Pagination Controls */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{t('rowsPerPage')}:</span>
             <select 
               value={recordsPerPage} 
               onChange={handleRecordsPerPageChange}
@@ -679,22 +684,22 @@ export default function TruckTable() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Truck?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('deleteTruck')}?</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedTruck?.plateNo}</b>?
+              {t('deleteTruckConfirm')} <b>{selectedTruck?.plateNo}</b>?
             </p>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
                 onClick={handleDelete}
               >
-                Yes, Delete
+                {t('yesDelete')}
               </button>
             </div>
           </div>
@@ -705,13 +710,13 @@ export default function TruckTable() {
       {showSuspendPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Suspend Truck?</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('suspendTruck')}?</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to suspend <b>{selectedTruck?.plateNo}</b>?
+              {t('suspendTruckConfirm')} <b>{selectedTruck?.plateNo}</b>?
             </p>
             <div className="mt-4">
               <textarea
-                placeholder="Reason for suspension..."
+                placeholder={t('reasonForSuspension')}
                 className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 rows={3}
                 onChange={(e) => setAssignDriverReason(e.target.value)}
@@ -722,13 +727,13 @@ export default function TruckTable() {
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                 onClick={() => setShowSuspendPopup(false)}
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md"
                 onClick={handleSuspend}
               >
-                Yes, Suspend
+                {t('yesSuspend')}
               </button>
             </div>
           </div>
@@ -739,21 +744,21 @@ export default function TruckTable() {
       {showAssignDriverPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Assign Driver</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('assignDriver')}</h2>
             <p className="text-sm text-gray-600 mt-2">
-              Assign driver to <b>{selectedTruck?.plateNo}</b>
+              {t('assignDriverConfirm')} <b>{selectedTruck?.plateNo}</b>
             </p>
             
             <div className="mt-4 space-y-3">
               <select className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Select Available Driver</option>
-                <option value="Driver 1">Driver 1 (Available)</option>
-                <option value="Driver 2">Driver 2 (Available)</option>
-                <option value="Driver 3">Driver 3 (Available)</option>
+                <option value="">{t('selectAvailableDriver')}</option>
+                <option value="Driver 1">Driver 1 ({t('available')})</option>
+                <option value="Driver 2">Driver 2 ({t('available')})</option>
+                <option value="Driver 3">Driver 3 ({t('available')})</option>
               </select>
               
               <textarea
-                placeholder="Additional notes for driver assignment..."
+                placeholder={t('reasonForAssignment')}
                 className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows={2}
                 value={assignDriverReason}
@@ -769,13 +774,13 @@ export default function TruckTable() {
                   setAssignDriverReason("");
                 }}
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
                 onClick={handleAssignDriver}
               >
-                Assign Driver
+                {t('assignDriver')}
               </button>
             </div>
           </div>

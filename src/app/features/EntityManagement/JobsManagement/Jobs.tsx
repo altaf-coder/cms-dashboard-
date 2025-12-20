@@ -10,6 +10,7 @@ import {
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   Table,
   TableBody,
@@ -70,6 +71,7 @@ const getJobsData = (): Job[] => {
 };
 
 export default function ViewJobs() {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState<Job[]>([]);
   
   // Pagination state
@@ -257,20 +259,20 @@ export default function ViewJobs() {
   return (
     <>
       <PageMeta
-        title="Jobs Management | CMS Dashboard"
-        description="Manage jobs and assignments"
+        title={t('jobsManagement') + ' | CMS Dashboard'}
+        description={t('manageJobsAndAssignments')}
       />
-      <PageBreadcrumb pageTitle="Jobs Management" />
+      <PageBreadcrumb pageTitle={t('jobsManagement')} />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
         <h2 className="font-bold text-lg text-gray-900 dark:text-white">
-          View Jobs
+          {t('viewJobs')}
         </h2>
         <Link to="/add-jobs">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add New Job
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap min-w-[140px]">
+            <span className="text-xl">+</span> {t('addNewJob')}
           </button>
         </Link>
       </div>
@@ -286,24 +288,23 @@ export default function ViewJobs() {
               </div>
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Delete Job
+              {t('deleteJob')}
             </h2>
             <p className="text-gray-700 mb-6">
-              Are you sure you want to delete this job? This action cannot be
-              undone.
+              {t('areYouSureYouWantToDeleteThisJob')}
             </p>
             <div className="flex justify-center space-x-3">
               <button
                 onClick={() => setShowCancelConfirm(null)}
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={() => confirmCancelJob(showCancelConfirm)}
                 className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
               >
-                Delete Job
+                {t('deleteJob')}
               </button>
             </div>
           </div>
@@ -316,10 +317,10 @@ export default function ViewJobs() {
         <div className="flex flex-wrap gap-3 items-center">
           {/* Job ID Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Job ID</label>
+            <label className="text-xs text-gray-500 mb-1">{t('jobId')}</label>
             <input
               type="text"
-              placeholder="Enter Job ID"
+              placeholder={t('enterJobId')}
               className="w-32 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={jobIdFilter}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -330,10 +331,10 @@ export default function ViewJobs() {
 
           {/* Shipment ID Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Shipment ID</label>
+            <label className="text-xs text-gray-500 mb-1">{t('shipmentId')}</label>
             <input
               type="text"
-              placeholder="Enter Shipment ID"
+              placeholder={t('enterShipmentId')}
               className="w-36 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={shipmentIdFilter}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -344,10 +345,10 @@ export default function ViewJobs() {
 
           {/* Container No Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Container No.</label>
+            <label className="text-xs text-gray-500 mb-1">{t('containerNo')}</label>
             <input
               type="text"
-              placeholder="Enter Container No"
+              placeholder={t('enterContainerNo')}
               className="w-40 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={containerNoFilter}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -358,10 +359,10 @@ export default function ViewJobs() {
 
           {/* Driver Name Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Driver Name</label>
+            <label className="text-xs text-gray-500 mb-1">{t('driverName')}</label>
             <input
               type="text"
-              placeholder="Enter Driver Name"
+              placeholder={t('enterDriverName')}
               className="w-40 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={driverNameFilter}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -372,10 +373,10 @@ export default function ViewJobs() {
 
           {/* Vendor Name Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Vendor Name</label>
+            <label className="text-xs text-gray-500 mb-1">{t('vendorName')}</label>
             <input
               type="text"
-              placeholder="Enter Vendor Name"
+              placeholder={t('enterVendorName')}
               className="w-40 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={vendorNameFilter}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -389,7 +390,7 @@ export default function ViewJobs() {
         <div className="flex flex-wrap gap-3 items-center">
           {/* Job Type Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Job Type</label>
+            <label className="text-xs text-gray-500 mb-1">{t('jobType')}</label>
             <select
               value={jobTypeFilter}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -397,18 +398,18 @@ export default function ViewJobs() {
               }
               className="w-40 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">All Types</option>
-              <option value="Pickup">Pickup</option>
-              <option value="Delivery">Delivery</option>
-              <option value="Transhipment">Transhipment</option>
-              <option value="Storage">Storage</option>
-              <option value="Customs Clearance">Customs Clearance</option>
+              <option value="">{t('allTypes')}</option>
+              <option value="Pickup">{t('pickup')}</option>
+              <option value="Delivery">{t('delivery')}</option>
+              <option value="Transhipment">{t('transhipment')}</option>
+              <option value="Storage">{t('storage')}</option>
+              <option value="Customs Clearance">{t('customsClearance')}</option>
             </select>
           </div>
 
           {/* Job Date Range Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Job Date Range</label>
+            <label className="text-xs text-gray-500 mb-1">{t('jobDateRange')}</label>
             <div className="flex items-center gap-2">
               <div className="relative">
                 <input
@@ -441,7 +442,7 @@ export default function ViewJobs() {
                 </div>
               </div>
 
-              <span className="text-gray-500">to</span>
+              <span className="text-gray-500">{t('to')}</span>
 
               <div className="relative">
                 <input
@@ -478,7 +479,7 @@ export default function ViewJobs() {
 
           {/* Status Filter */}
           <div className="flex flex-col">
-            <label className="text-xs text-gray-500 mb-1">Status</label>
+            <label className="text-xs text-gray-500 mb-1">{t('status')}</label>
             <select
               value={statusFilter}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -486,13 +487,13 @@ export default function ViewJobs() {
               }
               className="w-40 px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Assigned">Assigned</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Overdue">Overdue</option>
+              <option value="">{t('allStatus')}</option>
+              <option value="Pending">{t('pending')}</option>
+              <option value="Assigned">{t('assigned')}</option>
+              <option value="In Progress">{t('inProgress')}</option>
+              <option value="Completed">{t('completed')}</option>
+              <option value="Cancelled">{t('cancelled')}</option>
+              <option value="Overdue">{t('overdue')}</option>
             </select>
           </div>
 
@@ -508,7 +509,7 @@ export default function ViewJobs() {
                 }
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                Overdue Jobs only
+                {t('showOverdueOnly')}
               </span>
             </label>
 
@@ -522,7 +523,7 @@ export default function ViewJobs() {
                 }
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                Today's Jobs
+                {t('showTodaysJobsOnly')}
               </span>
             </label>
           </div>
@@ -532,17 +533,17 @@ export default function ViewJobs() {
         {selectedJobs.length > 0 && (
           <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedJobs.length} selected
+              {selectedJobs.length} {t('selected')}
             </span>
 
             {/* Cancel Selected Button */}
             <button
               onClick={handleBulkCancel}
               className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 flex items-center gap-1"
-              title="Cancel Selected"
+              title={t('cancelSelected')}
             >
               <XMarkIcon className="w-4 h-4" />
-              Cancel Jobs
+              {t('cancelJobs')}
             </button>
 
             {/* Export CSV Button */}
@@ -551,7 +552,7 @@ export default function ViewJobs() {
               className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
             >
               <ArrowDownTrayIcon className="w-4 h-4" />
-              Export CSV
+              {t('exportCSV')}
             </button>
           </div>
         )}
@@ -574,40 +575,40 @@ export default function ViewJobs() {
                 />
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Job ID
+                {t('jobId')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Shipment ID
+                {t('shipmentId')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Container No.
+                {t('containerNo')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Job Type
+                {t('jobType')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Vendor
+                {t('vendor')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Driver
+                {t('driver')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Truck No.
+                {t('truckNo')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 ">
-                Job Date / Time
+                {t('jobDateTime')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Status
+                {t('status')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Last Return Date
+                {t('lastReturnDate')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Auto Alerts
+                {t('autoAlerts')}
               </TableCell>
               <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                Actions
+                {t('actions')}
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -637,7 +638,12 @@ export default function ViewJobs() {
                       job.jobType
                     )}`}
                   >
-                    {job.jobType}
+                    {job.jobType === 'Pickup' ? t('pickup') :
+                     job.jobType === 'Delivery' ? t('delivery') :
+                     job.jobType === 'Transhipment' ? t('transhipment') :
+                     job.jobType === 'Storage' ? t('storage') :
+                     job.jobType === 'Customs Clearance' ? t('customsClearance') :
+                     job.jobType}
                   </span>
                 </TableCell>
                 <TableCell className="px-5 py-4">{job.vendor}</TableCell>
@@ -664,12 +670,12 @@ export default function ViewJobs() {
                     {job.jobDateTime}
                     {job.overdue && (
                       <span className="ml-2 text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded">
-                        OVERDUE
+                        {t('overdue').toUpperCase()}
                       </span>
                     )}
                     {job.todaysJob && !job.overdue && (
                       <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">
-                        TODAY
+                        {t('today').toUpperCase()}
                       </span>
                     )}
                   </div>
@@ -680,7 +686,13 @@ export default function ViewJobs() {
                       job.status
                     )}`}
                   >
-                    {job.status}
+                    {job.status === 'Pending' ? t('pending') :
+                     job.status === 'Assigned' ? t('assigned') :
+                     job.status === 'In Progress' ? t('inProgress') :
+                     job.status === 'Completed' ? t('completed') :
+                     job.status === 'Cancelled' ? t('cancelled') :
+                     job.status === 'Overdue' ? t('overdue') :
+                     job.status}
                   </span>
                 </TableCell>
                 <TableCell className="px-5 py-4">
@@ -705,7 +717,7 @@ export default function ViewJobs() {
                         <EyeIcon className="w-5 h-5 text-blue-600 group-hover:text-blue-800" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View
+                        {t('view')}
                       </span>
                     </div>
 
@@ -715,11 +727,11 @@ export default function ViewJobs() {
                         <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
                       </Link>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Edit
+                        {t('edit')}
                       </span>
                     </div>
 
-                    {/* Cancel - UPDATED: अब confirmation modal दिखाएगा */}
+                    {/* Cancel */}
                     <div className="relative group">
                       <button
                         className="text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -732,7 +744,7 @@ export default function ViewJobs() {
                         <XMarkIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Cancel
+                        {t('cancel')}
                       </span>
                     </div>
 
@@ -746,7 +758,7 @@ export default function ViewJobs() {
                         <MapPinIcon className="w-5 h-5" />
                       </button>
                       <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Track
+                        {t('track')}
                       </span>
                     </div>
                   </div>
@@ -758,7 +770,7 @@ export default function ViewJobs() {
 
         {filteredJobs.length === 0 && (
           <p className="text-center py-4 text-gray-500">
-            No matching records found.
+            {t('noMatchingRecordsFound')}
           </p>
         )}
       </div>
@@ -768,7 +780,7 @@ export default function ViewJobs() {
         <div className="px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 border-t border-gray-100 dark:border-white/[0.05]">
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Showing {indexOfFirstRecord + 1} to {Math.min(indexOfLastRecord, filteredJobs.length)} of {filteredJobs.length} jobs
+              {t('showingJobs')} {indexOfFirstRecord + 1} {t('to')} {Math.min(indexOfLastRecord, filteredJobs.length)} {t('of')} {filteredJobs.length} {t('jobs')}
             </span>
             <select
               value={recordsPerPage}
@@ -791,7 +803,7 @@ export default function ViewJobs() {
               disabled={currentPage === 1}
               className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Previous
+              {t('previous')}
             </button>
             
             <div className="flex items-center gap-1">
@@ -828,7 +840,7 @@ export default function ViewJobs() {
               disabled={currentPage === totalPages}
               className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Next
+              {t('next')}
             </button>
           </div>
         </div>

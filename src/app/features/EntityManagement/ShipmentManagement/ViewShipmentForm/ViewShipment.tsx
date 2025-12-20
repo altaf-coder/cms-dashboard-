@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Types matching the form
 type Vehicle = {
@@ -145,6 +146,7 @@ const getStatusText = (status: string) => {
 };
 
 export default function ViewShipment() {
+  const { t } = useTranslation();
   const [shipmentData] = useState<ShipmentData>(mockShipmentData);
   const [vehicles] = useState<Vehicle[]>(mockVehicles);
   const [containers] = useState<Container[]>(mockContainers);
@@ -173,65 +175,67 @@ export default function ViewShipment() {
         <div className="bg-white rounded-xl shadow-md p-6">
           {/* Header */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">SHIPMENT DETAILS</h1>
-            </div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('shipmentDetails')}</h1>
+            <p className="text-gray-600 mt-2">{t('shipmentInformationAndSpecifications')}</p>
+          </div>
           
 
           <div className="space-y-8">
             {/* Shipment Information Section */}
             <div className="border-b pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('shipmentInformation')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Shipment ID</label>
+                  <label className="text-sm font-medium text-gray-500">{t('shipmentId')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.shipmentId}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Customer</label>
+                  <label className="text-sm font-medium text-gray-500">{t('customer')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{getCustomerName(shipmentData.customer)}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Bill of Lading No.</label>
+                  <label className="text-sm font-medium text-gray-500">{t('billOfLadingNo')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.billOfLadingNo}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Port of Arrival</label>
+                  <label className="text-sm font-medium text-gray-500">{t('portOfArrival')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.portOfArrival}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">ETA</label>
+                  <label className="text-sm font-medium text-gray-500">{t('eta')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{formatDateTime(shipmentData.etaDate, shipmentData.etaTime)}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Number of Vehicles</label>
+                  <label className="text-sm font-medium text-gray-500">{t('numberOfVehicles')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.numberOfVehicles}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Shipment Type</label>
+                  <label className="text-sm font-medium text-gray-500">{t('shipmentType')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.shipmentType}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Status</label>
+                  <label className="text-sm font-medium text-gray-500">{t('status')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{getStatusText(shipmentData.status)}</p>
                   </div>
@@ -242,49 +246,49 @@ export default function ViewShipment() {
             {/* Vehicle Details Section */}
             {(shipmentData.shipmentType === 'RORO' || shipmentData.shipmentType === 'Containerized Cars') && vehicles.length > 0 && (
               <div className="border-b pb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Vehicle Details</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('vehicleDetails')}</h3>
                 <div className="space-y-4">
                   {vehicles.map((vehicle, index) => (
                     <div key={index} className="p-4 border rounded-lg bg-gray-50">
-                      <h4 className="font-medium text-gray-700 mb-3">Vehicle {index + 1}</h4>
+                      <h4 className="font-medium text-gray-700 mb-3">{t('vehicle')} {index + 1}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Chassis Number (VIN)</label>
+                          <label className="text-sm font-medium text-gray-500">{t('chassisNumber')} (VIN)</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800 font-mono">{vehicle.chassisNumber}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Make</label>
+                          <label className="text-sm font-medium text-gray-500">{t('make')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{vehicle.make}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Model</label>
+                          <label className="text-sm font-medium text-gray-500">{t('model')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{vehicle.model}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Model Year</label>
+                          <label className="text-sm font-medium text-gray-500">{t('modelYear')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{vehicle.modelYear}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Color</label>
+                          <label className="text-sm font-medium text-gray-500">{t('color')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{vehicle.color || 'N/A'}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Vehicle Value</label>
+                          <label className="text-sm font-medium text-gray-500">{t('vehicleValue')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{vehicle.value ? formatCurrency(vehicle.value) : 'N/A'}</p>
                           </div>
@@ -299,31 +303,31 @@ export default function ViewShipment() {
             {/* Delivery Order Section */}
             {shipmentData.doIssued && (
               <div className="border-b pb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Delivery Order (DO)</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('deliveryOrder')} (DO)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">DO Number</label>
+                    <label className="text-sm font-medium text-gray-500">{t('doNumber')}</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-gray-800 font-medium">{shipmentData.doNumber}</p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium text-gray-500">DO Issue Date</label>
+                    <label className="text-sm font-medium text-gray-500">{t('doIssueDate')}</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-gray-800 font-medium">{formatDateTime(shipmentData.doIssueDate, '')}</p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium text-gray-500">DO Expiry Date</label>
+                    <label className="text-sm font-medium text-gray-500">{t('doExpiryDate')}</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-gray-800 font-medium">{formatDateTime(shipmentData.doExpiryDate, '')}</p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium text-gray-500">DO Issued by</label>
+                    <label className="text-sm font-medium text-gray-500">{t('doIssuedBy')}</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-gray-800 font-medium">{shipmentData.doIssuedBy}</p>
                     </div>
@@ -335,42 +339,42 @@ export default function ViewShipment() {
             {/* Container Information Section */}
             {shipmentData.containerShipment && containers.length > 0 && (
               <div className="border-b pb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Container Information</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('containerInformation')}</h3>
                 <div className="space-y-4">
                   {containers.map((container, index) => (
                     <div key={index} className="p-4 border rounded-lg bg-gray-50">
-                      <h4 className="font-medium text-gray-700 mb-3">Container {index + 1}</h4>
+                      <h4 className="font-medium text-gray-700 mb-3">{t('container')} {index + 1}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Container No.</label>
+                          <label className="text-sm font-medium text-gray-500">{t('containerNo')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800 font-mono">{container.containerNo}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Container Size</label>
+                          <label className="text-sm font-medium text-gray-500">{t('containerSize')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
-                            <p className="text-gray-800">{container.containerSize} ft</p>
+                            <p className="text-gray-800">{container.containerSize} {t('ft')}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Seal Number</label>
+                          <label className="text-sm font-medium text-gray-500">{t('sealNumber')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{container.sealNumber || 'N/A'}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Last Free Date (LFD)</label>
+                          <label className="text-sm font-medium text-gray-500">{t('lastFreeDate')} (LFD)</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{formatDateTime(container.lastFreeDate, '')}</p>
                           </div>
                         </div>
                         
                         <div>
-                          <label className="text-sm font-medium text-gray-500">Return Deadline</label>
+                          <label className="text-sm font-medium text-gray-500">{t('returnDeadline')}</label>
                           <div className="mt-1 p-2 bg-white rounded border border-gray-200">
                             <p className="text-gray-800">{formatDateTime(container.returnDeadline, '')}</p>
                           </div>
@@ -384,35 +388,35 @@ export default function ViewShipment() {
 
             {/* Customs Documents Section */}
             <div className="border-b pb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Customs Documents</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('customsDocuments')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Import Customs Declaration No.</label>
+                  <label className="text-sm font-medium text-gray-500">{t('importCustomsNo')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{shipmentData.importCustomsNo}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Inspection Required</label>
+                  <label className="text-sm font-medium text-gray-500">{t('inspectionRequired')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                    <p className="text-gray-800 font-medium">{shipmentData.inspectionRequired === 'yes' ? 'Yes' : 'No'}</p>
+                    <p className="text-gray-800 font-medium">{shipmentData.inspectionRequired === 'yes' ? t('yes') : t('no')}</p>
                   </div>
                 </div>
 
                 {shipmentData.inspectionRequired === 'yes' && (
                   <>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Inspection Date</label>
+                      <label className="text-sm font-medium text-gray-500">{t('inspectionDate')}</label>
                       <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                         <p className="text-gray-800 font-medium">{formatDateTime(shipmentData.inspectionDate, '')}</p>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Inspection Passed</label>
+                      <label className="text-sm font-medium text-gray-500">{t('inspectionPassed')}</label>
                       <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <p className="text-gray-800 font-medium">{shipmentData.inspectionPassed === 'yes' ? 'Yes' : 'No'}</p>
+                        <p className="text-gray-800 font-medium">{shipmentData.inspectionPassed === 'yes' ? t('yes') : t('no')}</p>
                       </div>
                     </div>
                   </>
@@ -420,56 +424,56 @@ export default function ViewShipment() {
               </div>
 
               <div className="mt-4">
-                <label className="text-sm font-medium text-gray-500">Remarks</label>
+                <label className="text-sm font-medium text-gray-500">{t('remarks')}</label>
                 <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <p className="text-gray-800 whitespace-pre-line">{shipmentData.remarks || 'No remarks'}</p>
+                  <p className="text-gray-800 whitespace-pre-line">{shipmentData.remarks || t('noRemarks')}</p>
                 </div>
               </div>
             </div>
 
             {/* Financial Section */}
             <div className="pb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Financial Information</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('financialInformation')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Customs Deposit</label>
+                  <label className="text-sm font-medium text-gray-500">{t('customsDeposit')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{formatCurrency(shipmentData.customsDeposit)}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Port Charges</label>
+                  <label className="text-sm font-medium text-gray-500">{t('portCharges')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{formatCurrency(shipmentData.portCharges)}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Shipping Line Charges</label>
+                  <label className="text-sm font-medium text-gray-500">{t('shippingLineCharges')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-gray-800 font-medium">{formatCurrency(shipmentData.shippingLineCharges)}</p>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Demurrage Applicable</label>
+                  <label className="text-sm font-medium text-gray-500">{t('demurrageApplicable')}</label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                    <p className="text-gray-800 font-medium">{shipmentData.demurrageApplicable === 'yes' ? 'Yes' : 'No'}</p>
+                    <p className="text-gray-800 font-medium">{shipmentData.demurrageApplicable === 'yes' ? t('yes') : t('no')}</p>
                   </div>
                 </div>
 
                 {shipmentData.demurrageApplicable === 'yes' && (
                   <>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Demurrage Days</label>
+                      <label className="text-sm font-medium text-gray-500">{t('demurrageDays')}</label>
                       <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <p className="text-gray-800 font-medium">{shipmentData.demurrageDays} days</p>
+                        <p className="text-gray-800 font-medium">{shipmentData.demurrageDays} {t('days')}</p>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Demurrage Amount</label>
+                      <label className="text-sm font-medium text-gray-500">{t('demurrageAmount')}</label>
                       <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
                         <p className="text-gray-800 font-medium">{formatCurrency(shipmentData.demurrageAmount)}</p>
                       </div>
@@ -479,9 +483,9 @@ export default function ViewShipment() {
               </div>
 
               <div className="mt-4">
-                <label className="text-sm font-medium text-gray-500">Cargo Description</label>
+                <label className="text-sm font-medium text-gray-500">{t('cargoDescription')}</label>
                 <div className="mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <p className="text-gray-800 whitespace-pre-line">{shipmentData.cargoDescription || 'No description'}</p>
+                  <p className="text-gray-800 whitespace-pre-line">{shipmentData.cargoDescription || t('noDescription')}</p>
                 </div>
               </div>
             </div>

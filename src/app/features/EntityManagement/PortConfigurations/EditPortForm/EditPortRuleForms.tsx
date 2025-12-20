@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { CheckIcon, ClockIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface PortFormData {
@@ -73,6 +74,7 @@ interface TimePickerProps {
 }
 
 function TimePicker({ value, onChange, error, touched, label, required }: TimePickerProps) {
+  const { t } = useTranslation();
   const [showPicker, setShowPicker] = useState(false);
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
@@ -170,21 +172,21 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
         <div className="absolute z-50 mt-1 bg-white border border-gray-300 rounded-lg shadow-xl w-80">
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-sm font-medium text-gray-700">Select Time</div>
+              <div className="text-sm font-medium text-gray-700">{t('selectTime')}</div>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleCancel}
                   className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="button"
                   onClick={handleApply}
                   className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  Apply
+                  {t('apply')}
                 </button>
               </div>
             </div>
@@ -203,7 +205,7 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
                   <div className="w-16 h-16 bg-gray-50 border border-gray-300 rounded-lg flex items-center justify-center">
                     <span className="text-2xl font-bold text-gray-900">{hours}</span>
                   </div>
-                  <div className="text-xs text-gray-500 mt-2">Hours</div>
+                  <div className="text-xs text-gray-500 mt-2">{t('hours')}</div>
                   <button
                     type="button"
                     onClick={() => handleTimeChange('hours', false)}
@@ -229,7 +231,7 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
                   <div className="w-16 h-16 bg-gray-50 border border-gray-300 rounded-lg flex items-center justify-center">
                     <span className="text-2xl font-bold text-gray-900">{minutes}</span>
                   </div>
-                  <div className="text-xs text-gray-500 mt-2">Minutes</div>
+                  <div className="text-xs text-gray-500 mt-2">{t('minutes')}</div>
                   <button
                     type="button"
                     onClick={() => handleTimeChange('minutes', false)}
@@ -255,7 +257,7 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
                   <div className="w-16 h-16 bg-gray-50 border border-gray-300 rounded-lg flex items-center justify-center">
                     <span className="text-2xl font-bold text-gray-900">{seconds}</span>
                   </div>
-                  <div className="text-xs text-gray-500 mt-2">Seconds</div>
+                  <div className="text-xs text-gray-500 mt-2">{t('seconds')}</div>
                   <button
                     type="button"
                     onClick={() => handleTimeChange('seconds', false)}
@@ -268,7 +270,7 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
             </div>
            
             <div className="pt-3 border-t border-gray-200">
-              <div className="text-sm text-gray-600 mb-1">Selected Time:</div>
+              <div className="text-sm text-gray-600 mb-1">{t('selectedTime')}</div>
               <div className="text-lg font-bold text-blue-600 bg-blue-50 py-2 px-3 rounded">{hours}:{minutes}:{seconds}</div>
             </div>
           </div>
@@ -283,6 +285,7 @@ function TimePicker({ value, onChange, error, touched, label, required }: TimePi
 }
 
 export default function PortForm() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const isEditMode = Boolean(id);
 
@@ -511,55 +514,55 @@ export default function PortForm() {
     const newErrors: Record<string, string> = {};
 
     // Basic Port Information
-    if (!formData.portName.trim()) newErrors.portName = "Port name is required";
-    if (!formData.emirate) newErrors.emirate = "Emirate is required";
+    if (!formData.portName.trim()) newErrors.portName = t('portNameIsRequired');
+    if (!formData.emirate) newErrors.emirate = t('emirateIsRequired');
     if (formData.portCode && (formData.portCode.length < 3 || formData.portCode.length > 5)) {
-      newErrors.portCode = "Port code must be 3-5 letters";
+      newErrors.portCode = t('portCodeMustBe3To5Letters');
     }
 
     // Container Return Rules
     if (!formData.standardFreeDays || formData.standardFreeDays <= 0) {
-      newErrors.standardFreeDays = "Standard free days must be greater than 0";
+      newErrors.standardFreeDays = t('standardFreeDaysMustBeGreaterThan0');
     }
     if (!formData.maximumReturnDays || formData.maximumReturnDays < formData.standardFreeDays) {
-      newErrors.maximumReturnDays = "Maximum return days must be greater than or equal to free days";
+      newErrors.maximumReturnDays = t('maximumReturnDaysMustBeGreaterThanOrEqualToFreeDays');
     }
     if (!formData.demurragePerDay || formData.demurragePerDay <= 0) {
-      newErrors.demurragePerDay = "Demurrage per day must be greater than 0";
+      newErrors.demurragePerDay = t('demurragePerDayMustBeGreaterThan0');
     }
     if (!formData.returnDeadlineMethod) {
-      newErrors.returnDeadlineMethod = "Return deadline method is required";
+      newErrors.returnDeadlineMethod = t('returnDeadlineMethodIsRequired');
     }
 
     // Toll & Movement Rules (conditional validation)
     if (formData.tollApplicable) {
       if (!formData.dayTollAmount || formData.dayTollAmount <= 0) {
-        newErrors.dayTollAmount = "Day toll amount must be greater than 0";
+        newErrors.dayTollAmount = t('dayTollAmountMustBeGreaterThan0');
       }
       if (!formData.nightTollAmount || formData.nightTollAmount <= 0) {
-        newErrors.nightTollAmount = "Night toll amount must be greater than 0";
+        newErrors.nightTollAmount = t('nightTollAmountMustBeGreaterThan0');
       }
-      if (!formData.nightHoursStart) newErrors.nightHoursStart = "Night hours start is required";
-      if (!formData.nightHoursEnd) newErrors.nightHoursEnd = "Night hours end is required";
+      if (!formData.nightHoursStart) newErrors.nightHoursStart = t('nightHoursStartIsRequired');
+      if (!formData.nightHoursEnd) newErrors.nightHoursEnd = t('nightHoursEndIsRequired');
       if (formData.tollRequiredForEmptyReturn && (!formData.emptyReturnTollAmount || formData.emptyReturnTollAmount <= 0)) {
-        newErrors.emptyReturnTollAmount = "Empty return toll amount must be greater than 0";
+        newErrors.emptyReturnTollAmount = t('emptyReturnTollAmountMustBeGreaterThan0');
       }
-      if (!formData.tollPaymentMethod) newErrors.tollPaymentMethod = "Toll payment method is required";
+      if (!formData.tollPaymentMethod) newErrors.tollPaymentMethod = t('tollPaymentMethodIsRequired');
       if (formData.automaticTollPenalty && (!formData.penaltyAmount || formData.penaltyAmount <= 0)) {
-        newErrors.penaltyAmount = "Penalty amount must be greater than 0";
+        newErrors.penaltyAmount = t('penaltyAmountMustBeGreaterThan0');
       }
     }
 
     // Movement Restrictions
     if (formData.nightOnlyMovement) {
-      if (!formData.allowedMovementStart) newErrors.allowedMovementStart = "Allowed movement start time is required";
-      if (!formData.allowedMovementEnd) newErrors.allowedMovementEnd = "Allowed movement end time is required";
+      if (!formData.allowedMovementStart) newErrors.allowedMovementStart = t('allowedMovementStartTimeIsRequired');
+      if (!formData.allowedMovementEnd) newErrors.allowedMovementEnd = t('allowedMovementEndTimeIsRequired');
     }
 
     // Operational Cutoff Rules
-    if (!formData.cutoffDosubmission) newErrors.cutoffDosubmission = "Cutoff time for DO submission is required";
-    if (!formData.cutoffContainerPickup) newErrors.cutoffContainerPickup = "Cutoff time for container pickup is required";
-    if (!formData.cutoffEmptyReturn) newErrors.cutoffEmptyReturn = "Cutoff time for empty return is required";
+    if (!formData.cutoffDosubmission) newErrors.cutoffDosubmission = t('cutoffTimeForDosubmissionIsRequired');
+    if (!formData.cutoffContainerPickup) newErrors.cutoffContainerPickup = t('cutoffTimeForContainerPickupIsRequired');
+    if (!formData.cutoffEmptyReturn) newErrors.cutoffEmptyReturn = t('cutoffTimeForEmptyReturnIsRequired');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -671,7 +674,7 @@ export default function PortForm() {
               {/* <ArrowLeftIcon className="w-5 h-5" /> */}
             </button>
             <h1 className="text-2xl font-bold text-gray-900">
-              {isEditMode ? "Edit Port Rule" : "Add Port Rule"}
+              {isEditMode ? t('editPortRule') : t('addPortRule')}
             </h1>
           </div>
         </div>
@@ -680,14 +683,14 @@ export default function PortForm() {
           {/* Basic Port Information */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Basic Port Information
+              {t('basicPortInformation')}
             </h3>
            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Port ID */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Port ID
+                  {t('portId')}
                 </label>
                 <input
                   type="text"
@@ -695,13 +698,13 @@ export default function PortForm() {
                   readOnly
                   className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-600 cursor-not-allowed"
                 />
-                <p className="mt-1 text-sm text-gray-500">Auto-generated port identifier</p>
+                <p className="mt-1 text-sm text-gray-500">{t('autoGenerated')}</p>
               </div>
 
               {/* Port Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Port Name <span className="text-red-500">*</span>
+                  {t('portName')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -712,7 +715,7 @@ export default function PortForm() {
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     errors.portName && touched.portName ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="Enter port name"
+                  placeholder={t('enterPortName')}
                 />
                 {errors.portName && touched.portName && (
                   <p className="mt-1 text-sm text-red-600">{errors.portName}</p>
@@ -722,7 +725,7 @@ export default function PortForm() {
               {/* Port Code */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Port Code (Optional)
+                  {t('portCode')} ({t('optional')})
                 </label>
                 <input
                   type="text"
@@ -734,18 +737,18 @@ export default function PortForm() {
                   className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     errors.portCode && touched.portCode ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="e.g., JAL"
+                  placeholder={t('enterPortCode')}
                 />
                 {errors.portCode && touched.portCode && (
                   <p className="mt-1 text-sm text-red-600">{errors.portCode}</p>
                 )}
-                <p className="mt-1 text-sm text-gray-500">3-5 letter code</p>
+                <p className="mt-1 text-sm text-gray-500">3-5 {t('letterCode')}</p>
               </div>
 
               {/* Emirate */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Emirate <span className="text-red-500">*</span>
+                  {t('emirate')} <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="emirate"
@@ -756,7 +759,7 @@ export default function PortForm() {
                     errors.emirate && touched.emirate ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
-                  <option value="">Select Emirate</option>
+                  <option value="">{t('selectEmirate')}</option>
                   {emirates.map(emirate => (
                     <option key={emirate} value={emirate}>{emirate}</option>
                   ))}
@@ -769,7 +772,7 @@ export default function PortForm() {
               {/* Active Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Active Status
+                  {t('activeStatus')}
                 </label>
                 <select
                   name="activeStatus"
@@ -777,8 +780,8 @@ export default function PortForm() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
+                  <option value="Active">{t('active')}</option>
+                  <option value="Inactive">{t('inactive')}</option>
                 </select>
               </div>
             </div>
@@ -787,14 +790,14 @@ export default function PortForm() {
           {/* Container Return Rules */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Container Return Rules
+              {t('containerReturnRules')}
             </h3>
            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Standard Free Days */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Standard Free Days <span className="text-red-500">*</span>
+                  {t('standardFreeDays')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -810,13 +813,13 @@ export default function PortForm() {
                 {errors.standardFreeDays && touched.standardFreeDays && (
                   <p className="mt-1 text-sm text-red-600">{errors.standardFreeDays}</p>
                 )}
-                <p className="mt-1 text-sm text-gray-500">Number of free days before demurrage applies</p>
+                <p className="mt-1 text-sm text-gray-500">{t('numberOfFreeDaysBeforeDemurrageApplies')}</p>
               </div>
 
               {/* Maximum Allowed Return Days */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Maximum Allowed Return Days <span className="text-red-500">*</span>
+                  {t('maximumReturnDays')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -832,13 +835,13 @@ export default function PortForm() {
                 {errors.maximumReturnDays && touched.maximumReturnDays && (
                   <p className="mt-1 text-sm text-red-600">{errors.maximumReturnDays}</p>
                 )}
-                <p className="mt-1 text-sm text-gray-500">Must be ≥ Free Days</p>
+                <p className="mt-1 text-sm text-gray-500">{t('mustBeGreaterThanOrEqualToFreeDays')}</p>
               </div>
 
               {/* Demurrage per Day */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Demurrage per Day (AED) <span className="text-red-500">*</span>
+                  {t('demurragePerDayAED')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -860,7 +863,7 @@ export default function PortForm() {
               {/* Return Deadline Calculation Method */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Return Deadline Calculation Method <span className="text-red-500">*</span>
+                  {t('returnDeadlineCalculationMethod')} <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="returnDeadlineMethod"
@@ -871,9 +874,13 @@ export default function PortForm() {
                     errors.returnDeadlineMethod && touched.returnDeadlineMethod ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
-                  <option value="">Select Method</option>
+                  <option value="">{t('selectMethod')}</option>
                   {returnDeadlineMethods.map(method => (
-                    <option key={method} value={method}>{method}</option>
+                    <option key={method} value={method}>
+                      {method === 'ETA Based' ? t('etaBased') : 
+                       method === 'Release Date Based' ? t('releaseDateBased') : 
+                       method === 'Custom' ? t('custom') : method}
+                    </option>
                   ))}
                 </select>
                 {errors.returnDeadlineMethod && touched.returnDeadlineMethod && (
@@ -884,7 +891,7 @@ export default function PortForm() {
               {/* Grace Period */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Grace Period (hours) - Optional
+                  {t('gracePeriodHoursOptional')}
                 </label>
                 <input
                   type="number"
@@ -894,7 +901,7 @@ export default function PortForm() {
                   min="0"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-                <p className="mt-1 text-sm text-gray-500">Additional hours after deadline</p>
+                <p className="mt-1 text-sm text-gray-500">{t('additionalHoursAfterDeadline')}</p>
               </div>
             </div>
           </div>
@@ -902,7 +909,7 @@ export default function PortForm() {
           {/* Toll & Movement Rules */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Toll & Movement Rules
+              {t('tollMovementRules')}
             </h3>
            
             {/* Toll Applicable Toggle */}
@@ -910,9 +917,9 @@ export default function PortForm() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Toll Applicable?
+                    {t('tollApplicable')}
                   </label>
-                  <p className="text-sm text-gray-500">Enable toll charges for this port</p>
+                  <p className="text-sm text-gray-500">{t('enableTollChargesForThisPort')}</p>
                 </div>
                 <button
                   type="button"
@@ -933,7 +940,7 @@ export default function PortForm() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Day Toll Amount (AED) <span className="text-red-500">*</span>
+                        {t('dayTollAmountAED')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
@@ -955,7 +962,7 @@ export default function PortForm() {
                     {/* Night Toll Amount */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Night Toll Amount (AED) <span className="text-red-500">*</span>
+                        {t('nightTollAmountAED')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="number"
@@ -980,7 +987,7 @@ export default function PortForm() {
                       onChange={(value) => handleTimeChange("nightHoursStart", value)}
                       error={errors.nightHoursStart}
                       touched={touched.nightHoursStart}
-                      label="Night Hours Start"
+                      label={t('nightHoursStart')}
                       required={true}
                     />
 
@@ -990,7 +997,7 @@ export default function PortForm() {
                       onChange={(value) => handleTimeChange("nightHoursEnd", value)}
                       error={errors.nightHoursEnd}
                       touched={touched.nightHoursEnd}
-                      label="Night Hours End"
+                      label={t('nightHoursEnd')}
                       required={true}
                     />
                   </div>
@@ -1000,9 +1007,9 @@ export default function PortForm() {
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Toll Required For Empty Return? (Optional)
+                          {t('tollRequiredForEmptyReturnOptional')}
                         </label>
-                        <p className="text-sm text-gray-500">Enable toll for empty container returns</p>
+                        <p className="text-sm text-gray-500">{t('enableTollForEmptyContainerReturns')}</p>
                       </div>
                       <button
                         type="button"
@@ -1020,7 +1027,7 @@ export default function PortForm() {
                     {formData.tollRequiredForEmptyReturn && (
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Toll Amount (AED) <span className="text-red-500">*</span>
+                          {t('emptyReturnTollAmountAED')} <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -1033,7 +1040,7 @@ export default function PortForm() {
                           className={`w-full md:w-1/2 px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             errors.emptyReturnTollAmount && touched.emptyReturnTollAmount ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="Enter toll amount"
+                          placeholder={t('enterTollAmount')}
                         />
                         {errors.emptyReturnTollAmount && touched.emptyReturnTollAmount && (
                           <p className="mt-1 text-sm text-red-600">{errors.emptyReturnTollAmount}</p>
@@ -1045,7 +1052,7 @@ export default function PortForm() {
                   {/* Toll Applied Dropdown */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Toll Applied
+                      {t('tollApplied')}
                     </label>
                     <select
                       name="tollApplied"
@@ -1062,7 +1069,7 @@ export default function PortForm() {
                   {/* Toll Payment Method Dropdown */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Toll Payment Method <span className="text-red-500">*</span>
+                      {t('tollPaymentMethod')} <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="tollPaymentMethod"
@@ -1073,7 +1080,7 @@ export default function PortForm() {
                         errors.tollPaymentMethod && touched.tollPaymentMethod ? 'border-red-500' : 'border-gray-300'
                       }`}
                     >
-                      <option value="">Select Payment Method</option>
+                      <option value="">{t('selectPaymentMethod')}</option>
                       {tollPaymentMethods.map(method => (
                         <option key={method} value={method}>{method}</option>
                       ))}
@@ -1082,7 +1089,7 @@ export default function PortForm() {
                       <p className="mt-1 text-sm text-red-600">{errors.tollPaymentMethod}</p>
                     )}
                     <p className="mt-1 text-sm text-gray-500">
-                      Prepaid (company pays upfront), Postpaid (customer pays later), Vendor Pays
+                      {t('tollPaymentMethodDescription')}
                     </p>
                   </div>
 
@@ -1090,9 +1097,9 @@ export default function PortForm() {
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Mandatory Toll Receipt Upload?
+                        {t('mandatoryTollReceiptUpload')}
                       </label>
-                      <p className="text-sm text-gray-500">Driver will have to upload receipt before marking job as Complete</p>
+                      <p className="text-sm text-gray-500">{t('driverWillHaveToUploadReceiptBeforeMarkingJobAsComplete')}</p>
                     </div>
                     <button
                       type="button"
@@ -1110,7 +1117,7 @@ export default function PortForm() {
                   {/* Return Route Restrictions */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Return Route Restrictions
+                      {t('returnRouteRestrictions')}
                     </label>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {returnRoutes.map(route => (
@@ -1130,8 +1137,8 @@ export default function PortForm() {
                     </div>
                     <p className="mt-1 text-sm text-gray-500">
                       {formData.returnRouteRestrictions.length > 0
-                        ? `Selected: ${formData.returnRouteRestrictions.join(", ")}`
-                        : "No restrictions selected"}
+                        ? `${t('selected')} ${formData.returnRouteRestrictions.join(", ")}`
+                        : t('noRestrictionsSelected')}
                     </p>
                   </div>
 
@@ -1140,9 +1147,9 @@ export default function PortForm() {
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Automatic Toll Penalty If No Receipt? (Optional)
+                          {t('automaticTollPenaltyIfNoReceiptOptional')}
                         </label>
-                        <p className="text-sm text-gray-500">Apply penalty automatically if receipt not uploaded</p>
+                        <p className="text-sm text-gray-500">{t('applyPenaltyAutomaticallyIfReceiptNotUploaded')}</p>
                       </div>
                       <button
                         type="button"
@@ -1160,7 +1167,7 @@ export default function PortForm() {
                     {formData.automaticTollPenalty && (
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Penalty Amount (AED) <span className="text-red-500">*</span>
+                          {t('penaltyAmountAED')} <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -1173,7 +1180,7 @@ export default function PortForm() {
                           className={`w-full md:w-1/2 px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                             errors.penaltyAmount && touched.penaltyAmount ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="Enter penalty amount"
+                          placeholder={t('enterPenaltyAmount')}
                         />
                         {errors.penaltyAmount && touched.penaltyAmount && (
                           <p className="mt-1 text-sm text-red-600">{errors.penaltyAmount}</p>
@@ -1189,7 +1196,7 @@ export default function PortForm() {
           {/* Movement Restrictions */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Movement Restrictions
+              {t('movementRestrictionsSection')}
             </h3>
            
             <div className="space-y-6">
@@ -1197,9 +1204,9 @@ export default function PortForm() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Night-Only Movement Allowed?
+                    {t('nightOnlyMovementAllowed')}
                   </label>
-                  <p className="text-sm text-gray-500">Restrict movement to night hours only</p>
+                  <p className="text-sm text-gray-500">{t('restrictMovementToNightHoursOnly')}</p>
                 </div>
                 <button
                   type="button"
@@ -1223,7 +1230,7 @@ export default function PortForm() {
                       onChange={(value) => handleTimeChange("allowedMovementStart", value)}
                       error={errors.allowedMovementStart}
                       touched={touched.allowedMovementStart}
-                      label="Allowed Movement Start Time"
+                      label={t('allowedMovementStartTime')}
                       required={true}
                     />
 
@@ -1233,7 +1240,7 @@ export default function PortForm() {
                       onChange={(value) => handleTimeChange("allowedMovementEnd", value)}
                       error={errors.allowedMovementEnd}
                       touched={touched.allowedMovementEnd}
-                      label="Allowed Movement End Time"
+                      label={t('allowedMovementEndTime')}
                       required={true}
                     />
                   </div>
@@ -1243,7 +1250,7 @@ export default function PortForm() {
               {/* Weekend Restrictions */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Weekend Restrictions
+                  {t('weekendRestrictions')}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {weekendDays.map(day => (
@@ -1263,8 +1270,8 @@ export default function PortForm() {
                 </div>
                 <p className="mt-1 text-sm text-gray-500">
                   {formData.weekendRestrictions.length > 0
-                    ? `Restricted days: ${formData.weekendRestrictions.join(", ")}`
-                    : "No weekend restrictions"}
+                    ? `${t('restrictedDays')} ${formData.weekendRestrictions.join(", ")}`
+                    : t('noWeekendRestrictions')}
                 </p>
               </div>
 
@@ -1272,9 +1279,9 @@ export default function PortForm() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Public Holiday Lock?
+                    {t('publicHolidayLock')}
                   </label>
-                  <p className="text-sm text-gray-500">Admin can manually block port on given dates</p>
+                  <p className="text-sm text-gray-500">{t('adminCanManuallyBlockPortOnGivenDates')}</p>
                 </div>
                 <button
                   type="button"
@@ -1292,7 +1299,7 @@ export default function PortForm() {
               {/* Port Entry Fee */}
               <div className="w-full md:w-1/2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Port Entry Fee (AED) - Optional
+                  {t('portEntryFeeAEDOptional')}
                 </label>
                 <input
                   type="number"
@@ -1310,7 +1317,7 @@ export default function PortForm() {
           {/* Operational Cutoff Rules */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Operational Cutoff Rules
+              {t('operationalCutoffRules')}
             </h3>
            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1320,7 +1327,7 @@ export default function PortForm() {
                 onChange={(value) => handleTimeChange("cutoffDosubmission", value)}
                 error={errors.cutoffDosubmission}
                 touched={touched.cutoffDosubmission}
-                label="Cutoff Time for DO Submission"
+                label={t('cutoffTimeForDosubmission')}
                 required={true}
               />
 
@@ -1330,7 +1337,7 @@ export default function PortForm() {
                 onChange={(value) => handleTimeChange("cutoffContainerPickup", value)}
                 error={errors.cutoffContainerPickup}
                 touched={touched.cutoffContainerPickup}
-                label="Cutoff Time for Container Pickup"
+                label={t('cutoffTimeForContainerPickup')}
                 required={true}
               />
 
@@ -1340,7 +1347,7 @@ export default function PortForm() {
                 onChange={(value) => handleTimeChange("cutoffEmptyReturn", value)}
                 error={errors.cutoffEmptyReturn}
                 touched={touched.cutoffEmptyReturn}
-                label="Cutoff Time for Empty Return"
+                label={t('cutoffTimeForEmptyReturn')}
                 required={true}
               />
             </div>
@@ -1349,9 +1356,9 @@ export default function PortForm() {
             <div className="mt-6 flex items-center justify-between">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Upload DO Mandatory?
+                  {t('uploadDoMandatory')}
                 </label>
-                <p className="text-sm text-gray-500">Require Delivery Order upload for operations</p>
+                <p className="text-sm text-gray-500">{t('requireDeliveryOrderUploadForOperations')}</p>
               </div>
               <button
                 type="button"
@@ -1370,7 +1377,7 @@ export default function PortForm() {
           {/* Notification Setup */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Notification Setup
+              {t('notificationSetup')}
             </h3>
            
             <div className="space-y-6">
@@ -1378,7 +1385,7 @@ export default function PortForm() {
                 {/* Reminder Before Return Deadline */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Reminder Before Return Deadline
+                    {t('reminderBeforeReturnDeadline')}
                   </label>
                   <select
                     name="reminderBeforeReturn"
@@ -1395,7 +1402,7 @@ export default function PortForm() {
                 {/* Demurrage Alert Threshold */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Demurrage Alert Threshold (days)
+                    {t('demurrageAlertThresholdDays')}
                   </label>
                   <input
                     type="number"
@@ -1405,7 +1412,7 @@ export default function PortForm() {
                     min="0"
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  <p className="mt-1 text-sm text-gray-500">Days before free days end</p>
+                  <p className="mt-1 text-sm text-gray-500">{t('daysBeforeFreeDaysEnd')}</p>
                 </div>
               </div>
 
@@ -1414,9 +1421,9 @@ export default function PortForm() {
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Toll Required Notification
+                      {t('tollRequiredNotification')}
                     </label>
-                    <p className="text-sm text-gray-500">Notify drivers about toll requirements</p>
+                    <p className="text-sm text-gray-500">{t('notifyDriversAboutTollRequirements')}</p>
                   </div>
                   <button
                     type="button"
@@ -1434,9 +1441,9 @@ export default function PortForm() {
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Night Movement Warning
+                      {t('nightMovementWarning')}
                     </label>
-                    <p className="text-sm text-gray-500">Alert about night movement restrictions</p>
+                    <p className="text-sm text-gray-500">{t('alertAboutNightMovementRestrictions')}</p>
                   </div>
                   <button
                     type="button"
@@ -1454,9 +1461,9 @@ export default function PortForm() {
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Cutoff Time Warning
+                      {t('cutoffTimeWarning')}
                     </label>
-                    <p className="text-sm text-gray-500">Alert about approaching cutoff times</p>
+                    <p className="text-sm text-gray-500">{t('alertAboutApproachingCutoffTimes')}</p>
                   </div>
                   <button
                     type="button"
@@ -1484,7 +1491,7 @@ export default function PortForm() {
                 disabled={isSubmitting}
               >
                 {/* <XMarkIcon className="w-5 h-5" /> */}
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 type="submit"
@@ -1494,12 +1501,12 @@ export default function PortForm() {
                 {isSubmitting ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {isEditMode ? "Updating..." : "Creating..."}
+                    {isEditMode ? t('updating') : t('creating')}
                   </>
                 ) : (
                   <>
                     {/* <CheckIcon className="w-5 h-5" /> */}
-                    {isEditMode ? "Update Port Rule" : "Create Port Rule"}
+                    {isEditMode ? t('updatePortRule') : t('createPortRule')}
                   </>
                 )}
               </button>
@@ -1516,12 +1523,12 @@ export default function PortForm() {
               <CheckIcon className="w-8 h-8 text-green-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {isEditMode ? "Port Updated Successfully!" : "Port Created Successfully!"}
+              {isEditMode ? t('portUpdatedSuccessfully') : t('portCreatedSuccessfully')}
             </h2>
             <p className="text-gray-600 mb-6">
               {isEditMode
-                ? "Port configuration has been updated successfully."
-                : "New port has been created successfully and added to the system."
+                ? t('portConfigurationUpdatedSuccessfully')
+                : t('newPortCreatedSuccessfullyAndAddedToTheSystem')
               }
             </p>
             <div className="flex justify-center gap-3">
@@ -1530,7 +1537,7 @@ export default function PortForm() {
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors"
               >
                 {/* <CheckIcon className="w-5 h-5" /> */}
-                OK
+                {t('ok')}
               </button>
             </div>
           </div>
