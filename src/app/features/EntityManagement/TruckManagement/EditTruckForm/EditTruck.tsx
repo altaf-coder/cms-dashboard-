@@ -1,5 +1,4 @@
 import { useState, useRef, ChangeEvent, FormEvent } from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface ReportFormData {
   truckId: string;
@@ -37,7 +36,6 @@ interface ReportFormTouched {
 }
 
 export default function EditTruck() {
-    const { t } = useTranslation();
     const [formData, setFormData] = useState<ReportFormData>({
         truckId: 'T-CMS-0001',
         truckNo: '',
@@ -71,46 +69,46 @@ export default function EditTruck() {
 
         switch (name) {
             case 'truckNo':
-                if (!value) return t('truckNumberRequired');
-                if (!plateRegex.test(value)) return t('validUaePlateNoRequired');
+                if (!value) return "Truck number is required";
+                if (!plateRegex.test(value)) return "Valid UAE plate no. required (e.g., SHJ 12345)";
                 return '';
 
             case 'vendorId':
-                if (!value) return t('vendorIdRequired');
+                if (!value) return "Vendor ID is required";
                 return '';
 
             case 'registrationExpiry':
-                if (!value) return t('registrationExpiryRequired');
-                if (value < today) return t('expiryMustBeTodayOrFuture');
+                if (!value) return "Registration expiry is required";
+                if (value < today) return "Expiry must be today or future";
                 return '';
 
             case 'insuranceExpiry':
-                if (!value) return t('insuranceExpiryRequired');
-                if (value < today) return t('expiryMustBeTodayOrFuture');
+                if (!value) return "Insurance expiry is required";
+                if (value < today) return "Expiry must be today or future";
                 return '';
 
             case 'capacity':
-                if (value && isNaN(Number(value))) return t('capacityMustBeNumeric');
+                if (value && isNaN(Number(value))) return "Capacity must be numeric";
                 return '';
 
             case 'vehicleType':
-                if (!value) return t('vehicleTypeRequired');
+                if (!value) return "Vehicle type is required";
                 return '';
 
             case 'status':
-                if (!value) return t('statusIsRequired');
+                if (!value) return "Status is required";
                 return '';
 
             case 'documents':
-                if (!value) return t('documentUploadRequired');
+                if (!value) return "Document upload required";
                 return '';
 
             case 'assignedTruck':
-                if (!value) return t('assignedTruckRequired');
+                if (!value) return "Assigned truck is required";
                 return '';
 
             case 'assignedVendor':
-                if (!value) return t('vendorSelectionRequired');
+                if (!value) return "Vendor selection required";
                 return '';
 
             default:
@@ -162,9 +160,9 @@ export default function EditTruck() {
 
             let error = '';
             if (!["application/pdf", "image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                error = t('onlyPdfJpgPngAllowed');
+                error = "Only PDF, JPG, PNG allowed";
             } else if (file.size > 10 * 1024 * 1024) {
-                error = t('maxFileSize10MbAllowed');
+                error = "Max file size 10MB allowed";
             }
 
             setErrors(prev => ({
@@ -197,7 +195,7 @@ export default function EditTruck() {
         });
 
         if (!formData.documents) {
-            newErrors.documents = t('documentUploadRequired');
+            newErrors.documents = "Document upload required";
         }
 
         setErrors(newErrors);
@@ -294,15 +292,15 @@ export default function EditTruck() {
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
                     <div className="bg-white p-6 rounded-xl shadow-lg z-10 text-center max-w-sm mx-auto">
-                        <h2 className="text-green-600 text-xl font-semibold mb-2">{t('success')}</h2>
+                        <h2 className="text-green-600 text-xl font-semibold mb-2">Success!</h2>
                         <p className="text-gray-700 mb-4">
-                            {t('truck')} <span className="font-semibold text-blue-600">{formData.truckNo}</span> {t('truckHasBeenUpdatedSuccessfully')}
+                            Truck <span className="font-semibold text-blue-600">{formData.truckNo}</span> has been updated successfully.
                         </p>
                         <button
                             onClick={handleSuccessPopupClose}
                             className="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                         >
-                            {t('ok')}
+                            OK
                         </button>
                     </div>
                 </div>
@@ -318,22 +316,22 @@ export default function EditTruck() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </div>
-                        <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('deleteTruck')}</h2>
+                        <h2 className="text-xl font-semibold text-gray-800 mb-2">Delete Truck</h2>
                         <p className="text-gray-600 mb-6">
-                            {t('deleteTruckConfirmAction')}
+                            Are you sure you want to delete truck <span className="font-semibold text-red-600">{formData.truckNo}</span>? This action cannot be undone.
                         </p>
                         <div className="flex space-x-3 justify-center">
                             <button
                                 onClick={() => setShowDeletePopup(false)}
                                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                             >
-                                {t('cancel')}
+                                Cancel
                             </button>
                             <button
                                 onClick={confirmDelete}
                                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                             >
-                                {t('delete')}
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -342,8 +340,8 @@ export default function EditTruck() {
 
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="bg-white p-6 border-b">
-                    <h1 className="text-2xl font-bold text-center text-gray-800">{t('editTruck')}</h1>
-                    <p className="text-center text-gray-600 mt-2">{t('pleaseFillFormToEditTruck')}</p>
+                    <h1 className="text-2xl font-bold text-center text-gray-800">Edit Truck</h1>
+                    <p className="text-center text-gray-600 mt-2">Please Fill in The Form Below to Edit Truck</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6">
@@ -352,7 +350,7 @@ export default function EditTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('truckId')}
+                                    Truck ID
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700">{formData.truckId}</span>
@@ -361,7 +359,7 @@ export default function EditTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('truckNoPlateNo')} <span className="text-red-500">*</span>
+                                    Truck No. / Plate No. <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -382,13 +380,13 @@ export default function EditTruck() {
 
                     {/* PERSONAL INFO */}
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-800 mb-4">{t('personalInfo')}</h2>
+                        <h2 className="text-lg font-bold text-gray-800 mb-4">Personal Info</h2>
 
                         {/* Vendor + Reg */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('vendorId')} <span className="text-red-500">*</span>
+                                    Vendor ID <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -406,7 +404,7 @@ export default function EditTruck() {
 
                             <div className="relative">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('registrationExpiry')} <span className="text-red-500">*</span>
+                                    Registration Expiry <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     ref={registrationExpiryRef}
@@ -438,7 +436,7 @@ export default function EditTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div className="relative">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('insuranceExpiry')} <span className="text-red-500">*</span>
+                                    Insurance Expiry <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     ref={insuranceExpiryRef}
@@ -467,7 +465,7 @@ export default function EditTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('capacityTons')}
+                                    Capacity (Tons)
                                 </label>
                                 <input
                                     type="text"
@@ -488,7 +486,7 @@ export default function EditTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('vehicleType')} <span className="text-red-500">*</span>
+                                    Vehicle Type <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="vehicleType"
@@ -498,12 +496,12 @@ export default function EditTruck() {
                                     className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${shouldShowError('vehicleType') ? 'border-red-500' : 'border-gray-300'
                                         }`}
                                 >
-                                    <option value="">{t('selectType')}</option>
+                                    <option value="">Select Type</option>
                                     <option value="Trailer">Trailer</option>
                                     <option value="Flatbed">Flatbed</option>
                                     <option value="Reefer">Reefer</option>
                                     <option value="Box">Box Truck</option>
-                                    <option value="Other">{t('other')}</option>
+                                    <option value="Other">Other</option>
                                 </select>
                                 {shouldShowError('vehicleType') && (
                                     <p className="text-red-500 text-sm mt-1">{errors.vehicleType}</p>
@@ -512,7 +510,7 @@ export default function EditTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('status')} <span className="text-red-500">*</span>
+                                    Status <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="status"
@@ -522,11 +520,11 @@ export default function EditTruck() {
                                     className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${shouldShowError('status') ? 'border-red-500' : 'border-gray-300'
                                         }`}
                                 >
-                                    <option value="">{t('selectStatus')}</option>
-                                    <option value="Available">{t('available')}</option>
-                                    <option value="On Trip">{t('onTrip')}</option>
-                                    <option value="Maintenance">{t('maintenance')}</option>
-                                    <option value="Suspended">{t('suspended')}</option>
+                                    <option value="">Select Status</option>
+                                    <option value="Available">Available</option>
+                                    <option value="On Trip">On Trip</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Suspended">Suspended</option>
                                 </select>
                                 {shouldShowError('status') && (
                                     <p className="text-red-500 text-sm mt-1">{errors.status}</p>
@@ -538,7 +536,7 @@ export default function EditTruck() {
                             {/* Documents with Upload Icon */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('documents')} <span className="text-red-500">*</span>
+                                    Documents <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
                                     <input
@@ -553,7 +551,7 @@ export default function EditTruck() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                         </svg>
                                         <span className="text-gray-700">
-                                            {formData.documents ? formData.documents.name : t('chooseFile')}
+                                            {formData.documents ? formData.documents.name : 'Choose file...'}
                                         </span>
                                     </div>
                                 </div>
@@ -565,12 +563,12 @@ export default function EditTruck() {
                             {/* Added by Field - Auto populated */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('addedBy')}
+                                    Added by
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700">{formData.addedBy}</span>
                                 </div>
-                                <p className="text-gray-500 text-xs mt-1">{t('autoFilledFromCurrentUser')}</p>
+                                <p className="text-gray-500 text-xs mt-1">Auto-filled from current user</p>
                             </div>
                         </div>
 
@@ -578,7 +576,7 @@ export default function EditTruck() {
                         <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
                             <div className="w-full md:w-1/2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('approvalStatus')}
+                                    Approval Status
                                 </label>
                                 <select
                                     name="approvalStatus"
@@ -586,18 +584,18 @@ export default function EditTruck() {
                                     onChange={handleChange}
                                     className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="pending">{t('pending')}</option>
-                                    <option value="approved">{t('approved')}</option>
-                                    <option value="rejected">{t('rejected')}</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
                                 </select>
-                                <p className="text-gray-500 text-xs mt-1">{t('autoManaged')}</p>
+                                <p className="text-gray-500 text-xs mt-1">Auto-managed</p>
                             </div>
                         </div>
 
                         {/* Notes */}
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('notes')} <span className="text-gray-500 font-normal">({t('optional')})</span>
+                                Notes <span className="text-gray-500 font-normal">(Optional)</span>
                             </label>
                             <textarea
                                 name="notes"
@@ -605,7 +603,7 @@ export default function EditTruck() {
                                 onChange={handleChange}
                                 rows={3}
                                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder={t('addAnyAdditionalNotesHere')}
+                                placeholder="Add any additional notes here..."
                             />
                         </div>
                     </div>
@@ -614,7 +612,7 @@ export default function EditTruck() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('assignedTruck')} <span className="text-red-500">*</span>
+                                Assigned Truck <span className="text-red-500">*</span>
                             </label>
                             <select
                                 name="assignedTruck"
@@ -624,7 +622,7 @@ export default function EditTruck() {
                                 className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${shouldShowError('assignedTruck') ? 'border-red-500' : 'border-gray-300'
                                     }`}
                             >
-                                <option value="">{t('selectTruck')}</option>
+                                <option value="">Select Truck</option>
                                 <option value="truck-001">Truck-001</option>
                                 <option value="truck-002">Truck-002</option>
                                 <option value="truck-003">Truck-003</option>
@@ -636,7 +634,7 @@ export default function EditTruck() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('assignedVendor')} <span className="text-red-500">*</span>
+                                Assigned Vendor <span className="text-red-500">*</span>
                             </label>
                             <select
                                 name="assignedVendor"
@@ -646,7 +644,7 @@ export default function EditTruck() {
                                 className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${shouldShowError('assignedVendor') ? 'border-red-500' : 'border-gray-300'
                                     }`}
                             >
-                                <option value="">{t('selectVendor')}</option>
+                                <option value="">Select Vendor</option>
                                 <option value="vendor-001">Vendor-001</option>
                                 <option value="vendor-002">Vendor-002</option>
                                 <option value="vendor-003">Vendor-003</option>
@@ -667,13 +665,13 @@ export default function EditTruck() {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
-                            {t('deleteTruck')}
+                            Delete Truck
                         </button>
                         <button
                             type="submit"
                             className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors"
                         >
-                            {t('updateTruck')}
+                            Update Truck
                         </button>
                     </div>
                 </form>

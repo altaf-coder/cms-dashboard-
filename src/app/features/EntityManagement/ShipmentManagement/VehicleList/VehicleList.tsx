@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 
 interface Vehicle {
   id: string;
@@ -48,7 +47,6 @@ const vehiclesData: Vehicle[] = [
 ];
 
 export default function VehicleList() {
-  const { t } = useTranslation();
   const [vehicles, setVehicles] = useState<Vehicle[]>(vehiclesData);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
@@ -69,16 +67,12 @@ export default function VehicleList() {
       <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-800">{t('vehicleList')}</h2>
+            <h2 className="text-xl font-bold text-gray-800">Vehicle List</h2>
             <p className="text-sm text-gray-600 mt-1">
-              {t('shipmentId')}: <span className="font-semibold text-blue-600">SHP-00125</span>
+              Shipment ID: <span className="font-semibold text-blue-600">SHP-00125</span>
             </p>
           </div>
-          <Link to="/add-vehicle">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-              <span className="text-xl">+</span> {t('addVehicle')}
-            </button>
-          </Link>
+         
         </div>
       </div>
 
@@ -88,28 +82,28 @@ export default function VehicleList() {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('shipmentId')}
+                Shipment ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('vinNumber')}
+                VIN Number
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('make')}
+                Make
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('model')}
+                Model
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('modelYear')}
+                Model Year
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('color')}
+                Color
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('vehicleValue')}
+                Vehicle Value
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('action')}
+                Action
               </th>
             </tr>
           </thead>
@@ -157,7 +151,7 @@ export default function VehicleList() {
                       </Link>
                       {/* Tooltip below icon on hover */}
                       <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-1 px-2 py-1  text-black text-xs  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                        {t('view')}
+                        View
                         <div className="absolute left-1/2 transform -translate-x-1/2 -top-1 w-0 h-0  "></div>
                       </div>
                     </div>
@@ -172,7 +166,7 @@ export default function VehicleList() {
                       </Link>
                       {/* Tooltip below icon on hover */}
                       <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-1 px-2 py-1 text-black text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                        {t('editVehicle')}
+                        Edit
                         <div className="absolute left-1/2 transform -translate-x-1/2 -top-1 w-0 h-0 border-l-2 border-r-2 border-b-2 border-l-transparent border-r-transparent border-b-gray-900"></div>
                       </div>
                     </div>
@@ -190,7 +184,7 @@ export default function VehicleList() {
                       </button>
                       {/* Tooltip below icon on hover */}
                       <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-1 px-2 py-1 text-black text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                        {t('deleteVehicle')}
+                        Delete
                         <div className="absolute left-1/2 transform -translate-x-1/2 -top-1 w-0 h-0 border-l-2 border-r-2 border-b-2 border-l-transparent border-r-transparent border-b-gray-900"></div>
                       </div>
                     </div>
@@ -204,7 +198,7 @@ export default function VehicleList() {
 
         {vehicles.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">{t('noVehiclesFoundInShipment')}</p>
+            <p className="text-gray-500">No vehicles found in this shipment.</p>
           </div>
         )}
       </div>
@@ -212,7 +206,7 @@ export default function VehicleList() {
       {/* Footer */}
       <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
         <div className="text-sm text-gray-600">
-          {t('showingVehiclesInShipment', { count: vehicles.length, shipmentId: 'SHP-00125' })}
+          Showing {vehicles.length} vehicles in shipment SHP-00125
         </div>
       </div>
 
@@ -227,11 +221,11 @@ export default function VehicleList() {
               </div>
               
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {t('deleteVehicle')}
+                Delete Vehicle?
               </h3>
               
               <p className="text-gray-600 mb-6">
-                {t('deleteVehicleConfirm')}{" "}
+                Are you sure you want to delete{" "}
                 <span className="font-semibold text-gray-900">
                   {vehicleToDelete.make} {vehicleToDelete.model}
                 </span>
@@ -246,13 +240,13 @@ export default function VehicleList() {
                   }}
                   className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  {t('cancel')}
+                  Cancel
                 </button>
                 <button
                   onClick={handleDelete}
                   className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
-                  {t('yesDelete')}
+                  Yes, Delete
                 </button>
               </div>
             </div>

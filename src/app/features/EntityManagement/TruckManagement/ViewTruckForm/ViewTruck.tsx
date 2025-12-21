@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface ReportData {
   id: string;
@@ -16,7 +15,6 @@ interface ReportData {
 }
 
 export default function ViewTruck() {
-    const { t } = useTranslation();
     const [formData] = useState<ReportData>({
         id: '1',
         truckId: 'T-CMS-0001',
@@ -43,8 +41,8 @@ export default function ViewTruck() {
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
                 {/* Header */}
                 <div className="bg-white p-6 border-b">
-                    <h1 className="text-2xl font-bold text-center text-gray-800">{t('viewTruck')}</h1>
-                    <p className="text-center text-gray-600 mt-2">{t('truckInformationAndSpecifications')}</p>
+                    <h1 className="text-2xl font-bold text-center text-gray-800">VIEW TRUCK DETAILS</h1>
+                    <p className="text-center text-gray-600 mt-2">Truck Information and Specifications</p>
                 </div>
 
                 <div className="p-6">
@@ -53,7 +51,7 @@ export default function ViewTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('truckId')}
+                                    Truck ID
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.truckId}</span>
@@ -62,7 +60,7 @@ export default function ViewTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('truckNoPlateNo')}
+                                    Truck No. / Plate No.
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.truckNo}</span>
@@ -73,13 +71,13 @@ export default function ViewTruck() {
 
                     {/* PERSONAL INFO */}
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{t('truckInformation')}</h2>
+                        <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Truck Information</h2>
 
                         {/* Vendor + Reg */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('vendorId')}
+                                    Vendor ID
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.vendorId}</span>
@@ -88,7 +86,7 @@ export default function ViewTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('registrationExpiry')}
+                                    Registration Expiry
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.registrationExpiry}</span>
@@ -100,7 +98,7 @@ export default function ViewTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('insuranceExpiry')}
+                                    Insurance Expiry
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.insuranceExpiry}</span>
@@ -109,10 +107,10 @@ export default function ViewTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('capacityTons')}
+                                    Capacity (Tons)
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
-                                    <span className="text-gray-700 font-medium">{formData.capacity} {t('tons')}</span>
+                                    <span className="text-gray-700 font-medium">{formData.capacity} Tons</span>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +119,7 @@ export default function ViewTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('vehicleType')}
+                                    Vehicle Type
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.vehicleType}</span>
@@ -130,7 +128,7 @@ export default function ViewTruck() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('status')}
+                                    Status
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className={`font-medium ${
@@ -139,10 +137,7 @@ export default function ViewTruck() {
                                         formData.status === 'Maintenance' ? 'text-yellow-600' :
                                         'text-red-600'
                                     }`}>
-                                        {formData.status === 'Available' ? t('available') :
-                                         formData.status === 'On Trip' ? t('onTrip') :
-                                         formData.status === 'Maintenance' ? t('maintenance') :
-                                         formData.status}
+                                        {formData.status}
                                     </span>
                                 </div>
                             </div>
@@ -152,7 +147,7 @@ export default function ViewTruck() {
                             {/* Documents */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('documents')}
+                                    Documents
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <div className="flex items-center">
@@ -169,7 +164,7 @@ export default function ViewTruck() {
                             {/* Added by Field */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('addedBy')}
+                                    Added by
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.addedBy}</span>
@@ -181,7 +176,7 @@ export default function ViewTruck() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('requiredByDate')}
+                                    Required By Date
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className="text-gray-700 font-medium">{formData.requiredBy}</span>
@@ -191,7 +186,7 @@ export default function ViewTruck() {
                             {/* Approval Status */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('approvalStatus')}
+                                    Approval Status
                                 </label>
                                 <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                     <span className={`font-medium ${
@@ -199,10 +194,7 @@ export default function ViewTruck() {
                                         formData.approvalStatus === 'pending' ? 'text-gray-600' :
                                         'text-red-600'
                                     }`}>
-                                        {formData.approvalStatus === 'approved' ? t('approved') :
-                                         formData.approvalStatus === 'pending' ? t('pending') :
-                                         formData.approvalStatus === 'rejected' ? t('rejected') :
-                                         formData.approvalStatus.charAt(0).toUpperCase() + formData.approvalStatus.slice(1)}
+                                        {formData.approvalStatus.charAt(0).toUpperCase() + formData.approvalStatus.slice(1)}
                                     </span>
                                 </div>
                             </div>
@@ -212,7 +204,7 @@ export default function ViewTruck() {
                         <div className="">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                               {t('notesOptional')}
+                               Notes Optional
                             </label>
                             </label>
                            
@@ -223,7 +215,7 @@ export default function ViewTruck() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('assignedTruck')}
+                                Assigned Truck
                             </label>
                             <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                 <span className="text-gray-700 font-medium">{formData.assignedTruck}</span>
@@ -232,7 +224,7 @@ export default function ViewTruck() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t('assignedVendor')}
+                                Assigned Vendor
                             </label>
                             <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">
                                 <span className="text-gray-700 font-medium">{formData.assignedVendor}</span>

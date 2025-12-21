@@ -6,7 +6,7 @@ import { DropdownItem } from "../dropdown/DropdownItem";
 // import img from "../../../src/";
 
 export default function UserDropdown() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const isRTL = i18n.language === "ar";
   const [isOpen, setIsOpen] = useState(false);
 
@@ -85,7 +85,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              Edit profile
+              {t('editProfile')}
             </DropdownItem>
           </li>
           <li>
@@ -110,7 +110,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              Account settings
+              {t('accountSettings')}
             </DropdownItem>
           </li>
           <li>
@@ -135,7 +135,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              Support
+              {t('support')}
             </DropdownItem>
           </li>
         </ul>
@@ -158,7 +158,7 @@ export default function UserDropdown() {
               fill=""
             />
           </svg>
-          Sign out
+          {t('signOut')}
         </Link>
       </Dropdown>
     </div>

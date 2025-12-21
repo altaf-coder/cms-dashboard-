@@ -1214,5 +1214,15 @@
   "tollRequiredForEmptyReturnOptional": "رسوم الطريق مطلوبة للإرجاع الفارغ؟ (اختياري)",
   "tollAmountAED": "مبلغ الرسوم (درهم)",
   "automaticTollPenaltyIfNoReceiptOptional": "عقوبة الرسوم التلقائية في حالة عدم وجود إيصال؟ (اختياري)",
-  "mandatoryTollReceiptUpload": "رفع إيصال الرسوم إلزامي؟"
+  "mandatoryTollReceiptUpload": "رفع إيصال الرسوم إلزامي؟",
+  "editProfile": "تعديل الملف الشخصي",
+  "accountSettings": "إعدادات الحساب",
+  "support": "الدعم",
+  "signOut": "تسجيل الخروج",
+  "notification": "الإشعارات",
+  "viewAllNotifications": "عرض جميع الإشعارات",
+  "requestsPermissionToChange": "يطلب الإذن للتغيير",
+  "project": "المشروع",
+  "minAgo": "منذ دقيقة",
+  "hrAgo": "منذ ساعة"
 }

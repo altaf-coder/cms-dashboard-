@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 
 // Mock data for viewing
@@ -44,7 +43,6 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 export default function ViewJob() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -61,8 +59,8 @@ export default function ViewJob() {
                 >
                 </button>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">{t('viewJobDetails')}</h1>
-                  <p className="text-sm text-gray-600 mt-1">{t('completeTransportationJobInformation')}</p>
+                  <h1 className="text-2xl font-bold text-gray-900">View Job Details</h1>
+                  <p className="text-sm text-gray-600 mt-1">Complete transportation job information</p>
                 </div>
               </div>
             </div>
@@ -72,7 +70,7 @@ export default function ViewJob() {
           <form className="p-6 space-y-6">
             {/* Basic Information Section - FIXED ALIGNMENT */}
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('basicInformation')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Column - All single line fields */}
@@ -80,7 +78,7 @@ export default function ViewJob() {
                   {/* Job ID */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('jobId')}
+                      Job ID
                     </label>
                     <input
                       type="text"
@@ -93,7 +91,7 @@ export default function ViewJob() {
                   {/* Shipment */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('shipmentId')}
+                      Shipment ID
                     </label>
                     <input
                       type="text"
@@ -106,7 +104,7 @@ export default function ViewJob() {
                   {/* Container No. */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('containerNo')}
+                      Container No.
                     </label>
                     <input
                       type="text"
@@ -119,7 +117,7 @@ export default function ViewJob() {
                   {/* Customer */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('customer')}
+                      Customer
                     </label>
                     <input
                       type="text"
@@ -135,7 +133,7 @@ export default function ViewJob() {
                   {/* Vendor - Fixed height to match left */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('vendor')}
+                      Vendor
                     </label>
                     <div className="relative">
                       <input
@@ -145,7 +143,7 @@ export default function ViewJob() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
                       />
                       <div className="absolute top-2 right-3">
-                        <span className="text-xs text-gray-500">{t('id')}: {viewJobData.vendorId}</span>
+                        <span className="text-xs text-gray-500">ID: {viewJobData.vendorId}</span>
                       </div>
                     </div>
                   </div>
@@ -153,7 +151,7 @@ export default function ViewJob() {
                   {/* Driver - Fixed height to match left */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('driver')}
+                      Driver
                     </label>
                     <div className="relative">
                       <input
@@ -163,7 +161,7 @@ export default function ViewJob() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
                       />
                       <div className="absolute top-2 right-3">
-                        <span className="text-xs text-gray-500">{t('id')}: {viewJobData.driverId}</span>
+                        <span className="text-xs text-gray-500">ID: {viewJobData.driverId}</span>
                       </div>
                     </div>
                   </div>
@@ -171,7 +169,7 @@ export default function ViewJob() {
                   {/* Truck - Fixed height to match left */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('truck')}
+                      Truck
                     </label>
                     <div className="relative">
                       <input
@@ -181,7 +179,7 @@ export default function ViewJob() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
                       />
                       <div className="absolute top-2 right-3">
-                        <span className="text-xs text-gray-500">{t('id')}: {viewJobData.truckId}</span>
+                        <span className="text-xs text-gray-500">ID: {viewJobData.truckId}</span>
                       </div>
                     </div>
                   </div>
@@ -189,11 +187,11 @@ export default function ViewJob() {
                   {/* Job Type - Fixed height to match left */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('jobType')}
+                      Job Type
                     </label>
                     <input
                       type="text"
-                      value={viewJobData.jobType === 'Pickup' ? t('pickup') : viewJobData.jobType === 'Delivery' ? t('delivery') : viewJobData.jobType}
+                      value={viewJobData.jobType}
                       readOnly
                       className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-900"
                     />
@@ -204,7 +202,7 @@ export default function ViewJob() {
 
             {/* Job Details Section */}
             <div className="border-t pt-6 mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('jobDetails')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Job Details</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Column */}
@@ -213,7 +211,7 @@ export default function ViewJob() {
                   {viewJobData.jobType === "Pickup" && (
                     <div className="h-[70px]">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('pickupLocation')}
+                        Pick up Location
                       </label>
                       <input
                         type="text"
@@ -228,7 +226,7 @@ export default function ViewJob() {
                   {viewJobData.jobType === "Delivery" && viewJobData.dropLocation && (
                     <div className="h-[70px]">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('dropLocation')}
+                        Drop Location
                       </label>
                       <input
                         type="text"
@@ -242,7 +240,7 @@ export default function ViewJob() {
                   {/* Port Last Return Date */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('portLastReturnDate')}
+                      Port Last Return Date
                     </label>
                     <input
                       type="text"
@@ -258,7 +256,7 @@ export default function ViewJob() {
                   {/* Scheduled Date & Time */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('scheduledDateAndTime')}
+                      Scheduled Date & Time
                     </label>
                     <div className="relative">
                       <input
@@ -276,7 +274,7 @@ export default function ViewJob() {
                   {/* Estimated Duration */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('estimatedDuration')}
+                      Estimated Duration
                     </label>
                     <input
                       type="text"
@@ -289,7 +287,7 @@ export default function ViewJob() {
                   {/* Priority */}
                   <div className="h-[70px]">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('priority')}
+                      Priority
                     </label>
                     <input
                       type="text"
@@ -304,11 +302,11 @@ export default function ViewJob() {
               {/* Special Instructions */}
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('specialInstructions')}
+                  Special Instructions
                 </label>
                 <div className="px-3 py-2 border border-gray-300 rounded-md bg-gray-50 min-h-[100px]">
                   <p className="text-gray-900 whitespace-pre-line">
-                    {viewJobData.specialInstructions || t('noSpecialInstructionsProvided')}
+                    {viewJobData.specialInstructions || "No special instructions provided."}
                   </p>
                 </div>
               </div>
@@ -317,7 +315,7 @@ export default function ViewJob() {
               {viewJobData.notes && (
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('additionalNotes')}
+                    Additional Notes
                   </label>
                   <div className="px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
                     <p className="text-gray-900">{viewJobData.notes}</p>
@@ -328,12 +326,12 @@ export default function ViewJob() {
 
             {/* System Information Section */}
             <div className="border-t pt-6 mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('systemInformation')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">System Information</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="h-[70px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('createdDate')}
+                    Created Date
                   </label>
                   <input
                     type="text"
@@ -345,7 +343,7 @@ export default function ViewJob() {
                 
                 <div className="h-[70px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('createdBy')}
+                    Created By
                   </label>
                   <input
                     type="text"
@@ -357,7 +355,7 @@ export default function ViewJob() {
                 
                 <div className="h-[70px]">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('lastUpdated')}
+                    Last Updated
                   </label>
                   <input
                     type="text"

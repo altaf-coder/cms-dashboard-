@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface DocumentData {
   id: string;
@@ -15,7 +14,6 @@ interface DocumentData {
 }
 
 export default function ViewDocuments() {
-  const { t } = useTranslation();
   const [formData] = useState<DocumentData>({
     id: 'DOC-001',
     documentCategory: 'Shipping',
@@ -43,7 +41,7 @@ export default function ViewDocuments() {
             <span className="text-gray-700">{fileName}</span>
           </div>
           <button className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer">
-            {t('download')}
+            Download
           </button>
         </div>
       </div>
@@ -89,7 +87,7 @@ export default function ViewDocuments() {
             value === 'In Review' ? 'text-blue-600' : 
             'text-gray-600'
           }`}>
-            {t(value.toLowerCase())}
+            {value}
           </span>
           <svg 
             className="w-5 h-5 text-gray-400" 
@@ -126,38 +124,38 @@ export default function ViewDocuments() {
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         {/* Header */}
         <div className="bg-white p-6 border-b">
-          <h1 className="text-2xl font-bold text-center text-gray-800">{t('viewDocumentDetails')}</h1>
-          <p className="text-center text-gray-600 mt-2">{t('documentInformationAndStatus')}</p>
+          <h1 className="text-2xl font-bold text-center text-gray-800">VIEW DOCUMENT DETAILS</h1>
+          <p className="text-center text-gray-600 mt-2">Document Information and Status</p>
         </div>
 
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 1. Document Category */}
-            {renderDropdownField(t('documentCategory'), formData.documentCategory)}
+            {renderDropdownField('Document Category', formData.documentCategory)}
             
             {/* 2. Document Type */}
-            {renderDropdownField(t('documentType'), formData.documentType)}
+            {renderDropdownField('Document Type', formData.documentType)}
             
             {/* 3. Document / Attachment */}
-            {renderFileField(t('documentAttachment'), formData.documentAttachment)}
+            {renderFileField('Document / Attachment', formData.documentAttachment)}
             
             {/* 4. Shipment ID */}
-            {renderInputField(t('shipmentId'), formData.shipmentId)}
+            {renderInputField('Shipment ID', formData.shipmentId)}
             
             {/* 5. Container ID */}
-            {renderInputField(t('containerId'), formData.containerId)}
+            {renderInputField('Container ID', formData.containerId)}
             
             {/* 6. Driver */}
-            {renderInputField(t('driver'), formData.driver)}
+            {renderInputField('Driver', formData.driver)}
             
             {/* 7. Customer */}
-            {renderInputField(t('customer'), formData.customer)}
+            {renderInputField('Customer', formData.customer)}
             
             {/* 8. Truck */}
-            {renderInputField(t('truck'), formData.truck)}
+            {renderInputField('Truck', formData.truck)}
             
             {/* 9. Status */}
-            {renderStatusField(t('status'), formData.status)}
+            {renderStatusField('Status', formData.status)}
           </div>
         </div>
       </div>

@@ -13,7 +13,6 @@ const ITEMS_PER_PAGE = 5
 
 export function AuditLogs() {
   const [logs, setLogs] = useState<AuditLog[]>(mockAuditLogs)
-  const [isLoading, setIsLoading] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
@@ -164,7 +163,7 @@ export function AuditLogs() {
         {/* Table */}
         <AuditTable
           logs={paginatedLogs}
-          isLoading={isLoading}
+          isLoading={false}
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}

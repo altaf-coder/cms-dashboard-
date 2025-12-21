@@ -60,6 +60,11 @@ import AppLayout from "./layout/AppLayout";
 import Shipments from "./app/features/Dashboard/Admin/FilterList/AllShipments/allShipments";
 import UserManagementPage from "./app/features/User & Branch Management/UsersPage/UsersPage";
 import { AuditLogs } from "./app/features/User & Branch Management/AuditLogsPage/AuditLogsPage";
+import ClearanceDashboard from "./app/features/Clearance/Dashboard/dashboard";
+import DOApplicationPage from "./app/features/Clearance/DoApplication/doApplication";
+import DOReceiptPage from "./app/features/Clearance/DOReceipt/dOReceipt";
+import ClearanceProcessingPage from "./app/features/Clearance/Processing/Processing";
+import ClearanceWorkQueuePage from "./app/features/Clearance/WorkQueue/WorkQueue";
 
 export default function App() {
   return (
@@ -72,6 +77,24 @@ export default function App() {
             <Route index path="/" element={<Home />} />
             <Route path="/shipments" element={<Shipments />} />
             <Route path="/customers" element={<Customers />} />
+            <Route
+              path="/clearance/dashboard"
+              element={<ClearanceDashboard />}
+            />
+            <Route
+              path="/clearance/do-application"
+              element={<DOApplicationPage />}
+            />
+            <Route
+              path="/clearance/processing"
+              element={<ClearanceProcessingPage />}
+            />
+
+            <Route
+              path="/clearance/work-queue"
+              element={<ClearanceWorkQueuePage />}
+            />
+            <Route path="/clearance/do-receipt" element={<DOReceiptPage />} />
             <Route path="/shipment-tracking" element={<ShipmentTracking />} />
             <Route
               path="/roles-and-permissions"
@@ -90,7 +113,7 @@ export default function App() {
             <Route path="/add-truck" element={<AddTruck />} />
             <Route path="/view-truck/:id" element={<ViewTruck />} />
             <Route path="/edit-truck/:id" element={<EditTruck />} />
-            <Route path="/NewPages/Vendor" element={<Vendor />} />
+            <Route path="/vendors" element={<Vendor />} />
             <Route path="/add-vendor" element={<ADDVendor />} />
             <Route path="/view-vendor/:id" element={<ViewVendor />} />
             <Route path="/edit-vendor/:id" element={<EditVendor />} />
@@ -127,7 +150,7 @@ export default function App() {
               path="/edit-port-rule-forms/:id"
               element={<EditPortRuleForms />}
             />
-            <Route path="/NewPages/Driver" element={<Driver />} />
+            <Route path="/drivers" element={<Driver />} />
             <Route path="/add-driver" element={<ADDDriver />} />
             <Route path="/view-driver/:id" element={<ViewDriver />} />
             <Route path="/edit-driver/:id" element={<EditDriver />} />

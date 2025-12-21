@@ -20,7 +20,6 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../components/ui/table";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../Dashboard/PageMeta";
-import { useTranslation } from 'react-i18next';
 
 interface Shipment {
   id: string;
@@ -92,7 +91,6 @@ const getShipmentsData = (): Shipment[] => {
 };
 
 export default function Shipment() {
-  const { t } = useTranslation();
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [globalSearch, setGlobalSearch] = useState("");
   const [vinFilter, setVinFilter] = useState("");
@@ -289,7 +287,7 @@ export default function Shipment() {
   // Submit Arrival Form
   const submitArrivalForm = () => {
     if (!selectedShipment || !arrivalDate) {
-      alert(t('pleaseSelectArrivalDate'));
+      alert("Please select arrival date");
       return;
     }
 
@@ -489,7 +487,7 @@ Generated on: ${new Date().toISOString()}
                 className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                 onClick={() => console.log('Update cars for shipment:', shipment.id)}
               >
-                {t('updateCars')}
+                Update Cars
               </button>
             </div>
           </>
@@ -502,7 +500,7 @@ Generated on: ${new Date().toISOString()}
             <div className="relative group">
               <Link to={`/view-shipment/${shipment.id}`}>
                 <button className="text-sm font-medium text-blue-600 hover:text-blue-800">
-                  {t('viewDetails')}
+                  View Details
                 </button>
               </Link>
             </div>
@@ -513,7 +511,7 @@ Generated on: ${new Date().toISOString()}
             <div className="relative group">
               <Link to={`/edit-shipment/${shipment.id}`}>
                 <button className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                  {t('edit')}
+                  Edit
                 </button>
               </Link>
             </div>
@@ -526,7 +524,7 @@ Generated on: ${new Date().toISOString()}
                 className="text-sm font-medium text-green-600 hover:text-green-800"
                 onClick={() => console.log('Assign clearance agent:', shipment.id)}
               >
-                {t('assignClearanceAgent')}
+                Assign Clearance Agent
               </button>
             </div>
 
@@ -541,7 +539,7 @@ Generated on: ${new Date().toISOString()}
                   setShowAssignPopup(true);
                 }}
               >
-                {t('assignTransport')}
+                Assign Transport
               </button>
             </div>
 
@@ -553,7 +551,7 @@ Generated on: ${new Date().toISOString()}
                 className="text-sm font-medium text-orange-600 hover:text-orange-800"
                 onClick={() => console.log('Override demurrage:', shipment.id)}
               >
-                {t('overrideDemurrage')}
+                Override Demurrage
               </button>
             </div>
 
@@ -565,7 +563,7 @@ Generated on: ${new Date().toISOString()}
                 className="text-sm font-medium text-red-600 hover:text-red-800"
                 onClick={() => console.log('Close shipment:', shipment.id)}
               >
-                {t('closeShipment')}
+                Close Shipment
               </button>
             </div>
           </>
@@ -595,21 +593,21 @@ Generated on: ${new Date().toISOString()}
   return (
     <>
       <PageMeta
-        title={t('shipmentManagement') + ' | CMS Dashboard'}
-        description={t('manageShipments')}
+        title="Shipment Management | CMS Dashboard"
+        description="Manage shipments and containers"
       />
-      <PageBreadcrumb pageTitle={t('shipmentManagement')} />
+      <PageBreadcrumb pageTitle="Shipment Management" />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
           {/* Header with Add Button */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-            <h2 className="font-bold text-lg text-gray-900 dark:text-white">{t('manageShipments')}</h2>
+            <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Shipments</h2>
             
             {/* Add Shipment Button */}
           <Link to="/edit-shipment/new">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap min-w-[140px]">
-            <span className="text-xl">+</span> {t('addShipments')}
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+            <span className="text-xl">+</span> Add Shipments
           </button>
         </Link>
           </div>
@@ -620,7 +618,7 @@ Generated on: ${new Date().toISOString()}
               <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  placeholder={t('searchShipmentsByIdContainerNoBlDoNoVin')}
+                  placeholder="Search Shipments by ID, Container No., BL/DO No., VIN, etc."
                   className="flex-1 px-3 py-2 border bg-white-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={globalSearch}
                   onChange={(e) => setGlobalSearch(e.target.value)}
@@ -642,10 +640,10 @@ Generated on: ${new Date().toISOString()}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* VIN Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byVin')}</label>
+                <label className="text-xs text-gray-500 mb-1">By VIN</label>
                 <input
                   type="text"
-                  placeholder={t('enterVin')}
+                  placeholder="Enter VIN"
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={vinFilter}
                   onChange={(e) => setVinFilter(e.target.value)}
@@ -654,10 +652,10 @@ Generated on: ${new Date().toISOString()}
 
               {/* Customer Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byCustomer')}</label>
+                <label className="text-xs text-gray-500 mb-1">By Customer</label>
                 <input
                   type="text"
-                  placeholder={t('enterCustomer')}
+                  placeholder="Enter Customer"
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={customerFilter}
                   onChange={(e) => setCustomerFilter(e.target.value)}
@@ -666,10 +664,10 @@ Generated on: ${new Date().toISOString()}
 
               {/* B/L No Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byBlNo')}</label>
+                <label className="text-xs text-gray-500 mb-1">By B/L No.</label>
                 <input
                   type="text"
-                  placeholder={t('enterBlNo')}
+                  placeholder="Enter B/L No."
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={blFilter}
                   onChange={(e) => setBlFilter(e.target.value)}
@@ -678,10 +676,10 @@ Generated on: ${new Date().toISOString()}
 
               {/* DO No Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byDoNo')}</label>
+                <label className="text-xs text-gray-500 mb-1">By DO No.</label>
                 <input
                   type="text"
-                  placeholder={t('enterDoNo')}
+                  placeholder="Enter DO No."
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={doFilter}
                   onChange={(e) => setDoFilter(e.target.value)}
@@ -690,31 +688,31 @@ Generated on: ${new Date().toISOString()}
 
               {/* Status Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byStatus')}</label>
+                <label className="text-xs text-gray-500 mb-1">By Status</label>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">{t('allStatus')}</option>
-                  <option value="Documents Pending">{t('documentsPending')}</option>
-                  <option value="Arrived">{t('arrived')}</option>
-                  <option value="In Transit">{t('inTransit')}</option>
-                  <option value="Cleared">{t('cleared')}</option>
-                  <option value="Delayed">{t('delayed')}</option>
-                  <option value="Cancelled">{t('cancelled')}</option>
+                  <option value="">All Status</option>
+                  <option value="Documents Pending">Documents Pending</option>
+                  <option value="Arrived">Arrived</option>
+                  <option value="In Transit">In Transit</option>
+                  <option value="Cleared">Cleared</option>
+                  <option value="Delayed">Delayed</option>
+                  <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
 
               {/* Port Filter */}
               <div className="flex flex-col">
-                <label className="text-xs text-gray-500 mb-1">{t('byPort')}</label>
+                <label className="text-xs text-gray-500 mb-1">By Port</label>
                 <select
                   value={portFilter}
                   onChange={(e) => setPortFilter(e.target.value)}
                   className="px-3 py-2 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">{t('allPorts')}</option>
+                  <option value="">All Ports</option>
                   <option value="Jebel Ali">Jebel Ali</option>
                   <option value="Khalifa">Khalifa</option>
                   <option value="Mina Rashid">Mina Rashid</option>
@@ -724,7 +722,7 @@ Generated on: ${new Date().toISOString()}
 
               {/* ETA Range Filter */}
               <div className="flex flex-col col-span-2">
-                <label className="text-xs text-gray-500 mb-1">{t('byEtaRange')}</label>
+                <label className="text-xs text-gray-500 mb-1">By ETA Range</label>
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <input
@@ -742,7 +740,7 @@ Generated on: ${new Date().toISOString()}
                     </div>
                   </div>
                   
-                  <span className="text-gray-500">{t('to')}</span>
+                  <span className="text-gray-500">to</span>
                   
                   <div className="relative flex-1">
                     <input
@@ -767,7 +765,7 @@ Generated on: ${new Date().toISOString()}
             {selectedShipments.length > 0 && (
               <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {selectedShipments.length} {t('selected')}
+                  {selectedShipments.length} selected
                 </span>
                 
                 <button
@@ -775,7 +773,7 @@ Generated on: ${new Date().toISOString()}
                   className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-1"
                 >
                   <TruckIcon className="w-4 h-4" />
-                  {t('bulkAssign')}
+                  Assign
                 </button>
                 
                 <button
@@ -783,7 +781,7 @@ Generated on: ${new Date().toISOString()}
                   className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
                 >
                   <ArrowDownTrayIcon className="w-4 h-4" />
-                  {t('exportCSV')}
+                  Export CSV
                 </button>
               </div>
             )}
@@ -802,15 +800,15 @@ Generated on: ${new Date().toISOString()}
                       onChange={toggleSelectAll}
                     />
                   </TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('shipmentId')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('containerNo')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('blDoNo')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('eta')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('port')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('status')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('vendor')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('lastUpdated')}</TableCell>
-                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">{t('action')}</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Shipment ID</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Container No.</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">BL/DO No.</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ETA</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Port</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Vendor</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Last Updated</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Action</TableCell>
                 </TableRow>
               </TableHeader>
 
@@ -852,12 +850,12 @@ Generated on: ${new Date().toISOString()}
                                 onChange={(e) => handleStatusChangeInTable(shipment, e.target.value as Shipment['status'])}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                               >
-                                <option value="Documents Pending">{t('documentsPending')}</option>
-                                <option value="Arrived">{t('arrived')}</option>
-                                <option value="In Transit">{t('inTransit')}</option>
-                                <option value="Cleared">{t('cleared')}</option>
-                                <option value="Delayed">{t('delayed')}</option>
-                                <option value="Cancelled">{t('cancelled')}</option>
+                                <option value="Documents Pending">Documents Pending</option>
+                                <option value="Arrived">Arrived</option>
+                                <option value="In Transit">In Transit</option>
+                                <option value="Cleared">Cleared</option>
+                                <option value="Delayed">Delayed</option>
+                                <option value="Cancelled">Cancelled</option>
                               </select>
                               <ChevronDownIcon className="w-3 h-3 text-gray-500" />
                             </div>
@@ -867,11 +865,11 @@ Generated on: ${new Date().toISOString()}
                         {/* Arrival Details */}
                         {shipment.status === "Arrived" && shipment.arrivalDate && (
                           <div className="text-xs text-gray-500">
-                            <div>{t('arrived')}: {shipment.arrivalDate}</div>
+                            <div>Arrived: {shipment.arrivalDate}</div>
                             {shipment.doDocuments && shipment.doDocuments.length > 0 && (
                               <div className="flex items-center gap-1 mt-1">
                                 <DocumentArrowUpIcon className="w-3 h-3" />
-                                <span>DO: {shipment.doDocuments.length} {t('files')}</span>
+                                <span>DO: {shipment.doDocuments.length} files</span>
                               </div>
                             )}
                             {shipment.manifestTxtFile && (
@@ -883,7 +881,7 @@ Generated on: ${new Date().toISOString()}
                             {shipment.deliveryNote && (
                               <div className="flex items-center gap-1 mt-1">
                                 <DocumentIcon className="w-3 h-3 text-blue-500" />
-                                <span>{t('deliveryNote')}: {shipment.deliveryNote}</span>
+                                <span>Delivery note: {shipment.deliveryNote}</span>
                               </div>
                             )}
                           </div>
@@ -906,7 +904,7 @@ Generated on: ${new Date().toISOString()}
             </Table>
 
             {filteredShipments.length === 0 && (
-              <p className="text-center py-4 text-gray-500">{t('noMatchingRecords')}</p>
+              <p className="text-center py-4 text-gray-500">No matching records found.</p>
             )}
           </div>
 
@@ -916,7 +914,7 @@ Generated on: ${new Date().toISOString()}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {t('showing')} {indexOfFirstRecord + 1} {t('to')} {Math.min(indexOfLastRecord, filteredShipments.length)} {t('of')} {filteredShipments.length} {t('entries')}
+                    Showing {indexOfFirstRecord + 1} to {Math.min(indexOfLastRecord, filteredShipments.length)} of {filteredShipments.length} entries
                   </span>
                   <select
                     value={recordsPerPage}
@@ -939,7 +937,7 @@ Generated on: ${new Date().toISOString()}
                     disabled={currentPage === 1}
                     className="px-3 py-1 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-white/[0.05] dark:text-white"
                   >
-                    {t('previous')}
+                    Previous
                   </button>
                   
                   <div className="flex items-center gap-1">
@@ -976,7 +974,7 @@ Generated on: ${new Date().toISOString()}
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-white/[0.05] dark:text-white"
                   >
-                    {t('next')}
+                    Next
                   </button>
                 </div>
               </div>
@@ -989,10 +987,10 @@ Generated on: ${new Date().toISOString()}
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b">
                   <h2 className="text-lg font-semibold text-gray-800">
-                    {currentStep === 'status-select' && t('markAsArrived') + ' - Step 1/3'}
-                    {currentStep === 'arrival-form' && t('arrivalDetails') + ' - Step 2/3'}
-                    {currentStep === 'manifest-upload' && t('generateTxt') + ' - Step 3/3'}
-                    {currentStep === 'delivery-note' && t('uploadDeliveryNote') + ' - Complete'}
+                    {currentStep === 'status-select' && 'Mark as Arrived - Step 1/3'}
+                    {currentStep === 'arrival-form' && 'Arrival Details - Step 2/3'}
+                    {currentStep === 'manifest-upload' && 'Generate TXT File - Step 3/3'}
+                    {currentStep === 'delivery-note' && 'Upload Delivery Note - Complete'}
                   </h2>
                   <button
                     onClick={cancelStatusChange}
@@ -1023,10 +1021,10 @@ Generated on: ${new Date().toISOString()}
                     ))}
                   </div>
                   <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>{t('confirm')}</span>
-                    <span>{t('arrivalDetails')}</span>
-                    <span>{t('generateTxt')}</span>
-                    <span>{t('deliveryNote')}</span>
+                    <span>Confirm</span>
+                    <span>Arrival Details</span>
+                    <span>Generate TXT</span>
+                    <span>Delivery Note</span>
                   </div>
                 </div>
 
@@ -1036,30 +1034,25 @@ Generated on: ${new Date().toISOString()}
                     <div className="space-y-4">
                       <div className="bg-green-50 p-4 rounded-lg">
                         <p className="text-sm text-green-800">
-                          {t('changingStatusToArrived')} <b>{t('arrived')}</b> {t('forShipment')} <b>{selectedShipment.id}</b>
+                          Changing status to <b>Arrived</b> for shipment: <b>{selectedShipment.id}</b>
                         </p>
                         <p className="text-sm text-green-700 mt-2">
-                          {t('currentStatus')} <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedShipment.status)}`}>
-                            {selectedShipment.status === 'Documents Pending' ? t('documentsPending') :
-                             selectedShipment.status === 'Arrived' ? t('arrived') :
-                             selectedShipment.status === 'In Transit' ? t('inTransit') :
-                             selectedShipment.status === 'Cleared' ? t('cleared') :
-                             selectedShipment.status === 'Delayed' ? t('delayed') :
-                             selectedShipment.status === 'Cancelled' ? t('cancelled') : selectedShipment.status}
+                          Current status: <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedShipment.status)}`}>
+                            {selectedShipment.status}
                           </span>
                         </p>
                       </div>
 
                       <div className="bg-blue-50 p-4 rounded-lg">
-                        <h3 className="text-sm font-medium text-blue-800 mb-2">{t('importantNotice')}</h3>
+                        <h3 className="text-sm font-medium text-blue-800 mb-2">Important Notice:</h3>
                         <p className="text-sm text-blue-700">
-                          {t('whenChangingStatusToArrived')}
+                          When changing status to "Arrived", you will need to:
                         </p>
                         <ul className="text-sm text-blue-700 mt-2 list-disc pl-5 space-y-1">
-                          <li>{t('provideDateOfArrival')}</li>
-                          <li>{t('uploadDoDocuments')}</li>
-                          <li>{t('generateTxtFileFromManifest')}</li>
-                          <li>{t('optionallyUploadDeliveryNote')}</li>
+                          <li>Provide date of arrival</li>
+                          <li>Upload DO documents</li>
+                          <li>Generate TXT file from Manifest & Bill of Lading</li>
+                          <li>Optionally upload delivery note</li>
                         </ul>
                       </div>
                     </div>
@@ -1069,7 +1062,7 @@ Generated on: ${new Date().toISOString()}
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('dateOfArrival')} <span className="text-red-500">*</span>
+                          Date of Arrival <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="date"
@@ -1082,7 +1075,7 @@ Generated on: ${new Date().toISOString()}
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('uploadDoDocuments')} <span className="text-red-500">*</span>
+                          Upload DO Documents <span className="text-red-500">*</span>
                         </label>
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                           <input
@@ -1093,7 +1086,7 @@ Generated on: ${new Date().toISOString()}
                             className="w-full"
                           />
                           <p className="text-xs text-gray-500 mt-2">
-                            {t('uploadBillOfLadingAndOtherDoDocuments')}
+                            Upload Bill of Lading and other DO documents
                           </p>
                         </div>
                         {doUploads.length > 0 && renderUploadedFiles(doUploads)}
@@ -1101,14 +1094,14 @@ Generated on: ${new Date().toISOString()}
 
                       {/* Manifest Preview */}
                       <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="text-sm font-medium text-gray-700 mb-2">{t('manifestInformation')}</h3>
+                        <h3 className="text-sm font-medium text-gray-700 mb-2">Manifest Information</h3>
                         <div className="text-sm space-y-1">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">{t('shipment')}</span>
+                            <span className="text-gray-600">Shipment #:</span>
                             <span className="font-medium">{selectedShipment.id}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">{t('containers')}</span>
+                            <span className="text-gray-600">Container(s):</span>
                             <span className="font-medium">{selectedShipment.containerNo.join(', ')}</span>
                           </div>
                         </div>
@@ -1129,10 +1122,10 @@ Generated on: ${new Date().toISOString()}
                               <BellIcon className="w-5 h-5 text-blue-600 mr-2" />
                               <div>
                                 <p className="text-sm text-blue-800 font-medium">
-                                  {t('attention')}
+                                  Attention!
                                 </p>
                                 <p className="text-sm text-blue-700">
-                                  "{t('pleaseGenerateTxtFileByChoosingManifest')}"
+                                  "Please generate TXT File by choosing Manifest & uploading Bill of Lading"
                                 </p>
                               </div>
                             </div>
@@ -1143,7 +1136,7 @@ Generated on: ${new Date().toISOString()}
                                 setShowNotificationPopup(true);
                               }}
                             >
-                              {t('linkToGenerateTxtFile')}
+                              Link to Generate Txt file
                             </button>
                           </div>
                         </div>
@@ -1171,7 +1164,7 @@ Generated on: ${new Date().toISOString()}
                       {/* Manifest Upload */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('uploadManifestFile')} <span className="text-red-500">*</span>
+                          Upload Manifest File <span className="text-red-500">*</span>
                         </label>
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                           <input
@@ -1181,12 +1174,12 @@ Generated on: ${new Date().toISOString()}
                             className="w-full"
                           />
                           <p className="text-xs text-gray-500 mt-2">
-                            {t('uploadManifestTxtFile')}
+                            Upload Manifest TXT file
                           </p>
                         </div>
                         {manifestFile && (
                           <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                            <span className="text-sm text-green-700">{t('selected')} {manifestFile.name}</span>
+                            <span className="text-sm text-green-700">Selected: {manifestFile.name}</span>
                           </div>
                         )}
                       </div>
@@ -1194,7 +1187,7 @@ Generated on: ${new Date().toISOString()}
                       {/* Bill of Lading Upload */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('uploadBillOfLading')} <span className="text-red-500">*</span>
+                          Upload Bill of Lading <span className="text-red-500">*</span>
                         </label>
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                           <input
@@ -1204,12 +1197,12 @@ Generated on: ${new Date().toISOString()}
                             className="w-full"
                           />
                           <p className="text-xs text-gray-500 mt-2">
-                            {t('uploadBillOfLadingDocument')}
+                            Upload Bill of Lading document
                           </p>
                         </div>
                         {billOfLadingFile && (
                           <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                            <span className="text-sm text-green-700">{t('selected')} {billOfLadingFile.name}</span>
+                            <span className="text-sm text-green-700">Selected: {billOfLadingFile.name}</span>
                           </div>
                         )}
                       </div>
@@ -1221,22 +1214,22 @@ Generated on: ${new Date().toISOString()}
                       <div className="bg-green-50 p-4 rounded-lg">
                         <div className="flex items-center gap-2 text-green-800">
                           <CheckCircleIcon className="w-5 h-5" />
-                          <span className="font-medium">{t('txtFileGeneratedSuccessfully')}</span>
+                          <span className="font-medium">TXT File Generated Successfully!</span>
                         </div>
                         <p className="text-sm text-green-700 mt-2">
-                          {t('shipment')} <b>{selectedShipment.id}</b> {t('hasBeenMarkedAsArrived')}
+                          Shipment <b>{selectedShipment.id}</b> has been marked as Arrived.
                         </p>
                       </div>
 
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <p className="text-sm text-gray-700">
-                          {t('processAfterShipmentBeforeClearance')}
+                          Process after shipment & before clearance "to take delivery note"
                         </p>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('uploadDeliveryNoteOptional')}
+                          Upload Delivery Note (Optional)
                         </label>
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                           <input
@@ -1246,12 +1239,12 @@ Generated on: ${new Date().toISOString()}
                             className="w-full"
                           />
                           <p className="text-xs text-gray-500 mt-2">
-                            {t('uploadDeliveryNoteDocument')}
+                            Upload delivery note document
                           </p>
                         </div>
                         {deliveryNoteFile && (
                           <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                            <span className="text-sm text-green-700">{t('selected')} {deliveryNoteFile.name}</span>
+                            <span className="text-sm text-green-700">Selected: {deliveryNoteFile.name}</span>
                           </div>
                         )}
                       </div>
@@ -1275,7 +1268,7 @@ Generated on: ${new Date().toISOString()}
                         }}
                         className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md text-sm"
                       >
-                        {t('back')}
+                        Back
                       </button>
                     )}
                   </div>
@@ -1285,7 +1278,7 @@ Generated on: ${new Date().toISOString()}
                       onClick={cancelStatusChange}
                       className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md text-sm"
                     >
-                      {t('cancel')}
+                      Cancel
                     </button>
                     
                     {currentStep === 'status-select' && (
@@ -1293,7 +1286,7 @@ Generated on: ${new Date().toISOString()}
                         onClick={handleStatusSelection}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm"
                       >
-                        {t('continue')}
+                        Continue
                       </button>
                     )}
                     
@@ -1303,7 +1296,7 @@ Generated on: ${new Date().toISOString()}
                         disabled={!arrivalDate}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {t('continueToGenerateTxt')}
+                        Continue to Generate TXT
                       </button>
                     )}
                     
@@ -1313,7 +1306,7 @@ Generated on: ${new Date().toISOString()}
                         disabled={!manifestFile || !billOfLadingFile}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {t('generateTxtFile')}
+                        Generate TXT File
                       </button>
                     )}
                     
@@ -1322,7 +1315,7 @@ Generated on: ${new Date().toISOString()}
                         onClick={submitDeliveryNote}
                         className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm"
                       >
-                        {t('completeProcess')}
+                        Complete Process
                       </button>
                     )}
                   </div>
@@ -1340,7 +1333,7 @@ Generated on: ${new Date().toISOString()}
                   <div className="flex items-center">
                     <ExclamationTriangleIcon className="w-6 h-6 text-yellow-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-800">
-                      {t('attention')}
+                      Attention!
                     </h2>
                   </div>
                   <button
@@ -1355,32 +1348,32 @@ Generated on: ${new Date().toISOString()}
                 <div className="p-6">
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
                     <p className="text-sm text-yellow-800">
-                      "{t('pleaseGenerateTxtFileByChoosingManifest')}"
+                      "Please generate TXT File by choosing Manifest & uploading Bill of Lading"
                     </p>
                   </div>
                   
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">{t('requiredFiles')}</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Required Files:</h3>
                       <ul className="text-sm text-gray-600 space-y-2">
                         <li className="flex items-center">
                           <DocumentIcon className="w-4 h-4 mr-2 text-blue-500" />
-                          <span>{t('manifestTxtFileContainsShipmentDetails')}</span>
+                          <span>Manifest TXT file (contains shipment details)</span>
                         </li>
                         <li className="flex items-center">
                           <DocumentArrowUpIcon className="w-4 h-4 mr-2 text-green-500" />
-                          <span>{t('billOfLadingDocument')}</span>
+                          <span>Bill of Lading document</span>
                         </li>
                       </ul>
                     </div>
 
                     <div className="bg-blue-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-blue-800 mb-2">{t('quickSteps')}</h3>
+                      <h3 className="text-sm font-medium text-blue-800 mb-2">Quick Steps:</h3>
                       <ol className="text-sm text-blue-700 space-y-1">
-                        <li>{t('clickOnUploadManifestFileField')}</li>
-                        <li>{t('clickOnUploadBillOfLadingField')}</li>
-                        <li>{t('bothFilesWillAppearAsSelected')}</li>
-                        <li>{t('clickGenerateTxtFileButton')}</li>
+                        <li>1. Click on "Upload Manifest File" field and select your TXT file</li>
+                        <li>2. Click on "Upload Bill of Lading" field and select your document</li>
+                        <li>3. Both files will appear as selected when uploaded</li>
+                        <li>4. Click "Generate TXT File" button to create final document</li>
                       </ol>
                     </div>
                   </div>
@@ -1399,7 +1392,7 @@ Generated on: ${new Date().toISOString()}
                     }}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm"
                   >
-                    {t('gotItTakeMeToUpload')}
+                    Got it! Take me to upload
                   </button>
                 </div>
               </div>
@@ -1411,7 +1404,7 @@ Generated on: ${new Date().toISOString()}
             <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
               <div className="bg-white p-6 rounded-xl shadow-xl w-96">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-800">{t('assignVendor')}</h2>
+                  <h2 className="text-lg font-semibold text-gray-800">Assign Vendor</h2>
                   <button
                     onClick={() => setShowAssignPopup(false)}
                     className="text-gray-400 hover:text-gray-600"
@@ -1420,12 +1413,12 @@ Generated on: ${new Date().toISOString()}
                   </button>
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
-                  {t('assignVendor')} {t('to')} {t('shipment')} <b>{selectedShipment.id}</b>
+                  Assign vendor to shipment <b>{selectedShipment.id}</b>
                 </p>
                 
                 <div className="space-y-3">
                   <select className="w-full px-3 py-2 border rounded-lg text-sm">
-                    <option value="">{t('selectVendor')}</option>
+                    <option value="">Select Vendor</option>
                     <option value="SpeedTrans LLC">SpeedTrans LLC</option>
                     <option value="Desert Logistics">Desert Logistics</option>
                     <option value="Gulf Shipping Co">Gulf Shipping Co</option>
@@ -1433,12 +1426,12 @@ Generated on: ${new Date().toISOString()}
                   
                   <input
                     type="text"
-                    placeholder={t('cost') + ' (AED)'}
+                    placeholder="Cost (AED)"
                     className="w-full px-3 py-2 border rounded-lg text-sm"
                   />
 
                   <textarea
-                    placeholder={t('notes')}
+                    placeholder="Notes"
                     className="w-full px-3 py-2 border rounded-lg text-sm"
                     rows={3}
                   />
@@ -1449,7 +1442,7 @@ Generated on: ${new Date().toISOString()}
                     className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
                     onClick={() => setShowAssignPopup(false)}
                   >
-                    {t('cancel')}
+                    Cancel
                   </button>
                   <button
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
@@ -1458,7 +1451,7 @@ Generated on: ${new Date().toISOString()}
                       setShowAssignPopup(false);
                     }}
                   >
-                    {t('assignVendor')}
+                    Assign Vendor
                   </button>
                 </div>
               </div>

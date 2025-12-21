@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useTranslation } from 'react-i18next';
-
 const validateVIN = (vin: string) => /^[A-HJ-NPR-Z0-9]{17}$/i.test(vin);
 
 export default function EditVehicleList() {
-  const { t } = useTranslation();
   const initialFormData = {
     shipmentId: "SHP-00125",
     vinNumber: "",
@@ -24,20 +21,13 @@ export default function EditVehicleList() {
   // Validate a single field
   const validateField = (name: string, value: string): string => {
     if (!value.trim()) {
-      const fieldNames: Record<string, string> = {
-        vinNumber: t('vinNumber'),
-        make: t('make'),
-        model: t('model'),
-        modelYear: t('modelYear'),
-        vehicleValue: t('vehicleValue')
-      };
-      return t('fieldIsRequired', { field: fieldNames[name] || name });
+      return `${name.replace(/([A-Z])/g, ' $1')} is required`;
     }
 
     switch (name) {
       case 'vinNumber':
         if (!validateVIN(value)) {
-          return t('invalidVinFormat');
+          return "Invalid VIN format (must be 17 alphanumeric characters)";
         }
         break;
        
@@ -45,14 +35,14 @@ export default function EditVehicleList() {
         const year = parseInt(value);
         const currentYear = new Date().getFullYear();
         if (isNaN(year) || year < 1900 || year > currentYear + 1) {
-          return t('modelYearMustBeBetween', { min: 1900, max: currentYear + 1 });
+          return `Model Year must be between 1900 and ${currentYear + 1}`;
         }
         break;
        
       case 'vehicleValue':
         const numValue = parseFloat(value);
         if (isNaN(numValue) || numValue <= 0) {
-          return t('vehicleValueMustBeGreaterThanZero');
+          return "Vehicle Value must be greater than 0";
         }
         break;
     }
@@ -160,11 +150,12 @@ export default function EditVehicleList() {
             </div>
            
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">
-              {t('deleteVehicle')}
+              Delete Vehicle
             </h3>
            
             <p className="text-gray-600 text-center mb-8">
-              {t('deleteVehicleConfirmAction')}
+              Are you sure you want to delete this vehicle?<br />
+              This action cannot be undone.
             </p>
            
             <div className="flex justify-center space-x-4">
@@ -172,13 +163,13 @@ export default function EditVehicleList() {
                 onClick={handleCancelDelete}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
               >
-                {t('cancel')}
+                Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
                 className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
               >
-                {t('delete')}
+                Delete
               </button>
             </div>
           </div>
@@ -203,11 +194,11 @@ export default function EditVehicleList() {
             </div>
            
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">
-              {t('success')}
+              Success!
             </h3>
            
             <p className="text-gray-600 text-center mb-8">
-              {t('vehicleUpdatedSuccessfully')}
+              Vehicle has been updated successfully!
             </p>
            
             <div className="flex justify-center">
@@ -215,7 +206,7 @@ export default function EditVehicleList() {
                 onClick={handleCloseSuccessPopup}
                 className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
-                {t('ok')}
+                OK
               </button>
             </div>
           </div>
@@ -226,10 +217,10 @@ export default function EditVehicleList() {
         {/* Header - Centered */}
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {t('editVehicleDetailsBelow')}
+            Edit Vehicle
           </h1>
           <p className="text-gray-600">
-            {t('updateVehicleDetailsForShipment')}: <span className="font-medium">SHP-00125</span>
+            Update vehicle details for Shipment ID: <span className="font-medium">SHP-00125</span>
           </p>
         </div>
 
@@ -241,7 +232,7 @@ export default function EditVehicleList() {
               {/* Shipment ID - Fixed Value (Not Editable) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('shipmentId')}
+                  Shipment ID
                 </label>
                 <div className="relative">
                   <div className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-lg text-gray-700">
@@ -254,14 +245,14 @@ export default function EditVehicleList() {
                   </div>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  {t('shipmentIdFixedCannotBeEdited')}
+                  Shipment ID is fixed and cannot be edited
                 </p>
               </div>
 
               {/* VIN Number */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('vinNumber')} <span className="text-red-500">*</span>
+                  VIN Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -272,7 +263,7 @@ export default function EditVehicleList() {
                     errors.vinNumber ? 'border-red-500' : 'border-gray-300'
                   }`}
                   maxLength={17}
-                  placeholder={t('enter17CharacterVin')}
+                  placeholder="Enter 17-character VIN"
                 />
                 {errors.vinNumber && (
                   <p className="mt-1 text-sm text-red-600">{errors.vinNumber}</p>
@@ -285,7 +276,7 @@ export default function EditVehicleList() {
               {/* Make */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('make')} <span className="text-red-500">*</span>
+                  Make <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -295,7 +286,7 @@ export default function EditVehicleList() {
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                     errors.make ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder={t('enterMake')}
+                  placeholder="e.g., Honda, Toyota"
                 />
                 {errors.make && (
                   <p className="mt-1 text-sm text-red-600">{errors.make}</p>
@@ -305,7 +296,7 @@ export default function EditVehicleList() {
               {/* Model */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('model')} <span className="text-red-500">*</span>
+                  Model <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -315,7 +306,7 @@ export default function EditVehicleList() {
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                     errors.model ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder={t('enterModel')}
+                  placeholder="e.g., Civic, Camry"
                 />
                 {errors.model && (
                   <p className="mt-1 text-sm text-red-600">{errors.model}</p>
@@ -328,7 +319,7 @@ export default function EditVehicleList() {
               {/* Model Year */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('modelYear')} <span className="text-red-500">*</span>
+                  Model Year <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -340,7 +331,7 @@ export default function EditVehicleList() {
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                     errors.modelYear ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder={t('enterModelYear')}
+                  placeholder="YYYY"
                 />
                 {errors.modelYear && (
                   <p className="mt-1 text-sm text-red-600">{errors.modelYear}</p>
@@ -350,7 +341,7 @@ export default function EditVehicleList() {
               {/* Color */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('color')} ({t('optional')})
+                  Color (Optional)
                 </label>
                 <input
                   type="text"
@@ -358,7 +349,7 @@ export default function EditVehicleList() {
                   value={formData.color}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                  placeholder={t('enterColor')}
+                  placeholder="e.g., Red, Blue, Black"
                 />
               </div>
             </div>
@@ -366,11 +357,11 @@ export default function EditVehicleList() {
             {/* Vehicle Value */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('vehicleValue')} ({t('aed')}) <span className="text-red-500">*</span>
+                Vehicle Value (AED) <span className="text-red-500">*</span>
               </label>
               <div className="relative w-full md:w-1/2 lg:w-1/3">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                  {t('aed')}
+                  AED
                 </span>
                 <input
                   type="number"
@@ -401,7 +392,7 @@ export default function EditVehicleList() {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                  {t('deleteVehicle')}
+                  Delete Vehicle
                 </button>
                 <button
                   type="submit"
@@ -418,10 +409,10 @@ export default function EditVehicleList() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {t('updating')}
+                      Updating...
                     </>
                   ) : (
-                    t('updateVehicle')
+                    'Update Vehicle'
                   )}
                 </button>
               </div>
@@ -438,7 +429,7 @@ export default function EditVehicleList() {
               </svg>
               <div>
                 <p className="text-sm font-medium text-red-800">
-                  {t('pleaseFixFollowingErrors')}
+                  Please fix the following errors:
                 </p>
                 <ul className="mt-1 text-sm text-red-700 list-disc list-inside space-y-1">
                   {errors.vinNumber && <li>{errors.vinNumber}</li>}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 import { 
   DocumentArrowUpIcon, 
   XCircleIcon, 
@@ -29,7 +28,6 @@ interface Option {
 }
 
 export default function AddDocument() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<DocumentFormData>({
@@ -96,14 +94,14 @@ export default function AddDocument() {
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      setFileError(t('onlyPdfJpgAndPngFilesAreAllowed'));
+      setFileError("Only PDF, JPG, and PNG files are allowed");
       return;
     }
 
     // Validate file size (10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB in bytes
     if (file.size > maxSize) {
-      setFileError(t('fileSizeMustBeLessThan10Mb'));
+      setFileError("File size must be less than 10MB");
       return;
     }
 
@@ -153,24 +151,24 @@ export default function AddDocument() {
     const newErrors: Partial<Record<keyof DocumentFormData, string>> = {};
 
     if (!formData.documentCategory) {
-      newErrors.documentCategory = t('documentCategoryIsRequired');
+      newErrors.documentCategory = "Document category is required";
     }
 
     if (!formData.documentType) {
-      newErrors.documentType = t('documentTypeIsRequired');
+      newErrors.documentType = "Document type is required";
     }
 
     if (!formData.shipmentId) {
-      newErrors.shipmentId = t('shipmentIdIsRequired');
+      newErrors.shipmentId = "Shipment ID is required";
     }
 
     // Validate that at least one related entity is selected
     if (!formData.containerId && !formData.driverId && !formData.customerId && !formData.truckId) {
-      newErrors.containerId = t('atLeastOneRelatedEntityRequired');
+      newErrors.containerId = "At least one related entity (Container, Driver, Customer, or Truck) is required";
     }
 
     if (!formData.file) {
-      newErrors.file = t('fileUploadIsRequired');
+      newErrors.file = "File upload is required";
     }
 
     setErrors(newErrors);
@@ -245,7 +243,7 @@ export default function AddDocument() {
               <ArrowLeftIcon className="w-5 h-5 text-gray-700" />
             </button> */}
             <h1 className="text-2xl font-bold text-gray-900">
-              {t('addDocument')}
+              Add Document 
             </h1>
           </div>
         </div>
@@ -258,7 +256,7 @@ export default function AddDocument() {
               {/* Document Category */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('documentCategory')} <span className="text-red-500">*</span>
+                  Document Category *
                 </label>
                 <select
                   name="documentCategory"
@@ -267,12 +265,12 @@ export default function AddDocument() {
                   className={`w-full px-4 py-2 border ${errors.documentCategory ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                   required
                 >
-                  <option value="">{t('selectCategory')}</option>
-                  <option value="Shipment">{t('documentBelongsToShipment')}</option>
-                  <option value="Customer">{t('customer')}</option>
-                  <option value="Vendor">{t('vendor')}</option>
-                  <option value="Driver">{t('driver')}</option>
-                  <option value="Truck">{t('truck')}</option>
+                  <option value="">Select Category</option>
+                  <option value="Shipment">Shipment</option>
+                  <option value="Customer">Customer</option>
+                  <option value="Vendor">Vendor</option>
+                  <option value="Driver">Driver</option>
+                  <option value="Truck">Truck</option>
                 </select>
                 {errors.documentCategory && (
                   <p className="mt-1 text-sm text-red-600">{errors.documentCategory}</p>
@@ -282,7 +280,7 @@ export default function AddDocument() {
               {/* Document Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('documentType')} <span className="text-red-500">*</span>
+                  Document Type *
                 </label>
                 <select
                   name="documentType"
@@ -292,7 +290,7 @@ export default function AddDocument() {
                   required
                   disabled={!formData.documentCategory}
                 >
-                  <option value="">{t('selectType')}</option>
+                  <option value="">Select Type</option>
                   {formData.documentCategory && 
                     documentTypes[formData.documentCategory]?.map((type) => (
                       <option key={type} value={type}>{type}</option>
@@ -308,7 +306,7 @@ export default function AddDocument() {
             {/* Document Belongs to (Auto-filled) */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('documentBelongsTo')} <span className="text-red-500">*</span>
+                Document Belongs to *
               </label>
               <input
                 type="text"
@@ -317,13 +315,13 @@ export default function AddDocument() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
                 readOnly
               />
-              <p className="mt-1 text-xs text-gray-500">{t('autoFilledBasedOnCurrentContext')}</p>
+              <p className="mt-1 text-xs text-gray-500">Auto-filled based on current context</p>
             </div>
 
             {/* Shipment ID */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('shipmentId')} <span className="text-red-500">*</span>
+                Shipment ID *
               </label>
               <input
                 type="text"
@@ -341,21 +339,21 @@ export default function AddDocument() {
             {/* Related Entities */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('relatedEntities')}
+                Related Entities (At least one required)
               </label>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Container ID */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {t('containerId')}
+                    Container ID
                   </label>
                   <select
                     value={formData.containerId}
                     onChange={(e) => handleSearchableChange("containerId", e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">{t('searchOrSelectContainer')}</option>
+                    <option value="">Search or Select Container</option>
                     {containers.map((container) => (
                       <option key={container.id} value={container.id}>
                         {container.name}
@@ -367,14 +365,14 @@ export default function AddDocument() {
                 {/* Driver */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {t('driver')}
+                    Driver
                   </label>
                   <select
                     value={formData.driverId}
                     onChange={(e) => handleSearchableChange("driverId", e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">{t('searchOrSelectDriver')}</option>
+                    <option value="">Search or Select Driver</option>
                     {drivers.map((driver) => (
                       <option key={driver.id} value={driver.id}>
                         {driver.name}
@@ -386,14 +384,14 @@ export default function AddDocument() {
                 {/* Customer */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {t('customer')}
+                    Customer
                   </label>
                   <select
                     value={formData.customerId}
                     onChange={(e) => handleSearchableChange("customerId", e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">{t('searchOrSelectCustomer')}</option>
+                    <option value="">Search or Select Customer</option>
                     {customers.map((customer) => (
                       <option key={customer.id} value={customer.id}>
                         {customer.name}
@@ -405,14 +403,14 @@ export default function AddDocument() {
                 {/* Truck */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {t('truck')}
+                    Truck
                   </label>
                   <select
                     value={formData.truckId}
                     onChange={(e) => handleSearchableChange("truckId", e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">{t('searchOrSelectTruck')}</option>
+                    <option value="">Search or Select Truck</option>
                     {trucks.map((truck) => (
                       <option key={truck.id} value={truck.id}>
                         {truck.name}
@@ -425,13 +423,13 @@ export default function AddDocument() {
               {errors.containerId && (
                 <p className="mt-1 text-sm text-red-600">{errors.containerId}</p>
               )}
-              <p className="mt-1 text-xs text-gray-500">{t('entitiesWillBeAutoFetched')}</p>
+              <p className="mt-1 text-xs text-gray-500">Entities will be auto-fetched if assigned to shipment</p>
             </div>
 
             {/* File Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('uploadFilePdfJpgPng')} <span className="text-red-500">*</span>
+                Upload File (PDF/JPG/PNG) *
               </label>
               
               {!formData.file ? (
@@ -440,7 +438,7 @@ export default function AddDocument() {
                     <DocumentArrowUpIcon className="mx-auto h-12 w-12 text-gray-400" />
                     <div className="flex text-sm text-gray-600">
                       <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                        <span>{t('uploadAFile')}</span>
+                        <span>Upload a file</span>
                         <input
                           type="file"
                           className="sr-only"
@@ -448,10 +446,10 @@ export default function AddDocument() {
                           onChange={handleFileChange}
                         />
                       </label>
-                      <p className="pl-1">{t('orDragAndDrop')}</p>
+                      <p className="pl-1">or drag and drop</p>
                     </div>
                     <p className="text-xs text-gray-500">
-                      {t('pdfJpgOrPngUpTo10Mb')}
+                      PDF, JPG or PNG up to 10MB
                     </p>
                   </div>
                 </div>
@@ -500,7 +498,7 @@ export default function AddDocument() {
               {/* Uploaded By */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('uploadedBy')}
+                  Uploaded By
                 </label>
                 <input
                   type="text"
@@ -514,7 +512,7 @@ export default function AddDocument() {
               {/* Upload Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('uploadDate')}
+                  Upload Date
                 </label>
                 <input
                   type="text"
@@ -528,7 +526,7 @@ export default function AddDocument() {
               {/* Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('status')}
+                  Status
                 </label>
                 <select
                   name="status"
@@ -536,9 +534,9 @@ export default function AddDocument() {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="Pending">{t('pending')}</option>
-                  <option value="Approved">{t('approved')}</option>
-                  <option value="Rejected">{t('rejected')}</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
                 </select>
               </div>
             </div>
@@ -546,7 +544,7 @@ export default function AddDocument() {
             {/* Notes */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('notes')}
+                Notes
               </label>
               <textarea
                 name="notes"
@@ -554,7 +552,7 @@ export default function AddDocument() {
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder={t('addAnyAdditionalNotesOrComments')}
+                placeholder="Add any additional notes or comments..."
               />
             </div>
 
@@ -566,7 +564,7 @@ export default function AddDocument() {
                 className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 disabled={isSubmitting}
               >
-                {t('cancel')}
+                Cancel
               </button>
               <button
                 type="submit"
@@ -576,10 +574,10 @@ export default function AddDocument() {
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    {t('uploading')}
+                    Uploading...
                   </>
                 ) : (
-                  t('uploadDocument')
+                  "Upload Document"
                 )}
               </button>
             </div>
@@ -590,7 +588,7 @@ export default function AddDocument() {
         {Object.keys(errors).length > 0 && (
           <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <h3 className="text-sm font-medium text-red-800 mb-2">
-              {t('pleaseFixFollowingErrors')}
+              Please fix the following errors:
             </h3>
             <ul className="list-disc list-inside text-sm text-red-700">
               {Object.entries(errors).map(([field, message]) => (
@@ -612,27 +610,27 @@ export default function AddDocument() {
             
             {/* Success Title */}
             <h2 className="text-xl font-bold text-gray-800 mb-2">
-              {t('documentUploadedSuccessfully')}
+              Document Uploaded Successfully!
             </h2>
             
             {/* Success Message */}
             <p className="text-sm text-gray-600 mb-6">
-              {t('yourDocumentHasBeenSuccessfullyUploaded')} <span className="font-semibold">{formData.file?.name}</span> {t('hasBeenSuccessfullyUploadedAndIsNowPendingReview')}
+              Your document <span className="font-semibold">{formData.file?.name}</span> has been successfully uploaded and is now pending review.
             </p>
             
             {/* Document Details */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg text-left">
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="text-gray-600">{t('documentType')}:</div>
+                <div className="text-gray-600">Document Type:</div>
                 <div className="font-medium">{formData.documentType}</div>
                 
-                <div className="text-gray-600">{t('shipmentId')}:</div>
+                <div className="text-gray-600">Shipment ID:</div>
                 <div className="font-medium">{formData.shipmentId}</div>
                 
-                <div className="text-gray-600">{t('status')}:</div>
-                <div className="font-medium text-yellow-600">{t(formData.status.toLowerCase())}</div>
+                <div className="text-gray-600">Status:</div>
+                <div className="font-medium text-yellow-600">{formData.status}</div>
                 
-                <div className="text-gray-600">{t('uploadDate')}:</div>
+                <div className="text-gray-600">Upload Date:</div>
                 <div className="font-medium">{formData.uploadDate}</div>
               </div>
             </div>
@@ -643,13 +641,13 @@ export default function AddDocument() {
                 onClick={handleClose}
                 className="px-6 py-2 border border-gray-300  text-gray-700 rounded-lg hover:bg-gray-50 flex-1"
               >
-                {t('close')}
+                Close
               </button>
               <button
                 onClick={handleOk}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex-1"
               >
-                {t('ok')}
+                OK
               </button>
              
             </div>

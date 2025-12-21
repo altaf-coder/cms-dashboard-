@@ -14,7 +14,6 @@ import {
   PlusIcon
 } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import PageMeta from "../../Dashboard/PageMeta";
 
@@ -50,7 +49,6 @@ const getDocumentsData = (): Document[] => {
 };
 
 export default function Documents() {
-  const { t } = useTranslation();
   const [documents, setDocuments] = useState<Document[]>([]);
   
   // Pagination state
@@ -129,11 +127,11 @@ export default function Documents() {
     const baseClass = "px-2 py-1 rounded-full text-xs font-medium";
     switch(status) {
       case 'Approved':
-        return <span className={`${baseClass} bg-green-100 text-green-800`}>{t('approved')}</span>;
+        return <span className={`${baseClass} bg-green-100 text-green-800`}>Approved</span>;
       case 'Pending':
-        return <span className={`${baseClass} bg-yellow-100 text-yellow-800`}>{t('pending')}</span>;
+        return <span className={`${baseClass} bg-yellow-100 text-yellow-800`}>Pending</span>;
       case 'Rejected':
-        return <span className={`${baseClass} bg-red-100 text-red-800`}>{t('rejected')}</span>;
+        return <span className={`${baseClass} bg-red-100 text-red-800`}>Rejected</span>;
       default:
         return null;
     }
@@ -148,23 +146,23 @@ export default function Documents() {
   return (
     <>
       <PageMeta
-        title={t('documentsManagement') + ' | CMS Dashboard'}
-        description={t('manageAndReviewAllDocuments')}
+        title="Documents Management | CMS Dashboard"
+        description="Manage and review all documents"
       />
-      <PageBreadcrumb pageTitle={t('documentsManagement')} />
+      <PageBreadcrumb pageTitle="Documents Management" />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         {/* Header with Add Button */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:mb-7">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {t('viewDocuments')}
+              View Documents
             </h1>
-            <p className="text-gray-600 mt-2">{t('manageAndReviewAllDocuments')}</p>
+            <p className="text-gray-600 mt-2">Manage and review all documents</p>
           </div>
           <Link to="/add-document">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 w-full sm:w-auto justify-center whitespace-nowrap min-w-[140px]">
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 w-full sm:w-auto justify-center">
               <PlusIcon className="w-5 h-5" />
-              {t('addDocument')}
+              Add Document
             </button>
           </Link>
         </div>
@@ -177,34 +175,34 @@ export default function Documents() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('documentCategory')}
+                    Document Category
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('documentType')}
+                    Document Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('documentAttachment')}
+                    Document / Attachment
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('shipmentId')}
+                    Shipment ID
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('containerId')}
+                    Container ID
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('driver')}
+                    Driver
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('customer')}
+                    Customer
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('truck')}
+                    Truck
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('status')}
+                    Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('action')}
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -254,13 +252,13 @@ export default function Documents() {
                           <button
                             onClick={() => handleView(doc.id)}
                             className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md"
-                            title={t('view')}
+                            title="View"
                           >
                             <EyeIcon className="w-4 h-4" />
                           </button>
                             </Link>
                           <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                            {t('view')}
+                            View
                           </span>
                         </div>
                         
@@ -269,12 +267,12 @@ export default function Documents() {
                           <button
                             onClick={() => handleDownload(doc.id)}
                             className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-md"
-                            title={t('download')}
+                            title="Download"
                           >
                             <ArrowDownTrayIcon className="w-4 h-4" />
                           </button>
                           <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                            {t('download')}
+                            Download
                           </span>
                         </div>
                         
@@ -287,12 +285,12 @@ export default function Documents() {
                                 setShowApprovePopup(true);
                               }}
                               className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-md"
-                              title={t('approve')}
+                              title="Approve"
                             >
                               <CheckCircleIcon className="w-4 h-4" />
                             </button>
                             <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                              {t('approve')}
+                              Approve
                             </span>
                           </div>
                         )}
@@ -306,12 +304,12 @@ export default function Documents() {
                                 setShowRejectPopup(true);
                               }}
                               className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md"
-                              title={t('reject')}
+                              title="Reject"
                             >
                               <XCircleIcon className="w-4 h-4" />
                             </button>
                             <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                              {t('reject')}
+                              Reject
                             </span>
                           </div>
                         )}
@@ -325,12 +323,12 @@ export default function Documents() {
                                 setShowDeletePopup(true);
                               }}
                               className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md"
-                              title={t('delete')}
+                              title="Delete"
                             >
                               <TrashIcon className="w-4 h-4" />
                             </button>
                             <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                              {t('delete')}
+                              Delete
                             </span>
                           </div>
                         )}
@@ -346,8 +344,8 @@ export default function Documents() {
           {documents.length === 0 && (
             <div className="text-center py-12">
               <DocumentIcon className="w-12 h-12 text-gray-400 mx-auto" />
-              <h3 className="mt-4 text-sm font-medium text-gray-900">{t('noDocuments')}</h3>
-              <p className="mt-1 text-sm text-gray-500">{t('getStartedByUploadingNewDocument')}</p>
+              <h3 className="mt-4 text-sm font-medium text-gray-900">No documents</h3>
+              <p className="mt-1 text-sm text-gray-500">Get started by uploading a new document.</p>
             </div>
           )}
 
@@ -357,7 +355,7 @@ export default function Documents() {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500">
-                    {t('showingDocuments')} {indexOfFirstRecord + 1} {t('to')} {Math.min(indexOfLastRecord, documents.length)} {t('of')} {documents.length} {t('documents')}
+                    Showing {indexOfFirstRecord + 1} to {Math.min(indexOfLastRecord, documents.length)} of {documents.length} documents
                   </span>
                   <select
                     value={recordsPerPage}
@@ -380,7 +378,7 @@ export default function Documents() {
                     disabled={currentPage === 1}
                     className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
-                    {t('previous')}
+                    Previous
                   </button>
                   
                   <div className="flex items-center gap-1">
@@ -417,7 +415,7 @@ export default function Documents() {
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
-                    {t('next')}
+                    Next
                   </button>
                 </div>
               </div>
@@ -430,22 +428,22 @@ export default function Documents() {
       {showApprovePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('approveDocument')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Approve Document?</h2>
             <p className="text-sm text-gray-600 mb-4">
-              {t('areYouSureYouWantToApprove')} <b>{selectedDocument?.documentAttachment}</b>?
+              Are you sure you want to approve <b>{selectedDocument?.documentAttachment}</b>?
             </p>
             <div className="flex justify-end gap-3">
               <button
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 onClick={() => setShowApprovePopup(false)}
               >
-                {t('cancel')}
+                Cancel
               </button>
               <button
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 onClick={handleApprove}
               >
-                {t('approve')}
+                Approve
               </button>
             </div>
           </div>
@@ -456,13 +454,13 @@ export default function Documents() {
       {showRejectPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('rejectDocument')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Reject Document?</h2>
             <p className="text-sm text-gray-600 mb-4">
-              {t('areYouSureYouWantToReject')} <b>{selectedDocument?.documentAttachment}</b>?
+              Are you sure you want to reject <b>{selectedDocument?.documentAttachment}</b>?
             </p>
             <div className="mb-4">
               <textarea
-                placeholder={t('reasonForRejectionOptional')}
+                placeholder="Reason for rejection (optional)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                 rows={3}
                 value={rejectReason}
@@ -474,13 +472,13 @@ export default function Documents() {
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 onClick={() => setShowRejectPopup(false)}
               >
-                {t('cancel')}
+                Cancel
               </button>
               <button
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 onClick={handleReject}
               >
-                {t('reject')}
+                Reject
               </button>
             </div>
           </div>
@@ -491,22 +489,22 @@ export default function Documents() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-96">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('deleteDocument')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Delete Document?</h2>
             <p className="text-sm text-gray-600 mb-4">
-              {t('areYouSureYouWantToDeleteDocument')} <b>{selectedDocument?.documentAttachment}</b>? {t('thisActionCannotBeUndone')}
+              Are you sure you want to delete <b>{selectedDocument?.documentAttachment}</b>? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 onClick={() => setShowDeletePopup(false)}
               >
-                {t('cancel')}
+                Cancel
               </button>
               <button
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 onClick={handleDelete}
               >
-                {t('delete')}
+                Delete
               </button>
             </div>
           </div>
