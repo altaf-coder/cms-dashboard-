@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 // @ts-ignore - JSON import is handled by TypeScript config
 import documentsData from '../../../../data/admins.json';
-import { 
-  EyeIcon, 
-  ArrowDownTrayIcon, 
-  CheckCircleIcon, 
-  XCircleIcon, 
+import {
+  EyeIcon,
+  ArrowDownTrayIcon,
+  CheckCircleIcon,
+  XCircleIcon,
   TrashIcon,
   DocumentIcon,
   PhotoIcon,
@@ -33,7 +33,7 @@ interface Document {
 // Function to get and map document data from JSON
 const getDocumentsData = (): Document[] => {
   if (!documentsData || !documentsData.documents) return [];
-  
+
   return documentsData.documents.map(doc => ({
     id: doc.id || 0,
     documentCategory: doc.documentCategory || 'N/A',
@@ -50,17 +50,17 @@ const getDocumentsData = (): Document[] => {
 
 export default function Documents() {
   const [documents, setDocuments] = useState<Document[]>([]);
-  
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
-  
+
   // Load document data on component mount
   useEffect(() => {
     const data = getDocumentsData();
     setDocuments(data);
   }, []);
-  
+
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showApprovePopup, setShowApprovePopup] = useState(false);
   const [showRejectPopup, setShowRejectPopup] = useState(false);
@@ -79,8 +79,8 @@ export default function Documents() {
 
   const handleApprove = () => {
     if (selectedDocument) {
-      setDocuments(docs => 
-        docs.map(doc => 
+      setDocuments(docs =>
+        docs.map(doc =>
           doc.id === selectedDocument.id ? { ...doc, status: 'Approved' } : doc
         )
       );
@@ -92,8 +92,8 @@ export default function Documents() {
 
   const handleReject = () => {
     if (selectedDocument) {
-      setDocuments(docs => 
-        docs.map(doc => 
+      setDocuments(docs =>
+        docs.map(doc =>
           doc.id === selectedDocument.id ? { ...doc, status: 'Rejected' } : doc
         )
       );
@@ -125,7 +125,7 @@ export default function Documents() {
 
   const getStatusBadge = (status: Document['status']) => {
     const baseClass = "px-2 py-1 rounded-full text-xs font-medium";
-    switch(status) {
+    switch (status) {
       case 'Approved':
         return <span className={`${baseClass} bg-green-100 text-green-800`}>Approved</span>;
       case 'Pending':
@@ -171,34 +171,34 @@ export default function Documents() {
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {/* Table */}
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full border-collapse border border-gray-200">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Document Category
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Document Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Document / Attachment
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Shipment ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Container ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Driver
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Truck
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -208,17 +208,17 @@ export default function Documents() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentRecords.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={doc.id} className="hover:bg-gray-50 border-b border-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.documentCategory}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.documentType}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="flex items-center gap-2">
                         {getFileIcon(doc.documentAttachment)}
-                        <span 
+                        <span
                           className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
                           onClick={() => handleView(doc.id)}
                         >
@@ -226,42 +226,42 @@ export default function Documents() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.shipmentId}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.containerId}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.driver}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.customer}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       <div className="text-sm text-gray-900">{doc.truck}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       {getStatusBadge(doc.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1">
                         {/* View Button */}
                         <div className="relative group">
-                         <Link to="/view-document">
-                          <button
-                            onClick={() => handleView(doc.id)}
-                            className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md"
-                            title="View"
-                          >
-                            <EyeIcon className="w-4 h-4" />
-                          </button>
-                            </Link>
+                          <Link to="/view-document">
+                            <button
+                              onClick={() => handleView(doc.id)}
+                              className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md"
+                              title="View"
+                            >
+                              <EyeIcon className="w-4 h-4" />
+                            </button>
+                          </Link>
                           <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
                             View
                           </span>
                         </div>
-                        
+
                         {/* Download Button */}
                         <div className="relative group">
                           <button
@@ -275,8 +275,8 @@ export default function Documents() {
                             Download
                           </span>
                         </div>
-                        
-                        {/* Approve Button - Only if not already approved */}
+
+                        {/* Approve Button */}
                         {doc.status !== 'Approved' && (
                           <div className="relative group">
                             <button
@@ -294,8 +294,8 @@ export default function Documents() {
                             </span>
                           </div>
                         )}
-                        
-                        {/* Reject Button - Only if not already rejected */}
+
+                        {/* Reject Button */}
                         {doc.status !== 'Rejected' && (
                           <div className="relative group">
                             <button
@@ -313,8 +313,8 @@ export default function Documents() {
                             </span>
                           </div>
                         )}
-                        
-                        {/* Delete Button - Only if not approved */}
+
+                        {/* Delete Button */}
                         {doc.status !== 'Approved' && (
                           <div className="relative group">
                             <button
@@ -371,7 +371,7 @@ export default function Documents() {
                     <option value={50}>50</option>
                   </select>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -380,7 +380,7 @@ export default function Documents() {
                   >
                     Previous
                   </button>
-                  
+
                   <div className="flex items-center gap-1">
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                       let pageNumber;
@@ -393,23 +393,22 @@ export default function Documents() {
                       } else {
                         pageNumber = currentPage - 2 + i;
                       }
-                      
+
                       return (
                         <button
                           key={pageNumber}
                           onClick={() => setCurrentPage(pageNumber)}
-                          className={`px-3 py-1 border rounded text-sm ${
-                            currentPage === pageNumber
+                          className={`px-3 py-1 border rounded text-sm ${currentPage === pageNumber
                               ? 'bg-blue-600 text-white border-blue-600'
                               : 'hover:bg-gray-50'
-                          }`}
+                            }`}
                         >
                           {pageNumber}
                         </button>
                       );
                     })}
                   </div>
-                  
+
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
@@ -422,6 +421,7 @@ export default function Documents() {
             </div>
           )}
         </div>
+
       </div>
 
       {/* Approve Confirmation Popup */}

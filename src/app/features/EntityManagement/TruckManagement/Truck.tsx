@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { EyeIcon, PencilIcon, TrashIcon, CheckCircleIcon, NoSymbolIcon, ArrowDownTrayIcon, UserIcon, TruckIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { EyeIcon, PencilIcon, TrashIcon, CheckCircleIcon, NoSymbolIcon, ArrowDownTrayIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../../components/ui/table";
 import truckData from '../../../../data/admins.json';
@@ -31,7 +31,7 @@ interface Truck {
 // Function to get and map truck data from JSON
 const getTrucksData = (): Truck[] => {
   if (!truckData || !truckData.trucks) return [];
-  
+
   return truckData.trucks.map((truck, index) => ({
     id: truck.id || `T-CMS-${String(index + 1).padStart(3, '0')}`,
     plateNo: truck.truckNumber || `ABC${Math.floor(1000 + Math.random() * 9000)}`,
@@ -62,11 +62,11 @@ export default function TruckTable() {
   const [vendorFilter, setVendorFilter] = useState("");
   const [expiryWindowFilter, setExpiryWindowFilter] = useState("");
   const [selectedTrucks, setSelectedTrucks] = useState<string[]>([]);
-  
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
-  
+
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showAssignDriverPopup, setShowAssignDriverPopup] = useState(false);
   const [showSuspendPopup, setShowSuspendPopup] = useState(false);
@@ -78,46 +78,50 @@ export default function TruckTable() {
     const data = getTrucksData();
     setTrucks(data);
   }, []);
-  
-  // Get unique vendors for filter
-  const vendors = Array.from(new Set(trucks.map(truck => truck.vendor)));
 
-  // Handle search and filtering
-  const filteredTrucks = trucks.filter((truck) => {
-    const term = searchTerm.toLowerCase();
-    const matchesSearch =
-      (truck.truckName || '').toLowerCase().includes(term) ||
-      (truck.mobile || '').toLowerCase().includes(term) ||
-      (truck.drivingLicense || '').toLowerCase().includes(term) ||
-      (truck.driverId || '').toLowerCase().includes(term) ||
-      truck.plateNo.toLowerCase().includes(term) ||
-      truck.id.toLowerCase().includes(term);
-
-    const matchesStatus = statusFilter ? truck.status === statusFilter : true;
-    const matchesVendor = vendorFilter ? truck.vendor === vendorFilter : true;
-    
-    // Expiry windows filter - checks BOTH registration and insurance
-    const matchesExpiryWindow = expiryWindowFilter ? {
-      "30": isExpiringWithinDays(truck.registrationExpiry, 30) || isExpiringWithinDays(truck.insuranceExpiry, 30),
-      "60": isExpiringWithinDays(truck.registrationExpiry, 60) || isExpiringWithinDays(truck.insuranceExpiry, 60),
-      "90": isExpiringWithinDays(truck.registrationExpiry, 90) || isExpiringWithinDays(truck.insuranceExpiry, 90)
-    }[expiryWindowFilter] || true : true;
-
-    return matchesSearch && matchesStatus && matchesVendor && matchesExpiryWindow;
-  });
-
-  // Check if date is expiring within X days
-  const isExpiringWithinDays = (dateStr: string, days: number) => {
+  // Check if date is expiring within X days - memoized callback
+  const isExpiringWithinDays = useCallback((dateStr: string, days: number) => {
     if (dateStr === 'N/A' || !dateStr) return false;
-    
+
     const [day, month, year] = dateStr.split('/').map(Number);
     const expiryDate = new Date(year, month - 1, day);
     const today = new Date();
     const daysFromNow = new Date();
     daysFromNow.setDate(today.getDate() + days);
-    
+
     return expiryDate <= daysFromNow && expiryDate >= today;
-  };
+  }, []);
+
+  // Get unique vendors for filter - memoized
+  const vendors = useMemo(() => {
+    return Array.from(new Set(trucks.map(truck => truck.vendor)));
+  }, [trucks]);
+
+  // Handle search and filtering - memoized for performance
+  const filteredTrucks = useMemo(() => {
+    return trucks.filter((truck) => {
+      const term = searchTerm.toLowerCase();
+      const matchesSearch =
+        (truck.truckName || '').toLowerCase().includes(term) ||
+        (truck.mobile || '').toLowerCase().includes(term) ||
+        (truck.drivingLicense || '').toLowerCase().includes(term) ||
+        (truck.driverId || '').toLowerCase().includes(term) ||
+        truck.plateNo.toLowerCase().includes(term) ||
+        truck.id.toLowerCase().includes(term);
+
+      const matchesStatus = statusFilter ? truck.status === statusFilter : true;
+      const matchesVendor = vendorFilter ? truck.vendor === vendorFilter : true;
+
+      // Expiry windows filter - checks BOTH registration and insurance
+      const matchesExpiryWindow = expiryWindowFilter ? {
+        "30": isExpiringWithinDays(truck.registrationExpiry, 30) || isExpiringWithinDays(truck.insuranceExpiry, 30),
+        "60": isExpiringWithinDays(truck.registrationExpiry, 60) || isExpiringWithinDays(truck.insuranceExpiry, 60),
+        "90": isExpiringWithinDays(truck.registrationExpiry, 90) || isExpiringWithinDays(truck.insuranceExpiry, 90)
+      }[expiryWindowFilter] || true : true;
+
+      return matchesSearch && matchesStatus && matchesVendor && matchesExpiryWindow;
+    });
+  }, [trucks, searchTerm, statusFilter, vendorFilter, expiryWindowFilter, isExpiringWithinDays]);
 
   // Pagination logic
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -153,7 +157,7 @@ export default function TruckTable() {
 
   // Approve truck
   const handleApprove = (truck: Truck) => {
-    setTrucks(prev => prev.map(t => 
+    setTrucks(prev => prev.map(t =>
       t.id === truck.id ? { ...t, status: "Approved" } : t
     ));
   };
@@ -161,7 +165,7 @@ export default function TruckTable() {
   // Suspend truck
   const handleSuspend = () => {
     if (selectedTruck) {
-      setTrucks(prev => prev.map(t => 
+      setTrucks(prev => prev.map(t =>
         t.id === selectedTruck.id ? { ...t, status: "Suspended" } : t
       ));
       setSelectedTruck(null);
@@ -172,9 +176,9 @@ export default function TruckTable() {
   // Assign driver
   const handleAssignDriver = () => {
     if (selectedTruck) {
-      setTrucks(prev => prev.map(t => 
-        t.id === selectedTruck.id ? { 
-          ...t, 
+      setTrucks(prev => prev.map(t =>
+        t.id === selectedTruck.id ? {
+          ...t,
           assignedDriver: "Driver Assigned",
           driverId: "D-CMS-001"
         } : t
@@ -187,15 +191,15 @@ export default function TruckTable() {
 
   // Export truck data
   const handleExport = (truck: Truck) => {
-    console.log('Exporting truck data:', truck);
+    // TODO: Implement export functionality
     // Implement export logic here
   };
 
   // Bulk actions
   const handleBulkAssignDriver = () => {
-    setTrucks(prev => prev.map(t => 
-      selectedTrucks.includes(t.id) ? { 
-        ...t, 
+    setTrucks(prev => prev.map(t =>
+      selectedTrucks.includes(t.id) ? {
+        ...t,
         assignedDriver: "Driver Assigned",
         driverId: "D-CMS-001"
       } : t
@@ -204,21 +208,21 @@ export default function TruckTable() {
   };
 
   const handleBulkApprove = () => {
-    setTrucks(prev => prev.map(t => 
+    setTrucks(prev => prev.map(t =>
       selectedTrucks.includes(t.id) ? { ...t, status: "Approved" } : t
     ));
     setSelectedTrucks([]);
   };
 
   const handleBulkSuspend = () => {
-    setTrucks(prev => prev.map(t => 
+    setTrucks(prev => prev.map(t =>
       selectedTrucks.includes(t.id) ? { ...t, status: "Suspended" } : t
     ));
     setSelectedTrucks([]);
   };
 
   const handleBulkExport = () => {
-    console.log('Exporting selected:', selectedTrucks);
+    // TODO: Implement bulk export functionality
     // Implement bulk export logic
   };
 
@@ -256,7 +260,7 @@ export default function TruckTable() {
   // Check if date is expired
   const isExpired = (dateStr: string) => {
     if (dateStr === 'N/A' || !dateStr) return false;
-    
+
     const [day, month, year] = dateStr.split('/').map(Number);
     const expiryDate = new Date(year, month - 1, day);
     const today = new Date();
@@ -282,505 +286,491 @@ export default function TruckTable() {
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
         <div className="overflow-hidden w-full rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
-        <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Trucks</h2>
-        <Link to="/add-truck">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <span className="text-xl">+</span> Add Truck
-          </button>
-        </Link>
-      </div>
-
-      {/* Search & Filters */}
-      <div className="px-5 py-3 space-y-3">
-        <input
-          type="text"
-          placeholder="Search Truck Name, Mobile, Driving License, Driver ID"
-          className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        {/* Filters - Only 3 as requested */}
-        <div className="flex flex-wrap gap-2 items-center">
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Suspended">Suspended</option>
-            <option value="Maintenance">Maintenance</option>
-          </select>
-
-          {/* Vendor Filter */}
-          <select
-            value={vendorFilter}
-            onChange={(e) => setVendorFilter(e.target.value)}
-            className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Vendors</option>
-            {vendors.map(vendor => (
-              <option key={vendor} value={vendor}>{vendor}</option>
-            ))}
-          </select>
-
-          {/* Expiry Windows Filter - Single filter for both registration and insurance */}
-          <select
-            value={expiryWindowFilter}
-            onChange={(e) => setExpiryWindowFilter(e.target.value)}
-            className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Expiry Windows</option>
-            <option value="30">Next 30 days (Registration/Insurance)</option>
-            <option value="60">Next 60 days (Registration/Insurance)</option>
-            <option value="90">Next 90 days (Registration/Insurance)</option>
-          </select>
-        </div>
-
-        {/* Bulk Actions */}
-        {selectedTrucks.length > 0 && (
-          <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              {selectedTrucks.length} selected
-            </span>
-            <button
-              onClick={handleBulkAssignDriver}
-              className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-1"
-            >
-              <UserIcon className="w-4 h-4" />
-              Assign Driver to Selected
-            </button>
-            <button
-              onClick={handleBulkApprove}
-              className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
-            >
-              <CheckCircleIcon className="w-4 h-4" />
-              Approve Selected
-            </button>
-            <button
-              onClick={handleBulkSuspend}
-              className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 flex items-center gap-1"
-            >
-              <NoSymbolIcon className="w-4 h-4" />
-              Suspend Selected
-            </button>
-            <button
-              onClick={handleBulkExport}
-              className="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 flex items-center gap-1"
-            >
-              <ArrowDownTrayIcon className="w-4 h-4" />
-              Export CSV
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Table */}
-      <div className="w-full overflow-x-auto">
-        <Table className="w-full table-auto">
-          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-            <TableRow>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">
-                <input 
-                  type="checkbox" 
-                  className="accent-blue-600" 
-                  checked={selectedTrucks.length === currentRecords.length && currentRecords.length > 0}
-                  onChange={toggleSelectAll}
-                />
-              </TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">ID</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Plate No.</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Vendor</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Assigned Driver</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Current Job</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Registration Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Insurance Expiry</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Status</TableCell>
-              <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400">Actions</TableCell>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {currentRecords.map((truck) => (
-              <TableRow key={truck.id} className="hover:bg-gray-50 dark:hover:bg-white/5">
-                <TableCell className="px-5 py-4">
-                  <input 
-                    type="checkbox" 
-                    className="accent-blue-600" 
-                    checked={selectedTrucks.includes(truck.id)}
-                    onChange={() => toggleTruckSelection(truck.id)}
-                  />
-                </TableCell>
-                <TableCell className="px-5 py-4 font-medium">{truck.id}</TableCell>
-                <TableCell className="px-5 py-4 font-semibold">
-                  <div className="flex items-center gap-1">
-                    <TruckIcon className="w-4 h-4" />
-                    {truck.plateNo}
-                  </div>
-                </TableCell>
-                <TableCell className="px-5 py-4">{truck.vendor}</TableCell>
-                <TableCell className="px-5 py-4">
-                  <div className="flex items-center gap-1">
-                    {truck.assignedDriver !== "Not Assigned" ? (
-                      <>
-                        <UserIcon className="w-4 h-4" />
-                        <span className="text-blue-600">{truck.assignedDriver}</span>
-                      </>
-                    ) : (
-                      <span className="text-gray-400">{truck.assignedDriver}</span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="px-5 py-4">
-                  <span className={truck.currentJob === "No Current Job" ? "text-gray-500" : "text-green-600"}>
-                    {truck.currentJob}
-                  </span>
-                </TableCell>
-                <TableCell className="px-5 py-4">
-                  <span className={getDateColor(truck.registrationExpiry)}>
-                    {truck.registrationExpiry}
-                  </span>
-                </TableCell>
-                <TableCell className="px-5 py-4">
-                  <span className={getDateColor(truck.insuranceExpiry)}>
-                    {truck.insuranceExpiry}
-                  </span>
-                </TableCell>
-                <TableCell className="px-5 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(truck.status)}`}>
-                    {truck.status === "Approved" && (
-                      <CheckCircleIcon className="w-3 h-3 mr-1" />
-                    )}
-                    {truck.status === "Suspended" && (
-                      <NoSymbolIcon className="w-3 h-3 mr-1" />
-                    )}
-                    {truck.status}
-                  </span>
-                </TableCell>
-
-                {/* Action Icons */}
-                <TableCell className="px-5 py-4">
-                  <div className="flex items-center gap-1">
-                    {/* View */}
-                    <div className="relative group">
-                      <Link to={`/view-truck/${truck.id}`}>
-                        <EyeIcon className="w-5 h-5 text-blue-600 group-hover:text-blue-800" />
-                      </Link>
-                      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        View
-                      </span>
-                    </div>
-
-                    {/* Edit */}
-                    <div className="relative group">
-                      <Link to={`/edit-truck/${truck.id}`}>
-                        <PencilIcon className="w-5 h-5 text-black group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200" />
-                      </Link>
-                      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Edit
-                      </span>
-                    </div>
-
-                    {/* Delete */}
-                    <div className="relative group">
-                      <button
-                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                        onClick={() => {
-                          setSelectedTruck(truck);
-                          setShowDeletePopup(true);
-                        }}
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Delete
-                      </span>
-                    </div>
-
-                    {/* Approve - Show for Pending trucks */}
-                    {truck.status === "Pending" && (
-                      <div className="relative group">
-                        <button
-                          className="text-green-600 hover:text-green-800"
-                          onClick={() => handleApprove(truck)}
-                        >
-                          <CheckCircleIcon className="w-5 h-5" />
-                        </button>
-                        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Approve
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Suspend - Show for Approved trucks */}
-                    {truck.status === "Approved" && (
-                      <div className="relative group">
-                        <button
-                          className="text-yellow-600 hover:text-yellow-800"
-                          onClick={() => {
-                            setSelectedTruck(truck);
-                            setShowSuspendPopup(true);
-                          }}
-                        >
-                          <NoSymbolIcon className="w-5 h-5" />
-                        </button>
-                        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Suspend
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Assign Driver - Show for trucks without driver */}
-                    {truck.assignedDriver === "Not Assigned" && (
-                      <div className="relative group">
-                        <button
-                          className="text-blue-600 hover:text-blue-800"
-                          onClick={() => {
-                            setSelectedTruck(truck);
-                            setShowAssignDriverPopup(true);
-                          }}
-                        >
-                          <UserIcon className="w-5 h-5" />
-                        </button>
-                        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                          Assign Driver
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Export */}
-                    <div className="relative group">
-                      <button
-                        className="text-blue-600 hover:text-blue-800"
-                        onClick={() => handleExport(truck)}
-                      >
-                        <ArrowDownTrayIcon className="w-5 h-5" />
-                      </button>
-                      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">
-                        Export
-                      </span>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {currentRecords.length === 0 && (
-          <p className="text-center py-4 text-gray-500">No matching records found.</p>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 border-t border-gray-100 dark:border-white/[0.05]">
-        <button 
-          className="flex items-center gap-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={selectedTrucks.length === 0}
-          onClick={() => {
-            if (selectedTrucks.length > 0) {
-              setShowDeletePopup(true);
-            }
-          }}
-        >
-          <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedTrucks.length} records)
-        </button>
-        
-        {/* Pagination Controls */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
-            <select 
-              value={recordsPerPage} 
-              onChange={handleRecordsPerPageChange}
-              className="px-2 py-1 border rounded text-sm dark:bg-white/[0.05] dark:text-white"
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-            </select>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              {indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredTrucks.length)} of {filteredTrucks.length}
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
-              className="px-2 py-1 border rounded-l disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {"<<"}
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-2 py-1 border disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {"<"}
-            </button>
-            
-            {/* Page Numbers */}
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNumber;
-              if (totalPages <= 5) {
-                pageNumber = i + 1;
-              } else if (currentPage <= 3) {
-                pageNumber = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNumber = totalPages - 4 + i;
-              } else {
-                pageNumber = currentPage - 2 + i;
-              }
-              
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`px-2 py-1 border text-sm ${
-                    currentPage === pageNumber 
-                      ? 'bg-blue-600 text-white' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            })}
-            
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-2 py-1 border disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {">"}
-            </button>
-            <button
-              onClick={() => handlePageChange(totalPages)}
-              disabled={currentPage === totalPages}
-              className="px-2 py-1 border rounded-r disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {">>"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Delete Confirmation Popup */}
-      {showDeletePopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
-            <h2 className="text-lg font-semibold text-gray-800">Delete Truck?</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to delete <b>{selectedTruck?.plateNo}</b>?
-            </p>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
-                onClick={() => setShowDeletePopup(false)}
-              >
-                Cancel
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-white/[0.05] gap-3 sm:gap-0">
+            <h2 className="font-bold text-lg text-gray-900 dark:text-white">Manage Trucks</h2>
+            <Link to="/add-truck">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                <span className="text-xl">+</span> Add Truck
               </button>
-              <button
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
-                onClick={handleDelete}
-              >
-                Yes, Delete
-              </button>
-            </div>
+            </Link>
           </div>
-        </div>
-      )}
 
-      {/* Suspend Confirmation Popup */}
-      {showSuspendPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Suspend Truck?</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to suspend <b>{selectedTruck?.plateNo}</b>?
-            </p>
-            <div className="mt-4">
-              <textarea
-                placeholder="Reason for suspension..."
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                rows={3}
-                onChange={(e) => setAssignDriverReason(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
-                onClick={() => setShowSuspendPopup(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md"
-                onClick={handleSuspend}
-              >
-                Yes, Suspend
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          {/* Search & Filters */}
+          <div className="px-5 py-3 space-y-3">
+            <input
+              type="text"
+              placeholder="Search Truck Name, Mobile, Driving License, Driver ID"
+              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-white/[0.05] dark:text-white"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
-      {/* Assign Driver Popup */}
-      {showAssignDriverPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
-            <h2 className="text-lg font-semibold text-gray-800">Assign Driver</h2>
-            <p className="text-sm text-gray-600 mt-2">
-              Assign driver to <b>{selectedTruck?.plateNo}</b>
-            </p>
-            
-            <div className="mt-4 space-y-3">
-              <select className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Select Available Driver</option>
-                <option value="Driver 1">Driver 1 (Available)</option>
-                <option value="Driver 2">Driver 2 (Available)</option>
-                <option value="Driver 3">Driver 3 (Available)</option>
+            {/* Filters - Only 3 as requested */}
+            <div className="flex flex-wrap gap-2 items-center">
+              {/* Status Filter */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Maintenance">Maintenance</option>
               </select>
-              
-              <textarea
-                placeholder="Additional notes for driver assignment..."
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={2}
-                value={assignDriverReason}
-                onChange={(e) => setAssignDriverReason(e.target.value)}
-              />
+
+              {/* Vendor Filter */}
+              <select
+                value={vendorFilter}
+                onChange={(e) => setVendorFilter(e.target.value)}
+                className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">All Vendors</option>
+                {vendors.map(vendor => (
+                  <option key={vendor} value={vendor}>{vendor}</option>
+                ))}
+              </select>
+
+              {/* Expiry Windows Filter - Single filter for both registration and insurance */}
+              <select
+                value={expiryWindowFilter}
+                onChange={(e) => setExpiryWindowFilter(e.target.value)}
+                className="px-3 py-1 border bg-gray-200 rounded-lg text-sm dark:bg-white/[0.05] dark:text-white focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Expiry Windows</option>
+                <option value="30">Next 30 days (Registration/Insurance)</option>
+                <option value="60">Next 60 days (Registration/Insurance)</option>
+                <option value="90">Next 90 days (Registration/Insurance)</option>
+              </select>
             </div>
 
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
-                onClick={() => {
-                  setShowAssignDriverPopup(false);
-                  setAssignDriverReason("");
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-                onClick={handleAssignDriver}
-              >
-                Assign Driver
-              </button>
+            {/* Bulk Actions */}
+            {selectedTrucks.length > 0 && (
+              <div className="flex flex-wrap gap-2 items-center pt-2 border-t border-gray-100">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {selectedTrucks.length} selected
+                </span>
+                <button
+                  onClick={handleBulkAssignDriver}
+                  className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-1"
+                >
+                  <UserIcon className="w-4 h-4" />
+                  Assign Driver to Selected
+                </button>
+                <button
+                  onClick={handleBulkApprove}
+                  className="px-3 py-1 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center gap-1"
+                >
+                  <CheckCircleIcon className="w-4 h-4" />
+                  Approve Selected
+                </button>
+                <button
+                  onClick={handleBulkSuspend}
+                  className="px-3 py-1 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 flex items-center gap-1"
+                >
+                  <NoSymbolIcon className="w-4 h-4" />
+                  Suspend Selected
+                </button>
+                <button
+                  onClick={handleBulkExport}
+                  className="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 flex items-center gap-1"
+                >
+                  <ArrowDownTrayIcon className="w-4 h-4" />
+                  Export CSV
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Table */}
+          <div className="w-full overflow-x-auto">
+            <Table className="w-full table-auto border border-gray-200 dark:border-white/[0.05]">
+              <TableHeader className="border-b border-gray-200 dark:border-white/[0.05]">
+                <TableRow>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">
+                    <input
+                      type="checkbox"
+                      className="accent-blue-600"
+                      checked={selectedTrucks.length === currentRecords.length && currentRecords.length > 0}
+                      onChange={toggleSelectAll}
+                    />
+                  </TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">ID</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Plate No.</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Vendor</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Assigned Driver</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Current Job</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Registration Expiry</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Insurance Expiry</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Status</TableCell>
+                  <TableCell className="px-5 py-3 text-start text-gray-500 font-medium text-xs dark:text-gray-400 border-r">Actions</TableCell>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody className="divide-y divide-gray-200 dark:divide-white/[0.05]">
+                {currentRecords.map((truck) => (
+                  <TableRow key={truck.id} className="hover:bg-gray-50 dark:hover:bg-white/5 border-b border-gray-200 dark:border-white/[0.05]">
+                    <TableCell className="px-5 py-4 border-r">
+                      <input
+                        type="checkbox"
+                        className="accent-blue-600"
+                        checked={selectedTrucks.includes(truck.id)}
+                        onChange={() => toggleTruckSelection(truck.id)}
+                      />
+                    </TableCell>
+                    <TableCell className="px-5 py-4 font-medium border-r">{truck.id}</TableCell>
+                    <TableCell className="px-5 py-4 font-semibold border-r">
+                      <div className="flex items-center gap-1">
+                        {truck.plateNo}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 border-r">{truck.vendor}</TableCell>
+                    <TableCell className="px-5 py-4 border-r">
+                      <div className="flex items-center gap-1">
+                        {truck.assignedDriver !== "Not Assigned" ? (
+                          <>
+                            <span className="text-blue-600">{truck.assignedDriver}</span>
+                          </>
+                        ) : (
+                          <span className="text-gray-400">{truck.assignedDriver}</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 border-r">
+                      <span className={truck.currentJob === "No Current Job" ? "text-gray-500" : "text-green-600"}>
+                        {truck.currentJob}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 border-r">
+                      <span className={getDateColor(truck.registrationExpiry)}>
+                        {truck.registrationExpiry}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 border-r">
+                      <span className={getDateColor(truck.insuranceExpiry)}>
+                        {truck.insuranceExpiry}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 border-r">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(truck.status)}`}>
+                        {truck.status === "Approved" && <CheckCircleIcon className="w-3 h-3 mr-1" />}
+                        {truck.status === "Suspended" && <NoSymbolIcon className="w-3 h-3 mr-1" />}
+                        {truck.status}
+                      </span>
+                    </TableCell>
+
+                    {/* Actions Column */}
+                  <TableCell className="px-5 py-4 border-r">
+  <div className="flex items-center gap-2">
+    {/* View */}
+    <div className="relative group">
+      <Link to={`/view-truck/${truck.id}`}>
+        <EyeIcon className="w-5 h-5 text-blue-600 hover:text-blue-800" />
+      </Link>
+      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+        View
+      </span>
+    </div>
+
+    {/* Edit */}
+    <div className="relative group">
+      <Link to={`/edit-truck/${truck.id}`}>
+        <PencilIcon className="w-5 h-5 text-black hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" />
+      </Link>
+      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+        Edit
+      </span>
+    </div>
+
+    {/* Delete */}
+    <div className="relative group">
+      <button
+        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+        onClick={() => { setSelectedTruck(truck); setShowDeletePopup(true); }}
+      >
+        <TrashIcon className="w-5 h-5" />
+      </button>
+      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+        Delete
+      </span>
+    </div>
+
+    {/* Approve */}
+    {truck.status === "Pending" && (
+      <div className="relative group">
+        <button
+          className="text-green-600 hover:text-green-800"
+          onClick={() => handleApprove(truck)}
+        >
+          <CheckCircleIcon className="w-5 h-5" />
+        </button>
+        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+          Approve
+        </span>
+      </div>
+    )}
+
+    {/* Suspend */}
+    {truck.status === "Approved" && (
+      <div className="relative group">
+        <button
+          className="text-yellow-600 hover:text-yellow-800"
+          onClick={() => { setSelectedTruck(truck); setShowSuspendPopup(true); }}
+        >
+          <NoSymbolIcon className="w-5 h-5" />
+        </button>
+        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+          Suspend
+        </span>
+      </div>
+    )}
+
+    {/* Export */}
+    <div className="relative group">
+      <button
+        className="text-blue-600 hover:text-blue-800"
+        onClick={() => handleExport(truck)}
+      >
+        <ArrowDownTrayIcon className="w-5 h-5" />
+      </button>
+      <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+        Export
+      </span>
+    </div>
+
+    {/* Assign Driver */}
+    {truck.assignedDriver === "Not Assigned" && (
+      <div className="relative group">
+        <button
+          className="text-blue-600 hover:text-blue-800"
+          onClick={() => setShowAssignDriverPopup(true)}
+        >
+          <UserIcon className="w-5 h-5" />
+        </button>
+        <span className="absolute left-1/2 -bottom-6 -translate-x-1/2 text-xs text-black dark:text-white px-2 py-1 opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap bg-gray-100 dark:bg-gray-800 rounded shadow">
+          Assign Driver
+        </span>
+      </div>
+    )}
+  </div>
+</TableCell>
+
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            {currentRecords.length === 0 && (
+              <p className="text-center py-4 text-gray-500">No matching records found.</p>
+            )}
+          </div>
+
+
+          {/* Footer */}
+          <div className="px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 border-t border-gray-100 dark:border-white/[0.05]">
+            <button
+              className="flex items-center gap-2 text-red-500 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={selectedTrucks.length === 0}
+              onClick={() => {
+                if (selectedTrucks.length > 0) {
+                  setShowDeletePopup(true);
+                }
+              }}
+            >
+              <TrashIcon className="w-5 h-5" /> Delete Selected ({selectedTrucks.length} records)
+            </button>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+                <select
+                  value={recordsPerPage}
+                  onChange={handleRecordsPerPageChange}
+                  className="px-2 py-1 border rounded text-sm dark:bg-white/[0.05] dark:text-white"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {indexOfFirstRecord + 1}-{Math.min(indexOfLastRecord, filteredTrucks.length)} of {filteredTrucks.length}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                  className="px-2 py-1 border rounded-l disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {"<<"}
+                </button>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-2 py-1 border disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {"<"}
+                </button>
+
+                {/* Page Numbers */}
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNumber;
+                  if (totalPages <= 5) {
+                    pageNumber = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNumber = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNumber = totalPages - 4 + i;
+                  } else {
+                    pageNumber = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`px-2 py-1 border text-sm ${currentPage === pageNumber
+                          ? 'bg-blue-600 text-white'
+                          : 'hover:bg-gray-100'
+                        }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-2 py-1 border disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {">"}
+                </button>
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="px-2 py-1 border rounded-r disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {">>"}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+
+          {/* Delete Confirmation Popup */}
+          {showDeletePopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+                <h2 className="text-lg font-semibold text-gray-800">Delete Truck?</h2>
+                <p className="text-sm text-gray-600 mt-2">
+                  Are you sure you want to delete <b>{selectedTruck?.plateNo}</b>?
+                </p>
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
+                    onClick={() => setShowDeletePopup(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
+                    onClick={handleDelete}
+                  >
+                    Yes, Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Suspend Confirmation Popup */}
+          {showSuspendPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+              <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
+                <h2 className="text-lg font-semibold text-gray-800">Suspend Truck?</h2>
+                <p className="text-sm text-gray-600 mt-2">
+                  Are you sure you want to suspend <b>{selectedTruck?.plateNo}</b>?
+                </p>
+                <div className="mt-4">
+                  <textarea
+                    placeholder="Reason for suspension..."
+                    className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    rows={3}
+                    onChange={(e) => setAssignDriverReason(e.target.value)}
+                  />
+                </div>
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
+                    onClick={() => setShowSuspendPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md"
+                    onClick={handleSuspend}
+                  >
+                    Yes, Suspend
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Assign Driver Popup */}
+          {showAssignDriverPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+              <div className="bg-white p-6 rounded-xl shadow-xl w-96 text-center">
+                <h2 className="text-lg font-semibold text-gray-800">Assign Driver</h2>
+                <p className="text-sm text-gray-600 mt-2">
+                  Assign driver to <b>{selectedTruck?.plateNo}</b>
+                </p>
+
+                <div className="mt-4 space-y-3">
+                  <select className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Available Driver</option>
+                    <option value="Driver 1">Driver 1 (Available)</option>
+                    <option value="Driver 2">Driver 2 (Available)</option>
+                    <option value="Driver 3">Driver 3 (Available)</option>
+                  </select>
+
+                  <textarea
+                    placeholder="Additional notes for driver assignment..."
+                    className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={2}
+                    value={assignDriverReason}
+                    onChange={(e) => setAssignDriverReason(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded-md"
+                    onClick={() => {
+                      setShowAssignDriverPopup(false);
+                      setAssignDriverReason("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+                    onClick={handleAssignDriver}
+                  >
+                    Assign Driver
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

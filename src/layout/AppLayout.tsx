@@ -52,6 +52,8 @@ import { useTranslation } from "react-i18next";
  
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
  
   return (
     <div className="min-h-screen xl:flex">
@@ -60,11 +62,17 @@ const LayoutContent: React.FC = () => {
         <Backdrop />
       </div>
  
-      {/*  MAIN CONTENT (NO RTL HERE) */}
+      {/*  MAIN CONTENT */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out overflow-x-hidden ${
-          isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
-        } ${isMobileOpen ? "ml-0" : ""}`}
+          isRTL
+            ? isExpanded || isHovered 
+              ? "lg:mr-[290px]" 
+              : "lg:mr-[90px]"
+            : isExpanded || isHovered 
+              ? "lg:ml-[290px]" 
+              : "lg:ml-[90px]"
+        } ${isMobileOpen ? "" : ""}`}
       >
         <AppHeader />
  

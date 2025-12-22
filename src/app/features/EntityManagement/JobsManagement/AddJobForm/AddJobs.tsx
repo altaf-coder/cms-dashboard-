@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { XMarkIcon, CalendarIcon, ClockIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from "react-router-dom";
 
@@ -96,6 +96,9 @@ export default function AddJobs() {
   // Filtered data based on selections
   const [filteredDrivers, setFilteredDrivers] = useState(driversData);
   const [filteredTrucks, setFilteredTrucks] = useState(trucksData);
+  
+  // Store timeout IDs for cleanup
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
@@ -114,7 +117,7 @@ export default function AddJobs() {
         }));
       }
     }
-  }, [formData.shipmentId]);
+  }, [formData.shipmentId]); // activeShipments is a constant, no need to include
 
   // Handle vendor selection
   useEffect(() => {
@@ -141,7 +144,7 @@ export default function AddJobs() {
       setFilteredTrucks([]);
       setFormData(prev => ({ ...prev, driverId: "", truckId: "" }));
     }
-  }, [formData.vendorId]);
+  }, [formData.vendorId, formData.driverId, formData.truckId]); // driversData and trucksData are constants
 
   // Check for overlapping jobs
   const checkDriverAvailability = () => {
@@ -289,6 +292,14 @@ export default function AddJobs() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+      timeoutRefs.current = [];
+    };
+  }, []);
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -301,19 +312,19 @@ export default function AddJobs() {
     
     try {
       // In real app, send data to API
-      console.log('Submitting job data:', formData);
+      // TODO: Replace with actual API call
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Send email notification (simulated)
-      console.log('Sending email notifications to driver and vendor...');
+      // TODO: Replace with actual email notification service
       
       // Show success popup
       setSuccessMessage('Job created successfully! Email notifications sent to driver and vendor.');
       
       // Reset form after success
-      setTimeout(() => {
+      const resetTimeout = setTimeout(() => {
         setFormData({
           jobId: generateJobId(),
           shipmentId: "",
@@ -333,14 +344,16 @@ export default function AddJobs() {
         setErrors({});
         setWarnings({});
         
-        // Navigate to jobs page after 3 seconds
-        setTimeout(() => {
+        // Navigate to jobs page after 1 second
+        const navigateTimeout = setTimeout(() => {
           navigate('/jobs');
         }, 1000);
+        timeoutRefs.current.push(navigateTimeout);
       }, 3000);
+      timeoutRefs.current.push(resetTimeout);
       
     } catch (error) {
-      console.error('Error creating job:', error);
+      // Error handling - in production, use proper error logging service
       setErrors(prev => ({
         ...prev,
         submit: "Failed to create job. Please try again."

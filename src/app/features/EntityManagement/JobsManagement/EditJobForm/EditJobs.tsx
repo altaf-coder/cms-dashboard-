@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { CalendarIcon, ClockIcon, ExclamationTriangleIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+// @ts-ignore - JSON import is handled by TypeScript config
+import jobsData from '../../../../../data/admins.json';
 
 // Mock data - in real app, this would come from API
 const activeShipments = [
@@ -63,6 +65,7 @@ interface FormData {
 
 export default function EditJobs() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   
   // Generate next Job ID
   const generateJobId = () => {
@@ -71,8 +74,14 @@ export default function EditJobs() {
     return `J-CMS-${nextId.toString().padStart(3, '0')}`;
   };
 
+  // Function to get job data from JSON
+  const getJobById = (jobId: string) => {
+    if (!jobsData || !jobsData.jobs) return null;
+    return jobsData.jobs.find((job: any) => job.id === jobId);
+  };
+
   const [formData, setFormData] = useState<FormData>({
-    jobId: generateJobId(),
+    jobId: id || generateJobId(),
     shipmentId: "",
     containerNo: "",
     customer: "",
@@ -94,6 +103,7 @@ export default function EditJobs() {
   const [successMessage, setSuccessMessage] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Filtered data based on selections
   const [filteredDrivers, setFilteredDrivers] = useState(driversData);
@@ -101,6 +111,74 @@ export default function EditJobs() {
 
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
+  const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
+
+  // Load job data when component mounts or ID changes
+  useEffect(() => {
+    if (id) {
+      setIsLoading(true);
+      // TODO: Replace with actual API call
+      const job = getJobById(id);
+      
+      if (job) {
+        // Find corresponding shipment to get customer and container info
+        const shipment = activeShipments.find(s => s.id === job.shipmentId);
+        
+        // Find vendor by name
+        const vendor = approvedVendors.find(v => v.name === job.vendor);
+        
+        // Find driver by name
+        const driver = driversData.find(d => d.name === job.driver);
+        
+        // Find truck by plate number or ID
+        const truck = trucksData.find(t => t.plateNumber === job.truckNo || t.id === job.truckNo);
+        
+        // Parse job date time - handle different formats
+        let jobDateTime = "";
+        if (job.jobDateTime) {
+          // If it's already in ISO format
+          if (job.jobDateTime.includes('T')) {
+            jobDateTime = job.jobDateTime;
+          } else {
+            // Try to parse common date formats
+            const date = new Date(job.jobDateTime);
+            if (!isNaN(date.getTime())) {
+              const dateStr = date.toISOString().split('T')[0];
+              jobDateTime = `${dateStr}T09:00`; // Default to 9 AM if time not provided
+            }
+          }
+        }
+        
+        setFormData({
+          jobId: job.id || id,
+          shipmentId: job.shipmentId || "",
+          containerNo: shipment?.containerNo || job.containerNo || "",
+          customer: shipment?.customer || "",
+          vendorId: vendor?.id || "",
+          driverId: driver?.id || "",
+          truckId: truck?.id || "",
+          jobType: job.jobType || "",
+          pickupLocation: shipment?.port || "",
+          dropLocation: "",
+          jobDateTime: jobDateTime,
+          portLastReturnDate: job.lastReturnDate || shipment?.lastReturnDate || "",
+          specialInstructions: "",
+          status: job.status || "draft"
+        });
+      }
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+      timeoutRefs.current = [];
+    };
+  }, []);
 
   // Handle shipment selection
   useEffect(() => {
@@ -116,7 +194,7 @@ export default function EditJobs() {
         }));
       }
     }
-  }, [formData.shipmentId]);
+  }, [formData.shipmentId]); // activeShipments is a constant
 
   // Handle vendor selection
   useEffect(() => {
@@ -143,7 +221,7 @@ export default function EditJobs() {
       setFilteredTrucks([]);
       setFormData(prev => ({ ...prev, driverId: "", truckId: "" }));
     }
-  }, [formData.vendorId]);
+  }, [formData.vendorId, formData.driverId, formData.truckId]); // driversData and trucksData are constants
 
   // Check for overlapping jobs
   const checkDriverAvailability = () => {
@@ -303,19 +381,19 @@ export default function EditJobs() {
     
     try {
       // In real app, send data to API
-      console.log('Submitting job data:', formData);
+      // TODO: Replace with actual API call
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Send email notification (simulated)
-      console.log('Sending email notifications to driver and vendor...');
+      // TODO: Replace with actual email notification service
       
       // Show success popup
       setSuccessMessage('Job created successfully! Email notifications sent to driver and vendor.');
       
     } catch (error) {
-      console.error('Error creating job:', error);
+      // Error handling - in production, use proper error logging service
       setErrors(prev => ({
         ...prev,
         submit: "Failed to create job. Please try again."
@@ -354,10 +432,13 @@ export default function EditJobs() {
     
     try {
       // In real app, send delete request to API (if draft was saved)
-      console.log('Deleting job draft...');
+      // TODO: Replace with actual API call
       
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => {
+        const timeout = setTimeout(resolve, 1000);
+        timeoutRefs.current.push(timeout);
+      });
       
       // Reset form to initial state
       setFormData({
@@ -382,10 +463,14 @@ export default function EditJobs() {
       // Close delete confirmation
       setShowDeleteConfirm(false);
       
-      console.log('Form reset to initial state');
+      // Form reset to initial state
       
     } catch (error) {
-      console.error('Error deleting job draft:', error);
+      // Error handling - in production, use proper error logging service
+      setErrors(prev => ({
+        ...prev,
+        delete: "Failed to delete job draft. Please try again."
+      }));
     } finally {
       setIsDeleting(false);
     }
@@ -410,6 +495,21 @@ export default function EditJobs() {
     const today = new Date();
     return today.toISOString().split('T')[0];
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div className="text-center">
+          <svg className="animate-spin h-12 w-12 text-blue-600 mx-auto" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+          <p className="mt-4 text-gray-600">Loading job data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">

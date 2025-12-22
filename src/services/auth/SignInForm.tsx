@@ -82,7 +82,7 @@ export default function SignInForm() {
 
     if (hasError) return;
 
-    console.log("Sign In Data:", formData);
+    // TODO: Replace with actual API call
     alert("Signed in successfully");
 
     // 👉 Direct dashboard redirect

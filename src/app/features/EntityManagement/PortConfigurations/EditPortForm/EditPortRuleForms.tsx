@@ -424,7 +424,8 @@ export default function PortForm() {
       // For now, use mock data
       setFormData(editModeInitialData);
     }
-  }, [id, isEditMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEditMode]); // editModeInitialData is stable mock data
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -606,7 +607,7 @@ export default function PortForm() {
    
     try {
       // TODO: Submit form data to API
-      console.log("Form submitted:", formData);
+      // TODO: Replace with actual API call
      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -614,7 +615,11 @@ export default function PortForm() {
       // Show success popup
       setShowSuccessPopup(true);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // Error handling - in production, use proper error logging service
+      setErrors(prev => ({
+        ...prev,
+        submit: "Failed to submit form. Please try again."
+      }));
     } finally {
       setIsSubmitting(false);
     }

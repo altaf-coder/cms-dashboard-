@@ -152,10 +152,7 @@ export default function SignUpForm() {
     if (Object.keys(newErrors).length === 0) {
       // Simulate OTP sending
       setOtpSent(true);
-      console.log("OTP sent to phone and email (frontend simulation):", {
-        email: formData.email,
-        phone: formData.phone,
-      });
+      // TODO: Replace with actual OTP service
 
       // Mark Super Admin as created in localStorage
       localStorage.setItem("superAdminCreated", "true");
